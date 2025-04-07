@@ -4,7 +4,7 @@ namespace SiteLixeiras.Models
 {
     public class PedidoDetalhe
     {
-        public int IdPedido { get; set; }
+        public int PedidoDetalheId { get; set; }
         public int PedidoId { get; set; }
         public int ProdutoId { get; set; }
         public int Quantidade { get; set; }

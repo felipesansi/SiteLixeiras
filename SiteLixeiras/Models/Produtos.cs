@@ -35,5 +35,9 @@ namespace SiteLixeiras.Models
         public bool Destaque {  get; set; }
 
 
+        public int CategoriaId { get; set; }  // relacionamentos entre lanches e categoria
+        public  Categoria Categoria { get; set; }  // relacionamentos entre lanches e categoria
+
+
     }
 }
