@@ -1,0 +1,60 @@
+﻿@model SiteLixeiras.ViewModel.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Cadastro";
+}
+<div class="container">
+    <div class="container2 my-5">
+        <div class="row shadow rounded overflow-hidden">
+
+            <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-success text-white p-5 text-center">
+                <h2 class="mb-3">Olá, novo usuário!</h2>
+                <p>Preencha o formulário para criar sua conta.</p>
+
+                <a asp-action="Login" class="btn btn-outline-light mt-3">Já tenho uma conta</a>
+            </div>
+
+            
+            <div class="col-12 col-md-6 bg-white p-5">
+                <form asp-controller="Account" asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <h3 class="mb-4 text-center">Cadastro</h3>
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="Seu e-mail" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="UserName" class="form-label"></label>
+                        <input asp-for="UserName" class="form-control" placeholder="Usuário" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Senha" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label"></label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirmar senha" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

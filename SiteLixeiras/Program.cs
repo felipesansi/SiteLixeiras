@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
 using SiteLixeiras.Repositorios;
 using SiteLixeiras.Repositorios.Interfaces;
+using SiteLixeiras.Sevices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Configurar o repositórios
 builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddTransient<IProdutosRepositorio, ProdutosRepositorio>();
+builder.Services.AddScoped<ISeedUserRolesInitial, SeedUserRolesInitial>();
 
+// configurar identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -34,11 +49,17 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var seed = services.GetRequiredService<ISeedUserRolesInitial>();
+    await seed.SeedRolesAsync();
+    await seed.SeedUsersAsync();
+}
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();
