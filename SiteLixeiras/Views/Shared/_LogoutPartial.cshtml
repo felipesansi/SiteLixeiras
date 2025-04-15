@@ -1,0 +1,50 @@
+﻿﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> _signInManager
+
+@if (_signInManager.IsSignedIn(User))
+{
+    <form asp-controller="Account" asp-action="Logout" method="post" class="navbar-left" id="logoutForm">
+        @Html.AntiForgeryToken()
+        <ul class="nav navbar-nav navbar-left">
+            <li class="nav-item dropdown">
+                <!-- Exibe o e-mail do usuário -->
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    @User.Identity.Name
+                </a>
+                <!-- Itens do Dropdown -->
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <!-- Exibe o e-mail do usuário -->
+                    <li>
+                        <span class="dropdown-item-text">
+                            <strong>Email:</strong> @User.Identity.Name
+                        </span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <!-- Botão Logout -->
+                    <li>
+                        <button type="submit" class="dropdown-item rounded-pill bg-danger text-light">
+                            Desconectar
+                        </button>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-left">
+        <li class="nav-item">
+            <a class="navbar-link text-dark btn btn-outline btn-login rounded-pill"
+               asp-controller="Account"
+               asp-action="Login"
+               asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")"
+               style="color:white; text-decoration: none; ">
+                &nbsp;Login adm &nbsp;
+            </a>
+        </li>
+    </ul>
+}

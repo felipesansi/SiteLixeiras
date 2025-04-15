@@ -20,6 +20,15 @@ builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddTransient<IProdutosRepositorio, ProdutosRepositorio>();
 builder.Services.AddScoped<ISeedUserRolesInitial, SeedUserRolesInitial>();
 
+// Configurar o AutoMapper
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.Name = "Lixeiras.Session";
+});
 // configurar identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -56,10 +65,18 @@ using (var scope = app.Services.CreateScope())
     await seed.SeedRolesAsync();
     await seed.SeedUsersAsync();
 }
+app.UseSession();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
+
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
 
 app.Run();
