@@ -38,12 +38,11 @@ else
 {
     <ul class="nav navbar-nav navbar-left">
         <li class="nav-item">
-            <a class="navbar-link text-dark btn btn-outline btn-login rounded-pill"
+            <a class="navbar-link text-white btn btn-outline-success  rounded-pill"
                asp-controller="Account"
                asp-action="Login"
-               asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")"
-               style="color:white; text-decoration: none; ">
-                &nbsp;Login adm &nbsp;
+               asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")" >
+                &nbsp;Login &nbsp;
             </a>
         </li>
     </ul>
