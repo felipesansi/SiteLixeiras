@@ -21,7 +21,7 @@
                     @Html.AntiForgeryToken()
 
                     <h3 class="mb-4 text-center">Login</h3>
-
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                     <div class="mb-3">
                         <label asp-for="UserName" class="form-label">Usuário ou E-mail</label>
                         <input asp-for="UserName" class="form-control" placeholder="Seu usuário ou e-mail" />

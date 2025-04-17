@@ -1,5 +1,5 @@
-﻿﻿@using Microsoft.AspNetCore.Identity
-
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> _userManager
 @inject SignInManager<IdentityUser> _signInManager
 
 @if (_signInManager.IsSignedIn(User))
@@ -14,12 +14,24 @@
                 </a>
                 <!-- Itens do Dropdown -->
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+                    <!-- Exibe o nome do usuário -->
+                    <li>
+                        <span class="dropdown-item-text">
+                            <strong>Usuário:</strong> @User.Identity.Name
+                        </span>
+                        
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
                     <!-- Exibe o e-mail do usuário -->
                     <li>
                         <span class="dropdown-item-text">
-                            <strong>Email:</strong> @User.Identity.Name
+                            <strong>Email:</strong> @(_userManager.GetEmailAsync(await _userManager.GetUserAsync(User)).Result)
                         </span>
                     </li>
+
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
