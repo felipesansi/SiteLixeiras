@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
+using SiteLixeiras.Models;
 using SiteLixeiras.Repositorios;
 using SiteLixeiras.Repositorios.Interfaces;
 using SiteLixeiras.Sevices;
@@ -19,6 +20,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddTransient<IProdutosRepositorio, ProdutosRepositorio>();
 builder.Services.AddScoped<ISeedUserRolesInitial, SeedUserRolesInitial>();
+
+// Registra o serviço `CarrinhoCompra` no contêiner de injeção de dependências com o ciclo de vida "Scoped"
+builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinhoCompra(sp));
+
+
 
 // Configurar o AutoMapper
 
