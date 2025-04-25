@@ -21,54 +21,57 @@ namespace SiteLixeiras.Models
         [Required(ErrorMessage = "Campo obrigatório")]
         [StringLength(999)]
 
-        public required string Nome { get; set; }
+        public  string? Nome { get; set; }
 
         [Display(Name = "Sobrenome: ")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [StringLength(999)]
-        public required string SobreNome { get; set; }
-        [Display(Name = " Endereço : ")]
+        public string? SobreNome { get; set; }
+        [Display(Name = " Rua : ")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [StringLength(999)]
-        public required string Endereco { get; set; }
-        
+        public  string Rua { get; set; }
+        [Display(Name = " Bairro : ")]
+        [Required(ErrorMessage = "Campo obrigatório")]
+        [StringLength(999)]
+        public string ? Bairro { get; set; }
+
 
         [Display(Name = " Estado: ")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [StringLength(999)]
-        public required string Estado { get; set; }
+        public  string? Estado { get; set; }
         [Display(Name = " Cidade: ")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [StringLength(999)]
 
-        public required string Cidade { get; set; }
+        public  string ?Cidade { get; set; }
         [Display(Name = "Telefone:")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [StringLength(25)]
         [DataType(DataType.PhoneNumber)]
-        public required string Telefone { get; set; }
-        [Display(Name = " E-mail:")]
-        [Required(ErrorMessage = "Campo obrigatório")]
-        [DataType(DataType.EmailAddress)]
-        [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage = "Email inválido")]
-        [StringLength(50)]
-        public required string Email { get; set; }
-       
+        public string? Telefone { get; set; }
+        
         [Display(Name = " CEP: ")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [StringLength(8)]
         [DataType(DataType.PostalCode)]
-        [RegularExpression(@"^\d{5}-\d{3}$", ErrorMessage = "CEP inválido")]
-
-        public required string Cep { get; set; }
+        [RegularExpression(@"^\d{5}-?\d{3}$", ErrorMessage = "CEP inválido")]
+        public  string? Cep { get; set; }
 
         [Display(Name = "CPF:")]
         [Required(ErrorMessage = "Campo obrigatório")]
         [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}\-\d{2}$", ErrorMessage = "CPF inválido (formato: 000.000.000-00)")]
         [StringLength(14)]
-        public required string CPF { get; set; }
-
-
+        public  string? CPF { get; set; }
+      
+        [Display(Name = "Número:")]
+        [Required(ErrorMessage = "Campo obrigatório")]
+        [StringLength(10)]
+        public string? Numero { get; set; }
+        [Display(Name = "Complemento:")]
+        [StringLength(999)]
+        public string? Complemento { get; set; }
 
     }
 }

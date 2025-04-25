@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiteLixeiras.Context;
 
@@ -11,9 +12,11 @@ using SiteLixeiras.Context;
 namespace SiteLixeiras.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423143010_AtualizandoTbEnderecos")]
+    partial class AtualizandoTbEnderecos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,10 +300,6 @@ namespace SiteLixeiras.Migrations
                         .HasMaxLength(999)
                         .HasColumnType("nvarchar(999)");
 
-                    b.Property<string>("Complemento")
-                        .HasMaxLength(999)
-                        .HasColumnType("nvarchar(999)");
-
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasMaxLength(999)
@@ -310,11 +309,6 @@ namespace SiteLixeiras.Migrations
                         .IsRequired()
                         .HasMaxLength(999)
                         .HasColumnType("nvarchar(999)");
-
-                    b.Property<string>("Numero")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Rua")
                         .IsRequired()

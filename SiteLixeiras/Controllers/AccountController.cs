@@ -100,7 +100,12 @@ namespace SiteLixeiras.Controllers
             if (resultado.Succeeded)
             {
                 await _userManager.AddToRoleAsync(usuario, "User");
-                return RedirectToAction("Login");
+
+                // Faz o login automático
+                await _signInManager.SignInAsync(usuario, isPersistent: false);
+
+               
+                return RedirectToAction("Create", "EnderecoEntregas");
             }
 
             foreach (var erro in resultado.Errors)
