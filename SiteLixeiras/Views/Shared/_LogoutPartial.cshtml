@@ -2,6 +2,8 @@
 @inject UserManager<IdentityUser> _userManager
 @inject SignInManager<IdentityUser> _signInManager
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 @if (_signInManager.IsSignedIn(User))
 {
     <form asp-controller="Account" asp-action="Logout" method="post" class="navbar-left" id="logoutForm">
@@ -50,11 +52,12 @@ else
 {
     <ul class="nav navbar-nav navbar-left">
         <li class="nav-item">
-            <a class="navbar-link text-white btn btn-outline-success  rounded-pill"
+            <a class="navbar-link text-white btn btn-outline-secondary  rounded-pill"
                asp-controller="Account"
                asp-action="Login"
                asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")" >
-                &nbsp;Login &nbsp;
+                <i class="fa-solid fa-circle-user fa-2x"></i>
+
             </a>
         </li>
     </ul>

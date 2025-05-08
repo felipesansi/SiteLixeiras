@@ -1,0 +1,31 @@
+﻿@model IEnumerable<SiteLixeiras.Models.EnderecoEntrega>
+
+@{
+    ViewData["Title"] = "Escolher Endereço de Entrega";
+}
+
+<h2 class="mt-4">Escolha um Endereço de Entrega</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning mt-3">
+        Você ainda não cadastrou nenhum endereço.
+        <a href="@Url.Action("Create", "EnderecoEntregas")" class="btn btn-sm btn-outline-primary ml-2">Cadastrar Endereço</a>
+    </div>
+}
+else
+{
+    <form asp-action="FinalizarPedido" method="post" class="mt-4">
+        @foreach (var endereco in Model)
+        {
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="enderecoId" value="@endereco.EnderecoEntregaId" required />
+                <label class="form-check-label">
+                    @endereco.Rua, @endereco.Numero - @endereco.Bairro, @endereco.Cidade/@endereco.Estado - CEP: @endereco.Cep
+                </label>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-success mt-3">Ir para o Pagamento</button>
+    </form>
+}

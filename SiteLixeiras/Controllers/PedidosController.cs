@@ -1,0 +1,112 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SiteLixeiras.Context;
+using SiteLixeiras.Models;
+using SiteLixeiras.Repositorios.Interfaces;
+using System.Security.Claims;
+
+namespace SiteLixeiras.Controllers
+{
+    public class PedidosController : Controller
+    {
+        private readonly IProdutosRepositorio _produtosRepositorio;
+        private readonly IPedido _pedido;
+        private readonly AppDbContext _context;
+        private readonly CarrinhoCompra carrinhoCompra;
+
+        public PedidosController(IProdutosRepositorio produtosRepositorio, IPedido pedido, AppDbContext context, CarrinhoCompra carrinhoCompra)
+        {
+            _produtosRepositorio = produtosRepositorio;
+            _pedido = pedido;
+            _context = context;
+            this.carrinhoCompra = carrinhoCompra;
+        }
+
+        public async Task <IActionResult> Checkout()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var enderecos = await _context.EnderecosEntregas
+                .Where(e => e.UsuarioId == userId)
+                .ToListAsync();
+
+            return View(enderecos);
+        }
+        [HttpPost]
+        public IActionResult Checkout(EnderecoEntrega enderecoEntrega)
+        {
+            int totalPedido = 0;
+            decimal valorTotal = 0;
+
+            var carrinhoCompraItens = carrinhoCompra.GetCarrinhoCompraItems();
+            foreach (var item in carrinhoCompraItens)
+            {
+                totalPedido += item.Quantidade;
+                valorTotal += item.Produtos.Preco * item.Quantidade;
+            }
+            var pedido = new Pedido
+            {
+                EnderecoEntrega = enderecoEntrega,
+                TotalItensPedidos = totalPedido,
+                PedidoTotal = valorTotal,
+              
+            };
+
+            if (ModelState.IsValid)
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                enderecoEntrega.UsuarioId = userId;
+                _context.EnderecosEntregas.Add(enderecoEntrega);
+                _context.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+            return View(enderecoEntrega);
+        }
+        [HttpPost]
+        public async Task<IActionResult> FinalizarPedido(int enderecoId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var endereco = await _context.EnderecosEntregas
+                .FirstOrDefaultAsync(e => e.EnderecoEntregaId == enderecoId && e.UsuarioId == userId);
+
+            if (endereco == null)
+                return NotFound("Endereço não encontrado.");
+
+            var itensCarrinho = carrinhoCompra.GetCarrinhoCompraItems();
+            if (itensCarrinho == null || !itensCarrinho.Any())
+                return RedirectToAction("Carrinho", "CarrinhoCompra");
+
+            var pedido = new Pedido
+            {
+                UsuarioId = userId,
+                PedidoTotal = itensCarrinho.Sum(i => i.Produtos.Preco * i.Quantidade),
+                TotalItensPedidos = itensCarrinho.Sum(i => i.Quantidade),
+                PedidoEnviado = DateTime.Now,
+                EnderecoEntregaId = endereco.EnderecoEntregaId,
+                PedidoItens = itensCarrinho.Select(item => new PedidoDetalhe
+                {
+                    ProdutoId = item.Produtos.Id_Produto,
+                    Quantidade = item.Quantidade,
+                    Preco = item.Produtos.Preco
+                }).ToList()
+            };
+
+            _context.Pedidos.Add(pedido);
+            await _context.SaveChangesAsync();
+
+            carrinhoCompra.LimparCarrinho();
+
+            return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
+
+        }
+        public IActionResult Confirmacao()
+        {
+            ViewBag.Mensagem = "Pedido realizado com sucesso!";
+            return View();
+        }
+
+
+
+    }
+}

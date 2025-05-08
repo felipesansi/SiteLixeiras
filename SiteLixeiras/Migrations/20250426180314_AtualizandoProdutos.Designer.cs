@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiteLixeiras.Context;
 
@@ -11,9 +12,11 @@ using SiteLixeiras.Context;
 namespace SiteLixeiras.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250426180314_AtualizandoProdutos")]
+    partial class AtualizandoProdutos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,36 +272,6 @@ namespace SiteLixeiras.Migrations
                     b.ToTable("Categorias");
                 });
 
-            modelBuilder.Entity("SiteLixeiras.Models.DadosDropBox", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccessToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DataExpiracao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("TokenType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DadosDropBox");
-                });
-
             modelBuilder.Entity("SiteLixeiras.Models.EnderecoEntrega", b =>
                 {
                     b.Property<int>("EnderecoEntregaId")
@@ -370,56 +343,6 @@ namespace SiteLixeiras.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("EnderecoEntrega");
-                });
-
-            modelBuilder.Entity("SiteLixeiras.Models.Foto", b =>
-                {
-                    b.Property<int>("FotoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FotoId"));
-
-                    b.Property<int>("ProdutoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("FotoId");
-
-                    b.HasIndex("ProdutoId");
-
-                    b.ToTable("Foto");
-                });
-
-            modelBuilder.Entity("SiteLixeiras.Models.Notificacao", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Lida")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Mensagem")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsuarioId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notificacoes");
                 });
 
             modelBuilder.Entity("SiteLixeiras.Models.Pedido", b =>
@@ -512,9 +435,6 @@ namespace SiteLixeiras.Migrations
                     b.Property<string>("Imagem")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagemThumbUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -522,11 +442,11 @@ namespace SiteLixeiras.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("altura")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("altura")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("largura")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("largura")
+                        .HasColumnType("int");
 
                     b.HasKey("Id_Produto");
 
@@ -608,17 +528,6 @@ namespace SiteLixeiras.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SiteLixeiras.Models.Foto", b =>
-                {
-                    b.HasOne("SiteLixeiras.Models.Produtos", "Produto")
-                        .WithMany("Fotos")
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Produto");
-                });
-
             modelBuilder.Entity("SiteLixeiras.Models.Pedido", b =>
                 {
                     b.HasOne("SiteLixeiras.Models.EnderecoEntrega", "EnderecoEntrega")
@@ -676,11 +585,6 @@ namespace SiteLixeiras.Migrations
             modelBuilder.Entity("SiteLixeiras.Models.Pedido", b =>
                 {
                     b.Navigation("PedidoItens");
-                });
-
-            modelBuilder.Entity("SiteLixeiras.Models.Produtos", b =>
-                {
-                    b.Navigation("Fotos");
                 });
 #pragma warning restore 612, 618
         }

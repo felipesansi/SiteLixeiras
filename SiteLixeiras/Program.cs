@@ -8,26 +8,33 @@ using SiteLixeiras.Sevices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Adiciona os controllers com views
 builder.Services.AddControllersWithViews();
 
-// Configurar o Entity Framework com o SQL Server
-// Adiciona o contexto do banco de dados como um serviço usando o Entity Framework Core
+// Configuração do banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configurar o repositórios
+// Repositórios e serviços
 builder.Services.AddTransient<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddTransient<IProdutosRepositorio, ProdutosRepositorio>();
+builder.Services.AddTransient<IPedido, PedidoRepositorio>();
 builder.Services.AddScoped<ISeedUserRolesInitial, SeedUserRolesInitial>();
 
-// Registra o serviço `CarrinhoCompra` no contêiner de injeção de dependências com o ciclo de vida "Scoped"
+// Adiciona o IHttpContextAccessor (ESSENCIAL para acessar a sessão no CarrinhoCompra)
+builder.Services.AddHttpContextAccessor();
+
+// Configura o carrinho de compras com sessão
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinhoCompra(sp));
 
+// Upload e Dropbox
+builder.Services.AddTransient<IUploadFotosService, UploadFotosService>();
+builder.Services.Configure<DropboxSettings>(builder.Configuration.GetSection("Dropbox"));
 
+// Carrega a configuração do MercadoPago
+builder.Services.Configure<MercadoPagoSettings>(builder.Configuration.GetSection("MercadoPago"));
 
-// Configurar o AutoMapper
-
+// Sessão (deve vir ANTES de Authentication/Authorization no pipeline)
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -35,7 +42,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
     options.Cookie.Name = "Lixeiras.Session";
 });
-// configurar identity
+
+// Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -50,20 +58,24 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 
+
+app.UseSession();               
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+// Criação de perfis e usuários padrão
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -71,18 +83,14 @@ using (var scope = app.Services.CreateScope())
     await seed.SeedRolesAsync();
     await seed.SeedUsersAsync();
 }
-app.UseSession();
 
+// Rotas
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-);
-
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

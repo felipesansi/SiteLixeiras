@@ -1,0 +1,76 @@
+﻿@model IEnumerable<SiteLixeiras.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Painel de Pedidos";
+}
+
+<h2>Pedidos Recebidos</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhum pedido foi realizado ainda.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Usuário</th>
+                <th>Data do Pedido</th>
+                <th>Endereço</th>
+                <th>Itens</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in Model)
+            {
+                <tr>
+                    <td>@pedido.PedidoId</td>
+                    <td>@pedido.Usuario?.Email</td>
+                    <td>@pedido.PedidoEnviado.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        @pedido.EnderecoEntrega?.Rua, @pedido.EnderecoEntrega?.Numero<br />
+                        @pedido.EnderecoEntrega?.Bairro - @pedido.EnderecoEntrega?.Cidade/@pedido.EnderecoEntrega?.Estado<br />
+                        CEP: @pedido.EnderecoEntrega?.Cep
+                    </td>
+                    <td>
+                        <ul>
+                            @foreach (var item in pedido.PedidoItens)
+                            {
+                                <li>@item.Produto?.Nome - @item.Quantidade x @item.Preco.ToString("C")</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>@pedido.PedidoTotal.ToString("C")</td>
+                    <td>
+                        @if (pedido.PedididoEntregue == null)
+                        {
+                            <span class="text-danger">Pendente</span>
+                        }
+                        else
+                        {
+                            <span class="text-success">Entregue em @pedido.PedididoEntregue?.ToString("dd/MM/yyyy")</span>
+                        }
+                    </td>
+                    <td>
+                        @if (pedido.PedididoEntregue == null)
+                        {
+                            <form asp-action="MarcarComoEntregue" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@pedido.PedidoId" />
+                                <button type="submit" class="btn btn-sm btn-success">Marcar como Entregue</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Concluído</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -8,36 +8,49 @@ namespace SiteLixeiras.Models
     {
         [Key]
         public int Id_Produto { get; set; }
-        
-        [Required(ErrorMessage = "O campo Nome é obrigatório.")]
+
+        [Required(ErrorMessage = "O campo Código é obrigatório.")]
         [Display(Name = "Código do Produto")]
         public int Codigo { get; set; }
-      
+
         [Required(ErrorMessage = "O campo Nome é obrigatório.")]
         [Display(Name = "Nome do Produto")]
         public required string Nome { get; set; }
-      
-        [Required(ErrorMessage = "O campo Nome é obrigatório.")]
+
+        [Required(ErrorMessage = "O campo Descrição é obrigatório.")]
         [Display(Name = "Descrição do Produto")]
         [StringLength(400, ErrorMessage = "A descrição deve ter no máximo 400 caracteres.")]
         public required string Descricao { get; set; }
-      
-        [Required(ErrorMessage = "O campo Nome é obrigatório.")]
-        [Display(Name = "Preço do Produto")]
-        [Range(0.01, 9999.99, ErrorMessage = "O preço deve ser entre 0,01 e 9999,99.")]
-        [Column(TypeName = "decimal(18,2)")]
 
+        [Required(ErrorMessage = "O campo Altura é obrigatório.")]
+        [Display(Name = "Altura (cm)")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal altura { get; set; }
+
+        [Required(ErrorMessage = "O campo Largura é obrigatório.")]
+        [Display(Name = "Largura (cm)")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal largura { get; set; }
+
+
+        [Required]
+        [Display(Name = "Preço do imóvel")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Preco { get; set; }
 
         [Display(Name = "Imagem do Produto")]
         public string? Imagem { get; set; }
-        [Display (Name = "Aparecer na pagina inicial")]
-        public bool Destaque {  get; set; }
+        [Display(Name = "Imagem do Produto")]
+        public string? ImagemThumbUrl { get; set; }
 
+        [Display(Name = "Aparecer na página inicial")]
+        public bool Destaque { get; set; }
 
-        public int CategoriaId { get; set; }  // relacionamentos entre lanches e categoria
-        public  Categoria Categoria { get; set; }  // relacionamentos entre lanches e categoria
+        [Required(ErrorMessage = "A categoria é obrigatória.")]
+        public int CategoriaId { get; set; }
 
-
+        [ForeignKey("CategoriaId")]
+        public Categoria? Categoria { get; set; }
+        public List <Foto> Fotos { get; set; } = new List<Foto>();
     }
 }

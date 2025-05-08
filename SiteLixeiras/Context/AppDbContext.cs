@@ -19,5 +19,10 @@ namespace SiteLixeiras.Context
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoDetalhe> PedidoDetalhes { get; set; }
         public DbSet<CarrinhoCompraItem> CarrinhoCompraItens { get; set; }
+        public DbSet<Foto> Fotos { get; set; }
+        public DbSet<DadosDropBox> DadosDropBox { get; set; }
+        public DbSet<Notificacao> Notificacoes { get; set; }
+
+
     }
 }

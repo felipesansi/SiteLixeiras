@@ -1,0 +1,53 @@
+﻿@model IEnumerable<SiteLixeiras.Models.Produtos>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="mb-4">Produtos</h1>
+
+<div class="mb-3">
+    <a asp-area="Admin" asp-controller="AdminProdutos" asp-action="Create" class="btn btn-primary">
+        <i class="fa-solid fa-plus me-2"></i> Adicionar novo produto
+    </a>
+</div>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                @if (!string.IsNullOrEmpty(item.ImagemThumbUrl))
+                {
+                    <img src="@Url.Content(item.ImagemThumbUrl)" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Imagem do produto" />
+                }
+               
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">@item.Nome</h5>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text"><strong>Código:</strong> @item.Codigo</p>
+                    <p class="card-text"><strong>Descrição:</strong> @item.Descricao</p>
+                    <p class="card-text"><strong>Preço:</strong> @item.Preco.ToString("C")</p>
+                    <p class="card-text"><strong>Altura:</strong> @item.altura cm</p>
+                    <p class="card-text"><strong>Largura:</strong> @item.largura cm</p>
+                    <p class="card-text"><strong>Destaque:</strong> @(item.Destaque ? "Sim" : "Não")</p>
+                    <p class="card-text"><strong>Categoria:</strong> @item.Categoria?.Nome</p>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+                    <a asp-area="Admin" asp-controller="AdminProdutos" asp-action="Edit" asp-route-id="@item.Id_Produto" class="btn btn-warning btn-sm">
+                        <i class="fa-solid fa-pen-to-square me-1"></i> Editar
+                    </a>
+                    <a asp-area="Admin" asp-controller="AdminProdutos" asp-action="Delete" asp-route-id="@item.Id_Produto" class="btn btn-danger btn-sm">
+                        <i class="fa-solid fa-trash me-1"></i> Excluir
+                    </a>
+                    <a asp-area="Admin" asp-controller="AdminProdutos" asp-action="Details" asp-route-id="@item.Id_Produto" class="btn btn-info btn-sm">
+                        <i class="fa-solid fa-eye me-1"></i> Detalhes
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

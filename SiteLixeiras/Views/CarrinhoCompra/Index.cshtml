@@ -4,50 +4,65 @@
     ViewData["Title"] = "Carrinho de Compras";
 }
 
-<h2 class="mt-4">Seu Carrinho de Compras</h2>
+<div class="container py-4">
+    <h2 class="mb-4">Seu Carrinho de Compras</h2>
 
-@if (!Model.CarrinhoCompra.CarrinhoCompraItems.Any())
-{
-    <div class="alert alert-info mt-4">
-        Seu carrinho está vazio.
-    </div>
-}
-else
-{
-    <table class="table table-bordered mt-4">
-        <thead class="table-light">
-            <tr>
-                <th>Produto</th>
-                <th>Quantidade</th>
-                <th>Preço</th>
-                <th>Subtotal</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.CarrinhoCompra.CarrinhoCompraItems)
-            {
+    @if (Model?.CarrinhoCompra?.CarrinhoCompraItems == null || !Model.CarrinhoCompra.CarrinhoCompraItems.Any())
+    {
+        <div class="alert alert-info">
+            Seu carrinho está vazio.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light text-center">
                 <tr>
-                    <td>@item.Produtos.Nome</td>
-                    <td>@item.Quantidade</td>
-                    <td>R$ @item.Produtos.Preco.ToString("F2")</td>
-                    <td>R$ @(item.Quantidade * item.Produtos.Preco).ToString("F2")</td>
-                    <td>
-                        <form asp-controller="CarrinhoCompra" asp-action="RemoverDoCarrinho" method="post" onsubmit="return confirm('Tem certeza que deseja remover este item?');">
-                            <input type="hidden" name="id" value="@item.Produtos.Id_Produto" />
-                            <button type="submit" class="btn btn-danger btn-sm">Remover</button>
-                        </form>
-                    </td>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unitário</th>
+                    <th>Subtotal</th>
+                    <th>Ação</th>
                 </tr>
-            }
-        </tbody>
-        <tfoot class="table-light">
-            <tr>
-                <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                <td colspan="2"><strong>R$ @Model.TotalCarrinho.ToString("F2")</strong></td>
-            </tr>
-        </tfoot>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CarrinhoCompra.CarrinhoCompraItems)
+                {
+                    var subtotal = item.Quantidade * item.Produtos.Preco;
 
-    <a asp-controller="Pedido" asp-action="Checkout" class="btn btn-success">Finalizar Compra</a>
-}
+                    <tr class="text-center">
+                        <td class="text-start">@item.Produtos.Nome</td>
+                        <td>@item.Quantidade</td>
+                        <td>@item.Produtos.Preco.ToString("C")</td>
+                        <td>@subtotal.ToString("C")</td>
+                        <td>
+                            <form asp-controller="CarrinhoCompra"
+                                  asp-action="RemoverDoCarrinho"
+                                  method="post"
+                                  onsubmit="return confirm('Deseja remover este item do carrinho?');">
+                                <input type="hidden" name="id" value="@item.Produtos.Id_Produto" />
+                                <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot class="table-light fw-bold text-center">
+                <tr>
+                    <td colspan="3" class="text-end">Total:</td>
+                    <td colspan="2">@Model.TotalCarrinho.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="text-end">
+            <a asp-controller="Pedidos" asp-action="Checkout" class="btn btn-success">
+                Finalizar Compra
+            </a>
+          
+            <a asp-controller="Home" asp-action="Produtos" class="btn btn-outline-primary">
+                Continuar comprando
+            </a>
+        </div>
+    }
+</div>
