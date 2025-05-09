@@ -1,0 +1,2 @@
+﻿# Ignorar appsettings.json (mas manter o appsettings.example.json, se existir)
+appsettings.json

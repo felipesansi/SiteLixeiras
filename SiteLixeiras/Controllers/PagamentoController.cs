@@ -35,17 +35,17 @@ namespace SiteLixeiras.Controllers
                 return RedirectToAction("Index", "CarrinhoCompra");
             }
 
-            // Cria lista de itens para a preferência
+            
             var itens_preferencias = carrinho.Select(i => new PreferenceItemRequest
             {
                 Id = i.Produtos.Id_Produto.ToString(),
                 Title = i.Produtos.Nome,
                 CurrencyId = "BRL",
                 Quantity = i.Quantidade,
-                UnitPrice = Math.Round(i.Produtos.Preco, 2) // Garante valor válido
+                UnitPrice = Math.Round(i.Produtos.Preco, 2)
             }).ToList();
 
-            // Criação da preferência
+           
             var preferenceRequest = new PreferenceRequest
             {
                 Items = itens_preferencias,
@@ -56,13 +56,30 @@ namespace SiteLixeiras.Controllers
                     Pending = Url.Action("Aguardando", "Pagamento", null, Request.Scheme)
                 },
                 AutoReturn = "approved",
+                NotificationUrl = Url.Action("Notificacao", "Pagamento", null, Request.Scheme),
             };
 
-            // Cria a preferência e redireciona para o checkout do Mercado Pago
+            
             var client = new PreferenceClient();
             var preferencia_resposta = await client.CreateAsync(preferenceRequest);
 
             return Redirect(preferencia_resposta.InitPoint);
+        }
+        public IActionResult PagamentoSucesso(int enderecoId)
+        {
+            TempData["Sucesso"] = "Pagamento realizado com sucesso!";
+            _carrinhoCompra.LimparCarrinho();
+            return RedirectToAction("Index", "Home");
+        }
+        public IActionResult Falha()
+        {
+            TempData["Erro"] = "Ocorreu um erro ao processar o pagamento.";
+            return RedirectToAction("Falha", "Pagamento");
+        }
+        public IActionResult Aguardando()
+        {
+            TempData["Aguardando"] = "Seu pagamento está aguardando confirmação.";
+            return RedirectToAction("Index", "CarrinhoCompra");
         }
     }
 }

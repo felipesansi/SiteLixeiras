@@ -61,7 +61,7 @@ namespace SiteLixeiras.Controllers
         {
             if (User.IsInRole("User"))
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Obtém o ID do usuário autenticado
 
                 var notificacoes = await _context.Notificacoes
                     .Where(n => n.UsuarioId == userId && !n.Lida)

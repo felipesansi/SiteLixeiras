@@ -24,7 +24,7 @@ namespace SiteLixeiras.Controllers
 
         public async Task <IActionResult> Checkout()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // verifica se o usuário está autenticado
 
             var enderecos = await _context.EnderecosEntregas
                 .Where(e => e.UsuarioId == userId)
@@ -65,7 +65,7 @@ namespace SiteLixeiras.Controllers
         [HttpPost]
         public async Task<IActionResult> FinalizarPedido(int enderecoId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // verifica se o usuário está autenticado    
 
             var endereco = await _context.EnderecosEntregas
                 .FirstOrDefaultAsync(e => e.EnderecoEntregaId == enderecoId && e.UsuarioId == userId);
@@ -95,7 +95,7 @@ namespace SiteLixeiras.Controllers
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
 
-            carrinhoCompra.LimparCarrinho();
+           
 
             return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
 

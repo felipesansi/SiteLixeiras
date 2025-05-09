@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Pagamento Falhou";
+}
+
+<div class="container mt-5">
+    <div class="alert alert-danger text-center" role="alert">
+        <h4 class="alert-heading">Opa! Algo deu errado...</h4>
+        <p>Infelizmente, não conseguimos processar o seu pagamento.</p>
+        <hr>
+        <p class="mb-0">Por favor, tente novamente ou escolha outra forma de pagamento.</p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "CarrinhoCompra")" class="btn btn-primary">
+            Voltar para o carrinho
+        </a>
+    </div>
+</div>
