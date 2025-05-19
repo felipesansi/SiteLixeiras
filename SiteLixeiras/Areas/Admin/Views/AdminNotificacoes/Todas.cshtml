@@ -1,0 +1,38 @@
+﻿@model List<SiteLixeiras.Models.Notificacao>
+@{
+    ViewData["Title"] = "Todas as Notificações";
+}
+
+<h2 class="mb-4">📩 Todas as Notificações</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Usuário</th>
+            <th>Mensagem</th>
+            <th>Data</th>
+            <th>Origem</th>
+            <th>Lida</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Usuario?.UserName</td>
+                <td>@item.Mensagem</td>
+                <td>@item.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    @(item.EnviadaPeloAdmin ? "Admin" : "Usuário")
+                </td>
+                <td>
+                    @(item.Lida ? "Sim" : "Não")
+                </td>
+                <td>
+                    <a asp-action="Detalhes" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Detalhes</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

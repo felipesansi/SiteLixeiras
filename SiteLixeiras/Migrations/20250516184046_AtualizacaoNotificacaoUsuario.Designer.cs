@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiteLixeiras.Context;
 
@@ -11,9 +12,11 @@ using SiteLixeiras.Context;
 namespace SiteLixeiras.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516184046_AtualizacaoNotificacaoUsuario")]
+    partial class AtualizacaoNotificacaoUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -409,9 +412,6 @@ namespace SiteLixeiras.Migrations
                     b.Property<DateTime?>("DataResposta")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("EnviadaPeloAdmin")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("Lida")
                         .HasColumnType("bit");
 
@@ -441,18 +441,8 @@ namespace SiteLixeiras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PedidoId"));
 
-                    b.Property<DateTime?>("DataPagamento")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("EnderecoEntregaId")
                         .HasColumnType("int");
-
-                    b.Property<string>("MercadoPagoPaymentId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("Pago")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("PedididoEntregue")
                         .HasColumnType("datetime2");

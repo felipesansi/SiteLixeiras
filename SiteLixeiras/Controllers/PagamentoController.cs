@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using MercadoPago;
 using MercadoPago.Config;
 using MercadoPago.Client.Preference;
-using MercadoPago.Resource.Preference;
 using SiteLixeiras.Models;
 
 namespace SiteLixeiras.Controllers
@@ -22,30 +20,32 @@ namespace SiteLixeiras.Controllers
 
         public async Task<IActionResult> CriarPagamento(int enderecoId)
         {
-            
             MercadoPagoConfig.AccessToken = _mercadoPagoSettings.AccessToken;
 
-            
             var carrinho = _carrinhoCompra.GetCarrinhoCompraItems();
-
-            
             if (carrinho == null || !carrinho.Any())
             {
                 TempData["Erro"] = "Seu carrinho está vazio.";
                 return RedirectToAction("Index", "CarrinhoCompra");
             }
 
-            
             var itens_preferencias = carrinho.Select(i => new PreferenceItemRequest
             {
-                Id = i.Produtos.Id_Produto.ToString(),
                 Title = i.Produtos.Nome,
-                CurrencyId = "BRL",
                 Quantity = i.Quantidade,
-                UnitPrice = Math.Round(i.Produtos.Preco, 2)
+                UnitPrice = Math.Round(i.Produtos.Preco, 2),
+                CurrencyId = "BRL",
+                Description = i.Produtos.Descricao,
+                PictureUrl = i.Produtos.ImagemThumbUrl
             }).ToList();
 
-           
+            var metodos_pagamento= new PreferencePaymentMethodsRequest
+            {
+                ExcludedPaymentTypes = new List<PreferencePaymentTypeRequest>(),
+                Installments = 12 // até 12 parcelas
+            };
+
+          
             var preferenceRequest = new PreferenceRequest
             {
                 Items = itens_preferencias,
@@ -56,29 +56,31 @@ namespace SiteLixeiras.Controllers
                     Pending = Url.Action("Aguardando", "Pagamento", null, Request.Scheme)
                 },
                 AutoReturn = "approved",
-                NotificationUrl = Url.Action("Notificacao", "Pagamento", null, Request.Scheme),
+                PaymentMethods = metodos_pagamento
             };
 
-            
             var client = new PreferenceClient();
-            var preferencia_resposta = await client.CreateAsync(preferenceRequest);
+            var preference = await client.CreateAsync(preferenceRequest);
 
-            return Redirect(preferencia_resposta.InitPoint);
+            return Redirect(preference.InitPoint);
         }
+
         public IActionResult PagamentoSucesso(int enderecoId)
         {
-            TempData["Sucesso"] = "Pagamento realizado com sucesso!";
+            TempData["Sucesso"] = "Pagamento aprovado com sucesso!";
             _carrinhoCompra.LimparCarrinho();
             return RedirectToAction("Index", "Home");
         }
+
         public IActionResult Falha()
         {
-            TempData["Erro"] = "Ocorreu um erro ao processar o pagamento.";
-            return RedirectToAction("Falha", "Pagamento");
+            TempData["Erro"] = "O pagamento falhou. Tente novamente.";
+            return RedirectToAction("Index", "CarrinhoCompra");
         }
+
         public IActionResult Aguardando()
         {
-            TempData["Aguardando"] = "Seu pagamento está aguardando confirmação.";
+            TempData["Aguardando"] = "O pagamento está aguardando confirmação.";
             return RedirectToAction("Index", "CarrinhoCompra");
         }
     }

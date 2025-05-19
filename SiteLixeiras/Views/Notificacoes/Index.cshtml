@@ -1,0 +1,59 @@
+﻿@model IEnumerable<SiteLixeiras.Models.Notificacao>
+@{
+    ViewData["Title"] = "Minhas Notificações";
+}
+
+<h2 class="mb-4">Minhas Notificações</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Você ainda não possui notificações.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-primary">
+            <tr>
+                <th>Mensagem</th>
+                <th>Resposta</th>
+                <th>Data</th>
+                <th>Lida</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var n in Model)
+            {
+                <tr>
+                    <td>@n.Mensagem</td>
+                    <td>
+                        @if (!string.IsNullOrWhiteSpace(n.Resposta))
+                        {
+                            <span class="text-success">@n.Resposta</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Aguardando resposta</span>
+                        }
+                    </td>
+                    <td>@n.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        @if (n.Lida)
+                        {
+                            <span class="badge bg-success">Sim</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Não</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Detalhes" asp-route-id="@n.Id">Ver detalhes</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
@@ -12,9 +13,12 @@ namespace SiteLixeiras.Areas.Admin.Controllers
     {
         private readonly AppDbContext _context;
 
-        public AdminPedidosController(AppDbContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public AdminPedidosController(AppDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -28,7 +32,7 @@ namespace SiteLixeiras.Areas.Admin.Controllers
 
             foreach (var pedido in pedidos)
             {
-                // Verifica se já existe uma notificação para esse pedido
+                
                 if (!_context.Notificacoes.Any(n => n.UsuarioId == pedido.UsuarioId && n.Mensagem.Contains($"Pedido #{pedido.PedidoId}")))
                 {
                     // Cria uma notificação
@@ -36,7 +40,7 @@ namespace SiteLixeiras.Areas.Admin.Controllers
                     {
                         UsuarioId = pedido.UsuarioId,
                         Mensagem = $"Seu pedido #{pedido.PedidoId} foi visualizado por um administrador.",
-                        DataCriacao = DateTime.Now  // Definindo a data de criação da notificação
+                        DataCriacao = DateTime.Now  
                     });
                 }
             }
@@ -59,12 +63,33 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             _context.Notificacoes.Add(new Notificacao
             {
                 UsuarioId = pedido.UsuarioId,
-                Mensagem = $"Seu pedido #{pedido.PedidoId} foi marcado como entregue.",
+                Mensagem = $"Seu pedido #{pedido.PedidoId} Seu pedido foi entregue a transportadora ou mercado livre para ser entregue no seu endereço.",
                 DataCriacao = DateTime.Now  // Data da notificação
             });
 
             await _context.SaveChangesAsync();
 
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> EnviarMensagem(string usuarioId, string mensagem)
+        {
+            if (string.IsNullOrWhiteSpace(mensagem)) return BadRequest("A mensagem não pode estar vazia.");
+
+            var usuario = await _userManager.FindByIdAsync(usuarioId);
+            if (usuario == null) return NotFound("Usuário não encontrado.");
+
+            var notificacao = new Notificacao
+            {
+                UsuarioId = usuarioId,
+                Mensagem = mensagem,
+                DataCriacao = DateTime.Now
+            };
+
+            _context.Notificacoes.Add(notificacao);
+            await _context.SaveChangesAsync();
+
+            TempData["MensagemEnviada"] = "Mensagem enviada com sucesso!";
             return RedirectToAction("Index");
         }
     }

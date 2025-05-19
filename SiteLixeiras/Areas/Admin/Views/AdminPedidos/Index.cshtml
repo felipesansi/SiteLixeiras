@@ -1,76 +1,81 @@
 ﻿@model IEnumerable<SiteLixeiras.Models.Pedido>
 
 @{
-    ViewData["Title"] = "Painel de Pedidos";
+    ViewData["Title"] = "Pedidos";
 }
 
-<h2>Pedidos Recebidos</h2>
+<h1>Pedidos</h1>
 
-@if (!Model.Any())
+@if (TempData["MensagemEnviada"] != null)
 {
-    <div class="alert alert-info">Nenhum pedido foi realizado ainda.</div>
+    <div class="alert alert-success">@TempData["MensagemEnviada"]</div>
 }
-else
+
+@if (TempData["MensagemExcluida"] != null)
 {
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark">
+    <div class="alert alert-warning">@TempData["MensagemExcluida"]</div>
+}
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Usuário</th>
+            <th>Data</th>
+            <th>Entregue?</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pedido in Model)
+        {
+            var modalId = $"mensagemModal-{pedido.PedidoId}";
             <tr>
-                <th>#</th>
-                <th>Usuário</th>
-                <th>Data do Pedido</th>
-                <th>Endereço</th>
-                <th>Itens</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Ações</th>
+                <td>@pedido.PedidoId</td>
+                <td>@pedido.Usuario?.UserName</td>
+                <td>@pedido.PedidoEnviado.ToString("dd/MM/yyyy")</td>
+                <td>
+                    @(pedido.PedididoEntregue.HasValue
+                        ? pedido.PedididoEntregue.Value.ToString("dd/MM/yyyy")
+                        : "Não")
+                </td>
+                <td>
+                    <form asp-action="MarcarComoEntregue" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@pedido.PedidoId" />
+                        <button type="submit" class="btn btn-sm btn-success">Marcar como entregue para tranportadora</button>
+                    </form>
+
+                    <!-- Botão abre modal -->
+                    <button type="button" class="btn btn-sm btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#@modalId">
+                        Enviar mensagem
+                    </button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var pedido in Model)
-            {
-                <tr>
-                    <td>@pedido.PedidoId</td>
-                    <td>@pedido.Usuario?.Email</td>
-                    <td>@pedido.PedidoEnviado.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>
-                        @pedido.EnderecoEntrega?.Rua, @pedido.EnderecoEntrega?.Numero<br />
-                        @pedido.EnderecoEntrega?.Bairro - @pedido.EnderecoEntrega?.Cidade/@pedido.EnderecoEntrega?.Estado<br />
-                        CEP: @pedido.EnderecoEntrega?.Cep
-                    </td>
-                    <td>
-                        <ul>
-                            @foreach (var item in pedido.PedidoItens)
-                            {
-                                <li>@item.Produto?.Nome - @item.Quantidade x @item.Preco.ToString("C")</li>
-                            }
-                        </ul>
-                    </td>
-                    <td>@pedido.PedidoTotal.ToString("C")</td>
-                    <td>
-                        @if (pedido.PedididoEntregue == null)
-                        {
-                            <span class="text-danger">Pendente</span>
-                        }
-                        else
-                        {
-                            <span class="text-success">Entregue em @pedido.PedididoEntregue?.ToString("dd/MM/yyyy")</span>
-                        }
-                    </td>
-                    <td>
-                        @if (pedido.PedididoEntregue == null)
-                        {
-                            <form asp-action="MarcarComoEntregue" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@pedido.PedidoId" />
-                                <button type="submit" class="btn btn-sm btn-success">Marcar como Entregue</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <span class="badge bg-secondary">Concluído</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
+            <!-- Modal Enviar Mensagem -->
+            <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@($"{modalId}Label")" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form asp-action="EnviarMensagem" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="@($"{modalId}Label")">Enviar mensagem para @pedido.Usuario?.UserName</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="usuarioId" value="@pedido.UsuarioId" />
+                                <div class="mb-3">
+                                    <label for="mensagem" class="form-label">Mensagem</label>
+                                    <textarea name="mensagem" class="form-control" rows="4" required></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+</table>

@@ -39,7 +39,12 @@
                             <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminFoto" asp-action="EnviarFotos">Enviar Fotos</a>
                         </li>
                         <li class="nav-item me-3">
-                            <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminPedidos" asp-action="Index">Admin</a>
+                            <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminPedidos" asp-action="Index">Gerenciar Pedidos</a>
+                        </li>
+
+                        @await Component.InvokeAsync("NotificacoesSino")
+
+
                     </ul>
                 </div>
             </div>

@@ -22,9 +22,10 @@ namespace SiteLixeiras.Controllers
             this.carrinhoCompra = carrinhoCompra;
         }
 
-        public async Task <IActionResult> Checkout()
+        // Tela para exibir endereços cadastrados
+        public async Task<IActionResult> Checkout()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // verifica se o usuário está autenticado
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var enderecos = await _context.EnderecosEntregas
                 .Where(e => e.UsuarioId == userId)
@@ -32,41 +33,28 @@ namespace SiteLixeiras.Controllers
 
             return View(enderecos);
         }
+
+        // Cadastro de novo endereço via POST
         [HttpPost]
         public IActionResult Checkout(EnderecoEntrega enderecoEntrega)
         {
-            int totalPedido = 0;
-            decimal valorTotal = 0;
-
-            var carrinhoCompraItens = carrinhoCompra.GetCarrinhoCompraItems();
-            foreach (var item in carrinhoCompraItens)
-            {
-                totalPedido += item.Quantidade;
-                valorTotal += item.Produtos.Preco * item.Quantidade;
-            }
-            var pedido = new Pedido
-            {
-                EnderecoEntrega = enderecoEntrega,
-                TotalItensPedidos = totalPedido,
-                PedidoTotal = valorTotal,
-              
-            };
-
             if (ModelState.IsValid)
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 enderecoEntrega.UsuarioId = userId;
                 _context.EnderecosEntregas.Add(enderecoEntrega);
                 _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Checkout");
             }
+
             return View(enderecoEntrega);
         }
+
+        // Finaliza o pedido e redireciona para o pagamento
         [HttpPost]
         public async Task<IActionResult> FinalizarPedido(int enderecoId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // verifica se o usuário está autenticado    
-
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var endereco = await _context.EnderecosEntregas
                 .FirstOrDefaultAsync(e => e.EnderecoEntregaId == enderecoId && e.UsuarioId == userId);
 
@@ -95,18 +83,14 @@ namespace SiteLixeiras.Controllers
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
 
-           
-
             return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
-
         }
+
+        // Confirmação visual do pedido após pagamento
         public IActionResult Confirmacao()
         {
             ViewBag.Mensagem = "Pedido realizado com sucesso!";
             return View();
         }
-
-
-
     }
 }

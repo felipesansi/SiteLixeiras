@@ -1,0 +1,37 @@
+﻿@model List<SiteLixeiras.Models.Notificacao>
+@{
+    ViewData["Title"] = "Novas Respostas de Usuários";
+}
+
+<h2 class="mb-4">📨 Novas Respostas de Usuários</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhuma nova resposta encontrada.</div>
+}
+else
+{
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>Mensagem</th>
+                <th>Data</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Usuario?.UserName</td>
+                    <td>@item.Mensagem</td>
+                    <td>@item.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <a asp-action="Detalhes" asp-route-id="@item.Id" class="btn btn-sm btn-success">Visualizar e Responder</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

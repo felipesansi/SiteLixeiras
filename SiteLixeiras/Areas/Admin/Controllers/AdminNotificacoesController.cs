@@ -1,66 +1,65 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
 using SiteLixeiras.Models;
 
-namespace SiteLixeiras.Controllers
+namespace SiteLixeiras.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "User")]
-    public class NotificacoesController : Controller
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    public class AdminNotificacoesController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public NotificacoesController(AppDbContext context, UserManager<IdentityUser> userManager)
+        public AdminNotificacoesController(AppDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Todas()
         {
-
-            var userId = _userManager.GetUserId(User);
-
             var notificacoes = await _context.Notificacoes
-                .Where(n => n.UsuarioId == userId)
+                .Include(n => n.Usuario)
                 .OrderByDescending(n => n.DataCriacao)
                 .ToListAsync();
-
-            
-            var naoLidas = notificacoes.Where(n => !n.Lida).ToList();
-            if (naoLidas.Any())
-            {
-                foreach (var n in naoLidas)
-                {
-                    n.Lida = true;
-                }
-                await _context.SaveChangesAsync();
-            }
 
             return View(notificacoes);
         }
 
+        public async Task<IActionResult> NovasRespostas()
+        {
+            var novas = await _context.Notificacoes
+                .Include(n => n.Usuario)
+                .Where(n => !n.EnviadaPeloAdmin && !n.Lida)
+                .OrderByDescending(n => n.DataCriacao)
+                .ToListAsync();
 
+            return View(novas);
+        }
 
+      
         public async Task<IActionResult> Detalhes(int id)
         {
-            var userId = _userManager.GetUserId(User);
             var notificacao = await _context.Notificacoes
-                .Where(n => n.Id == id && n.UsuarioId == userId)
-                .FirstOrDefaultAsync();
+                .Include(n => n.Usuario)
+                .FirstOrDefaultAsync(n => n.Id == id);
 
             if (notificacao == null)
-            {
                 return NotFound();
-            }
+
           
+            if (!notificacao.EnviadaPeloAdmin && !notificacao.Lida)
+            {
+                notificacao.Lida = true;
+                _context.Update(notificacao);
+                await _context.SaveChangesAsync();
+            }
+
             return View(notificacao);
         }
 
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Responder(int id, string resposta)
@@ -68,25 +67,21 @@ namespace SiteLixeiras.Controllers
             if (string.IsNullOrWhiteSpace(resposta))
             {
                 TempData["Erro"] = "A resposta não pode ser vazia.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Todas");
             }
-
-            var userId = _userManager.GetUserId(User);
 
             var notificacaoOriginal = await _context.Notificacoes
-                .Where(n => n.Id == id && n.UsuarioId == userId)
-                .FirstOrDefaultAsync();
+                .Include(n => n.Usuario)
+                .FirstOrDefaultAsync(n => n.Id == id);
 
             if (notificacaoOriginal == null)
-            {
                 return NotFound();
-            }
 
             var novaNotificacao = new Notificacao
             {
-                UsuarioId = userId,
+                UsuarioId = notificacaoOriginal.UsuarioId,
                 Mensagem = resposta,
-                EnviadaPeloAdmin = false,
+                EnviadaPeloAdmin = true,
                 Lida = false,
                 DataCriacao = DateTime.Now
             };
@@ -95,8 +90,7 @@ namespace SiteLixeiras.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Sucesso"] = "Resposta enviada com sucesso!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Todas");
         }
-
     }
 }

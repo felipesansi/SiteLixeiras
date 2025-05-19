@@ -12,14 +12,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3 ">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="w-75" src="~/imagens/logo-icena-txt.png" alt="Alternate Text" /></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="w-75" src="~/imagens/logo-icena-txt.png" alt="Logo SiteLixeiras" />
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,9 +28,9 @@
                     <ul class="navbar-nav">
                         @if (User.IsInRole("Admin"))
                         {
-                        <li class="nav-item me-3">
-                            <a class="nav-link text-white" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin</a>
-                        </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-white" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin</a>
+                            </li>
                         }
                         <li class="nav-item me-3">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -50,6 +50,7 @@
                         <li class="nav-item me-3">
                             @Html.Partial("_LogoutPartial")
                         </li>
+                        
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item dropdown me-3">
@@ -63,19 +64,28 @@
                                         </span>
                                     }
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificacoesDropdown">
+                                <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 320px;" aria-labelledby="notificacoesDropdown">
                                     @if (ViewBag.Notificacoes != null && ViewBag.Notificacoes.Count > 0)
                                     {
                                         foreach (var n in ViewBag.Notificacoes)
                                         {
-                                            <li><span class="dropdown-item text-wrap">@n.Mensagem</span></li>
+                                            <li class="mb-2">
+                                                <div>
+                                                    <strong>Mensagem:</strong><br />
+                                                    <span>@n.Mensagem</span>
+                                                </div>
+                                                @if (!string.IsNullOrWhiteSpace(n.Resposta))
+                                                {
+                                                    <div class="mt-2 alert alert-info p-2">
+                                                        <strong>Resposta do admin:</strong><br />
+                                                        <small>@n.Resposta</small>
+                                                    </div>
+                                                }
+                                            </li>
+                                            <li><hr class="dropdown-divider" /></li>
                                         }
-                                        <li><hr class="dropdown-divider" /></li>
-                                        <li>
-                                            <form method="post" asp-controller="Notificacoes" asp-action="MarcarTodasComoLidas">
-                                                <button type="submit" class="dropdown-item text-center text-primary fw-bold">Marcar todas como lidas</button>
-                                            </form>
-                                        </li>
+                                        <a class="dropdown-item text-center text-primary fw-bold" asp-controller="Notificacoes" asp-action="Index">Ver todas</a>
+
                                     }
                                     else
                                     {
@@ -84,7 +94,6 @@
                                 </ul>
                             </li>
                         }
-
 
                     </ul>
                 </div>
@@ -102,6 +111,7 @@
             &copy; 2025 - SiteLixeiras - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

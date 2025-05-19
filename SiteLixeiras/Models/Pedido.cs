@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace SiteLixeiras.Models
@@ -27,7 +29,7 @@ namespace SiteLixeiras.Models
         public DateTime PedidoEnviado { get; set; }
 
         [DataType(DataType.Text)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime? PedididoEntregue { get; set; }
 
         public List<PedidoDetalhe> PedidoItens { get; set; } = new();
@@ -36,5 +38,14 @@ namespace SiteLixeiras.Models
 
         [ForeignKey("EnderecoEntregaId")]
         public EnderecoEntrega? EnderecoEntrega { get; set; }
+
+        [MaxLength(100)]
+        public string? MercadoPagoPaymentId { get; set; }
+
+  
+        public bool Pago { get; set; } = false;
+
+     
+        public DateTime? DataPagamento { get; set; }
     }
 }

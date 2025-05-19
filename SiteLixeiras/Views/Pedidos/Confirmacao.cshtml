@@ -1,9 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Confirmação de Pedido";
 }
-
-<div class="alert alert-success mt-4">
-    <h4>@ViewBag.Mensagem</h4>
-    <p>Seu pedido foi enviado para o administrador. Você será notificado assim que ele for entregue.</p>
-    <a class="btn btn-outline-primary" href="/Home/Index">Voltar à Loja</a>
+<div class="container mt-4">
+    <div class="alert alert-success text-center">
+        <h4 class="mb-3">🎉 Pedido realizado com sucesso!</h4>
+        <p>@ViewBag.Mensagem</p>
+        <a class="btn btn-primary mt-3" href="@Url.Action("Index", "Home")">Voltar para a loja</a>
+    </div>
 </div>

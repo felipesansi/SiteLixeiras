@@ -15,7 +15,7 @@ namespace SiteLixeiras.Controllers
             _signInManager = signInManager;
         }
 
-        // Exibe a tela de login
+        
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -101,7 +101,7 @@ namespace SiteLixeiras.Controllers
             {
                 await _userManager.AddToRoleAsync(usuario, "User");
 
-                // Faz o login automático
+            
                 await _signInManager.SignInAsync(usuario, isPersistent: false);
 
                

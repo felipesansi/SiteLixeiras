@@ -1,0 +1,30 @@
+﻿@model SiteLixeiras.Models.Notificacao
+
+<h2>Detalhes da Notificação</h2>
+
+<div>
+    <strong>Mensagem do Admin:</strong>
+    <p>@Model.Mensagem</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Resposta))
+{
+    <div>
+        <strong>Sua resposta:</strong>
+        <p>@Model.Resposta</p>
+        <small>Respondido em @Model.DataResposta?.ToString("g")</small>
+    </div>
+}
+else
+{
+    <form asp-action="Responder" method="post">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <div class="mb-3">
+            <label for="resposta" class="form-label">Sua resposta</label>
+            <textarea name="resposta" id="resposta" class="form-control" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar resposta</button>
+    </form>
+}
+
+<a asp-action="Index">Voltar à lista</a>

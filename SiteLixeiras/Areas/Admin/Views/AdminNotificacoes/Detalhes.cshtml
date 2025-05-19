@@ -1,0 +1,30 @@
+﻿@model SiteLixeiras.Models.Notificacao
+@{
+    ViewData["Title"] = "Detalhes da Notificação";
+}
+
+<h2 class="mb-4">📝 Detalhes da Notificação</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Usuário:</strong> @Model.Usuario?.UserName</p>
+        <p><strong>Mensagem:</strong> @Model.Mensagem</p>
+        <p><strong>Data:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Origem:</strong> @(Model.EnviadaPeloAdmin ? "Admin" : "Usuário")</p>
+        <p><strong>Lida:</strong> @(Model.Lida ? "Sim" : "Não")</p>
+    </div>
+</div>
+
+<h4>Responder</h4>
+
+<form asp-action="Responder" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <div class="form-group">
+        <textarea name="resposta" class="form-control" rows="4" placeholder="Escreva sua resposta aqui..."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Enviar Resposta</button>
+    <a asp-action="Todas" class="btn btn-secondary mt-2">Voltar</a>
+</form>
