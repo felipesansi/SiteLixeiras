@@ -10,34 +10,40 @@
         @Html.AntiForgeryToken()
         <ul class="nav navbar-nav navbar-left">
             <li class="nav-item dropdown">
-                <!-- Exibe o e-mail do usuário -->
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     @User.Identity.Name
                 </a>
-                <!-- Itens do Dropdown -->
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-
-                    <!-- Exibe o nome do usuário -->
                     <li>
                         <span class="dropdown-item-text">
                             <strong>Usuário:</strong> @User.Identity.Name
                         </span>
-                        
                     </li>
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
-                    <!-- Exibe o e-mail do usuário -->
                     <li>
                         <span class="dropdown-item-text">
                             <strong>Email:</strong> @(_userManager.GetEmailAsync(await _userManager.GetUserAsync(User)).Result)
                         </span>
                     </li>
 
+                    @* Mostra apenas se estiver na role "User" *@
+                    @if (User.IsInRole("User"))
+                    {
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-controller="Pedidos" asp-action="HistoricoPedidos">
+                                <i class="fa-solid fa-box-archive me-2"></i> Histórico de Pedidos
+                            </a>
+                        </li>
+                    }
+
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
-                    <!-- Botão Logout -->
                     <li>
                         <button type="submit" class="dropdown-item rounded-pill bg-danger text-light">
                             Desconectar
@@ -52,12 +58,11 @@ else
 {
     <ul class="nav navbar-nav navbar-left">
         <li class="nav-item">
-            <a class="navbar-link text-white btn btn-outline-secondary  rounded-pill"
+            <a class="navbar-link text-white btn btn-outline-secondary rounded-pill"
                asp-controller="Account"
                asp-action="Login"
-               asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")" >
+               asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")">
                 <i class="fa-solid fa-circle-user fa-2x"></i>
-
             </a>
         </li>
     </ul>

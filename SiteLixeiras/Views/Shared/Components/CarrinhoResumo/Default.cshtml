@@ -1,7 +1,7 @@
 ﻿@model CarrinhoCompraViewModel
 
-<a asp-controller="CarrinhoCompra" asp-action="Index" class="btn btn-close-white position-relative">
-    🛒 
+<a asp-controller="CarrinhoCompra" asp-action="Index" class="btn bg-transparent position-relative text-white">
+    <i class="fas fa-shopping-cart fa-lg"></i>
     <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
         @Model.CarrinhoCompra.CarrinhoCompraItems.Count
     </span>

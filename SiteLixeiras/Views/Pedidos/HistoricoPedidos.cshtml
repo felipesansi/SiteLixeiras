@@ -1,0 +1,39 @@
+﻿@model List<SiteLixeiras.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Histórico de Pedidos";
+}
+
+<h2 class="my-4">Histórico de Pedidos</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        Você ainda não fez nenhum pedido.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var pedido in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Pedido #@pedido.PedidoId</h5>
+                        <p class="card-text">
+                            <strong>Data:</strong> @pedido.PedidoEnviado.ToString("dd/MM/yyyy")<br />
+                            <strong>Data de entrega ao tranportadora:</strong> @pedido.PedididoEntregue<br />
+                            <strong>Total:</strong>  @pedido.TotalItensPedidos.ToString("C")<br />
+                            <strong>Entrega:</strong> @pedido.EnderecoEntrega?.Cidade, @pedido.EnderecoEntrega?.Numero
+
+                        </p>
+                        <a href="@Url.Action("DetalhesPedido", "Pedidos", new { id = pedido.PedidoId })" class="btn btn-primary btn-sm">Detalhes do Pedido</a>
+
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

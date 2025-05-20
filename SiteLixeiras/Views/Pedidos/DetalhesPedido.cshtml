@@ -1,0 +1,61 @@
+﻿@model SiteLixeiras.Models.Pedido  
+
+@{
+    ViewData["Title"] = "Detalhes do Pedido";
+}
+
+<h2 class="my-4">Detalhes do Pedido #@Model.PedidoId</h2>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">Informações do Pedido</h5>
+        <p class="card-text">
+            <strong>Data da Emisão:</strong> @Model.PedidoEnviado.ToString("dd/MM/yyyy")<br />
+            <strong>E</strong> @Model.PedidoEnviado.ToString("dd/MM/yyyy")<br />
+            <strong>Total:</strong> R$ @Model.PedidoTotal.ToString("C")
+        </p>
+
+        <h5 class="mt-4">Endereço de Entrega</h5>
+        <p class="card-text">
+            @Model.EnderecoEntrega?.Cidade, @Model.EnderecoEntrega?.Numero<br />
+            @Model.EnderecoEntrega?.Bairro - @Model.EnderecoEntrega?.Cidade / @Model.EnderecoEntrega?.Estado<br />
+            CEP: @Model.EnderecoEntrega?.Cep
+        </p>
+
+        <a asp-action="HistoricoPedidos" class="btn btn-secondary mt-3">
+            <i class="fa fa-arrow-left"></i> Voltar ao Histórico
+        </a>
+    </div>
+</div>
+
+@if (Model.PedidoItens != null && Model.PedidoItens.Any())
+{
+    <h4>Itens do Pedido</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço Unitário</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PedidoItens)
+            {
+                <tr>
+                    <td>@item.Produto?.Nome</td>
+                    <td>@item.Quantidade</td>
+                    <td> @item.Preco.ToString("C")</td>
+                    <td> R$ @(item.Quantidade * item.Preco)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">
+        Nenhum item foi encontrado neste pedido.
+    </div>
+}

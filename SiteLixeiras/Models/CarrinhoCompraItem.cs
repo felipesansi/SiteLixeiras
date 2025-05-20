@@ -19,5 +19,6 @@ namespace SiteLixeiras.Models
 
         [MaxLength(200)]
         public string CarrinhoCompraId { get; set; } // Identifica o carrinho por sessão
+        public string UsuarioId { get; set; } // Identifica o usuário dono do carrinho
     }
 }

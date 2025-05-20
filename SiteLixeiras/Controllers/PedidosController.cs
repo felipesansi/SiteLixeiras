@@ -86,11 +86,31 @@ namespace SiteLixeiras.Controllers
             return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
         }
 
-        // Confirmação visual do pedido após pagamento
+    
         public IActionResult Confirmacao()
         {
             ViewBag.Mensagem = "Pedido realizado com sucesso!";
             return View();
+        }
+        public async Task<IActionResult> HistoricoPedidos()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var pedidos = await _context.Pedidos
+                .Include(p => p.EnderecoEntrega)
+                .Where(p => p.UsuarioId == userId && p.PedididoEntregue !=null) 
+                .ToListAsync();
+            return View(pedidos);
+        }
+        public async Task<IActionResult> DetalhesPedido(int id)
+        {
+            var pedido = await _context.Pedidos
+                .Include(p => p.PedidoItens)
+                .ThenInclude(pd => pd.Produto)
+                .Include(p => p.EnderecoEntrega)
+                .FirstOrDefaultAsync(p => p.PedidoId == id);
+            if (pedido == null)
+                return NotFound();
+            return View(pedido);
         }
     }
 }

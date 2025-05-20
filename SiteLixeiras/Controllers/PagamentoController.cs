@@ -81,7 +81,7 @@ namespace SiteLixeiras.Controllers
         public IActionResult Aguardando()
         {
             TempData["Aguardando"] = "O pagamento está aguardando confirmação.";
-            return RedirectToAction("Index", "CarrinhoCompra");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
