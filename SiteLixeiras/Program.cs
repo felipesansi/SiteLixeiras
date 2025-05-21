@@ -30,6 +30,7 @@ builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinhoCompra(sp));
 // Upload e Dropbox
 builder.Services.AddTransient<IUploadFotosService, UploadFotosService>();
 builder.Services.Configure<DropboxSettings>(builder.Configuration.GetSection("Dropbox"));
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("Email"));
 
 // Carrega a configuração do MercadoPago
 builder.Services.Configure<MercadoPagoSettings>(builder.Configuration.GetSection("MercadoPago"));
