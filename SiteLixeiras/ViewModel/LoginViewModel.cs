@@ -13,6 +13,6 @@ namespace SiteLixeiras.ViewModel
         [Display(Name = "Senha")]
         public string Password { get; set; }
 
-        public string? ReturnUrl { get; set; }
+        public string? ReturnUrl {get; set; }
     }
 }

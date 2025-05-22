@@ -1,0 +1,47 @@
+﻿@model SiteLixeiras.ViewModel.UsuarioViewmodel
+@{
+    ViewData["Title"] = "Configuração do Usuário";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Dados do Usuário</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Nome de Usuário:</strong> @Model.UserName</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Telefone:</strong> @(Model.Telefone ?? "Não informado")</p>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Endereços de Entrega</h4>
+
+    @if (Model.Entrega!= null && Model.Entrega.Any())
+    {
+        <div class="row">
+            @foreach (var endereco in Model.Entrega)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <p><strong>CEP:</strong> @endereco.Cep</p>
+                            <p><strong>Rua:</strong> @endereco.Rua</p>
+                            <p><strong>Número:</strong> @endereco.Numero</p>
+                            <p><strong>Complemento:</strong> @endereco.Complemento</p>
+                            <p><strong>Bairro:</strong> @endereco.Bairro</p>
+                            <p><strong>Cidade:</strong> @endereco.Cidade</p>
+                            <p><strong>Estado:</strong> @endereco.Estado</p>
+                            <p><strong>Telefone:</strong> @endereco.Telefone</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">Nenhum endereço de entrega cadastrado.</div>
+    }
+
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary mt-3">Voltar</a>
+</div>

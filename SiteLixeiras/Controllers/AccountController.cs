@@ -1,30 +1,32 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using SiteLixeiras.Context;
 using SiteLixeiras.Models;
 using SiteLixeiras.ViewModel;
 using System.Net.Mail;
 
 namespace SiteLixeiras.Controllers
 {
-    using Microsoft.Extensions.Options;
-
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly EmailSetting _emailSetting;
+        private readonly AppDbContext _context;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IOptions<EmailSetting> emailOptions)
+            IOptions<EmailSetting> emailSetting,
+            AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSetting = emailOptions.Value;
+            _emailSetting = emailSetting.Value;
+            _context = context;
         }
-
-
 
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
@@ -33,7 +35,6 @@ namespace SiteLixeiras.Controllers
             return View(viewModel);
         }
 
-     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -58,11 +59,10 @@ namespace SiteLixeiras.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
-        {
-            var viewModel = new RegisterViewModel();
-            return View(viewModel);
-        }
+        public IActionResult Register() => View(new RegisterViewModel());
+
+        public bool ExisteEmail(string email) =>
+            _userManager.FindByEmailAsync(email).Result != null;
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -75,28 +75,31 @@ namespace SiteLixeiras.Controllers
             }
 
             if (model.Password != model.ConfirmPassword)
-            {
                 ModelState.AddModelError("", "As senhas não conferem.");
-                return View(model);
-            }
 
             if (model.Password.Length < 6)
-            {
                 ModelState.AddModelError("", "A senha deve ter pelo menos 6 caracteres.");
-                return View(model);
-            }
 
             if (model.UserName.Length < 3 || model.UserName.Length > 20)
-            {
                 ModelState.AddModelError("", "O nome de usuário deve ter entre 3 e 20 caracteres.");
-                return View(model);
-            }
 
             if (model.Email.Length < 5 || model.Email.Length > 50)
-            {
                 ModelState.AddModelError("", "O e-mail deve ter entre 5 e 50 caracteres.");
+
+            if (ExisteEmail(model.Email))
+                ModelState.AddModelError("", "E-mail já cadastrado.");
+
+            if ((await _userManager.FindByNameAsync(model.UserName)) != null)
+                ModelState.AddModelError("", "Nome de usuário já cadastrado.");
+
+            if (model.UserName.Contains(" "))
+                ModelState.AddModelError("", "O nome de usuário não pode conter espaços.");
+
+            if (model.UserName.Count(char.IsDigit) > 1)
+                ModelState.AddModelError("", "O nome de usuário não pode conter mais que dois números.");
+
+            if (!ModelState.IsValid)
                 return View(model);
-            }
 
             var usuario = new IdentityUser
             {
@@ -110,18 +113,12 @@ namespace SiteLixeiras.Controllers
             if (resultado.Succeeded)
             {
                 await _userManager.AddToRoleAsync(usuario, "User");
-
-            
-                await _signInManager.SignInAsync(usuario, isPersistent: false);
-
-               
+                await _signInManager.SignInAsync(usuario, false);
                 return RedirectToAction("Create", "EnderecoEntregas");
             }
 
             foreach (var erro in resultado.Errors)
-            {
                 ModelState.AddModelError("", erro.Description);
-            }
 
             return View(model);
         }
@@ -133,97 +130,144 @@ namespace SiteLixeiras.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-        
-        public IActionResult EsqueciSenha()
-        {
-            return View();
-        }
+
+        public IActionResult EsqueciSenha() => View();
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EsqueciSenha(ResetSenhaViewModel model)
         {
-           
             IdentityUser? usuario = await _userManager.FindByNameAsync(model.UserName) ??
                                      (model.UserName.Contains("@") ? await _userManager.FindByEmailAsync(model.UserName) : null);
+
             if (usuario == null)
             {
                 ModelState.AddModelError("", "E-mail não encontrado.");
                 return View(model);
             }
+
             var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
-            var callbackUrl = Url.Action("ResetSenha", "Account", new { userId = usuario.Id, token }, protocol: HttpContext.Request.Scheme);
-            var corpo = $"Olá, recebemos uma solicitação de Redefinição de senha \n\n" + $"Click no link para redefinir a senha  {callbackUrl}";
+            var callbackUrl = Url.Action("ResetSenha", "Account", new { userId = usuario.Id, token }, Request.Scheme);
+            var corpo = $"Olá, recebemos uma solicitação de redefinição de senha.\n\nClique no link para redefinir: {callbackUrl}";
 
             try
             {
-                using (var client = new SmtpClient(_emailSetting.Host))
+                using var client = new SmtpClient(_emailSetting.Host)
                 {
-                    client.Port = _emailSetting.Port;
-                    client.EnableSsl = _emailSetting.EnableSsl;
-                    client.Credentials = new System.Net.NetworkCredential(_emailSetting.UserName, _emailSetting.Password);
-                    var mailMessage = new MailMessage
-                    {
-                        From = new MailAddress(_emailSetting.Remetente),
-                        Subject = "Redefinição de Senha",
-                        Body = corpo,
-                        IsBodyHtml = false
-                    };
-                    mailMessage.To.Add(usuario.Email);
-                    await client.SendMailAsync(mailMessage);
-                }
+                    Port = _emailSetting.Port,
+                    EnableSsl = _emailSetting.EnableSsl,
+                    Credentials = new System.Net.NetworkCredential(_emailSetting.UserName, _emailSetting.Password)
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(_emailSetting.Remetente),
+                    Subject = "Redefinição de Senha",
+                    Body = corpo,
+                    IsBodyHtml = false
+                };
+
+                mailMessage.To.Add(usuario.Email);
+                await client.SendMailAsync(mailMessage);
             }
-
-
-
-            catch (Exception ex)
+            catch (Exception)
             {
                 ModelState.AddModelError("", "Erro ao enviar o e-mail. Tente novamente mais tarde.");
                 return View(model);
-
             }
+
             return RedirectToAction("ConfirmacaoEnvioEmail");
         }
-        public IActionResult ConfirmacaoEnvioEmail()
-        {
-            return View();
-        }
-        public IActionResult ResetSenha(string userId, string token)
-        {
-            var viewModel = new ResetSenhaViewModel
-            {
-                UserId = userId,
-                Token = token
-            };
-            return View(viewModel);
-        }
+
+        public IActionResult ConfirmacaoEnvioEmail() => View();
+
+        public IActionResult ResetSenha(string userId, string token) =>
+            View(new ResetSenhaViewModel { UserId = userId, Token = token });
+
         [HttpPost]
         public async Task<IActionResult> ResetSenha(ResetSenhaViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError("", "Preencha todos os campos corretamente.");
-                return View(model);
-            }
             var usuario = await _userManager.FindByIdAsync(model.UserId);
             if (usuario == null)
             {
                 ModelState.AddModelError("", "Usuário não encontrado.");
                 return View(model);
             }
+
             var resultado = await _userManager.ResetPasswordAsync(usuario, model.Token, model.NovaSenha);
             if (resultado.Succeeded)
             {
                 return RedirectToAction("Login");
             }
+
             foreach (var erro in resultado.Errors)
-            {
                 ModelState.AddModelError("", erro.Description);
-            }
+
             return View(model);
         }
-        public IActionResult AccessDenied()
+
+        [HttpGet]
+        public async Task<IActionResult> Configuracao()
         {
-            return View();
+            var usuario = await _userManager.GetUserAsync(User);
+            if (usuario == null)
+                return RedirectToAction("Login");
+
+            var dadosUsuario = await _context.Users.FirstOrDefaultAsync(x => x.Id == usuario.Id);
+            var enderecos = await _context.EnderecosEntregas.Where(e => e.UsuarioId == usuario.Id).ToListAsync();
+
+            var viewModel = new UsuarioViewmodel
+            {
+                Id = dadosUsuario.Id,
+                UserName = dadosUsuario.UserName,
+                Email = dadosUsuario.Email,
+                Telefone = enderecos.FirstOrDefault()?.Telefone,
+                Entrega = enderecos
+            };
+
+            return View(viewModel);
         }
+        [HttpPost]
+        public async Task<IActionResult> Configuracao(UsuarioViewmodel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var usuario = await _userManager.FindByIdAsync(model.Id);
+            if (usuario == null)
+            {
+                ModelState.AddModelError("", "Usuário não encontrado.");
+                return View(model);
+            }
+
+            usuario.UserName = model.UserName;
+            usuario.Email = model.Email;
+
+            var result = await _userManager.UpdateAsync(usuario);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+                return View(model);
+            }
+
+          
+            var endereco = await _context.EnderecosEntregas.FirstOrDefaultAsync(e => e.UsuarioId == usuario.Id);
+            if (endereco != null)
+            {
+                endereco.Telefone = model.Telefone;
+                await _context.SaveChangesAsync();
+            }
+
+       
+            TempData["MensagemSucesso"] = "Dados atualizados com sucesso!";
+
+            return View(model);
+        }
+
+
+
+        public IActionResult AccessDenied() => View();
     }
 }
