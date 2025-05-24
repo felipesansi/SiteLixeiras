@@ -1,48 +1,33 @@
 ﻿@model SiteLixeiras.Models.Produtos
 
-<div class="container py-4">
-    <div class="row g-4 justify-content-center">
-        @if (Model.Fotos != null && Model.Fotos.Any())
-        {
-            foreach (var foto in Model.Fotos)
-            {
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 shadow-lg h-100" style="min-width: 280px; max-width: 340px; margin: auto;">
-                        <img src="@foto.Url"
-                             class="card-img-top img-fluid"
-                             alt="Foto do produto"
-                             style="height: 220px; object-fit: cover;">
+<div class="card border-0 shadow-lg text-center p-3">
+    @if (!string.IsNullOrEmpty(Model.ImagemThumbUrl))
+    {
+        <img src="@Model.ImagemThumbUrl"
+             class="img-fluid rounded"
+             alt="Imagem do produto"
+             style="height: 220px; object-fit: cover;">
+    }
+    else
+    {
+        <p class="text-muted mt-3">📷 Sem foto disponível</p>
+    }
 
-                        <div class="card-body bg-light d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="fw-bold text-primary">@Model.Nome</h5>
-                                <p class="text-muted small">@Model.Descricao</p>
-                                <p class="text-dark fw-semibold">@Model.Preco.ToString("C")</p>
-                            </div>
+    <div class="card-body">
+        <h4 class="text-black">@Model.Nome</h4>
+        <p class="text-muted">@Model.Descricao</p>
+        <h5 class="text-danger fw-bold">@Model.Preco.ToString("C")</h5>
+    </div>
 
-                            <div class="d-flex flex-column gap-2 mt-3">
-                                <a href="@Url.Action("Detalhes", "Produtos", new { id = Model.Id_Produto })"
-                                   class="btn btn-outline-dark">
-                                    Ver Detalhes
-                                </a>
-
-                                <a class="btn btn-primary"
-                                   asp-controller="CarrinhoCompra"
-                                   asp-action="AdicionarAoCarrinho"
-                                   asp-route-id="@Model.Id_Produto">
-                                    Incluir no Carrinho
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="col-12">
-                <p class="text-muted text-center">Nenhuma foto disponível para este produto.</p>
-            </div>
-        }
+    <div class="card-footer bg-transparent border-0">
+        <a href="@Url.Action("Detalhes", "Produtos", new { id = Model.Id_Produto })" class="btn btn-outline-dark w-100 mb-2">
+            Ver detalhes
+        </a>
+        <a class="btn btn-primary w-100"
+           asp-controller="CarrinhoCompra"
+           asp-action="AdicionarAoCarrinho"
+           asp-route-id="@Model.Id_Produto">
+            Incluir no Carrinho
+        </a>
     </div>
 </div>

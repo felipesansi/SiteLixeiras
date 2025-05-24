@@ -3,45 +3,106 @@
     ViewData["Title"] = "Configuração do Usuário";
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4">Dados do Usuário</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">⚙️ Configurações da Conta</h2>
+                <p class="text-muted">Atualize suas informações pessoais abaixo</p>
+            </div>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <p><strong>Nome de Usuário:</strong> @Model.UserName</p>
-            <p><strong>Email:</strong> @Model.Email</p>
-            <p><strong>Telefone:</strong> @(Model.Telefone ?? "Não informado")</p>
-        </div>
-    </div>
-
-    <h4 class="mb-3">Endereços de Entrega</h4>
-
-    @if (Model.Entrega!= null && Model.Entrega.Any())
-    {
-        <div class="row">
-            @foreach (var endereco in Model.Entrega)
+            @if (TempData["MensagemSucesso"] != null)
             {
-                <div class="col-md-6 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <p><strong>CEP:</strong> @endereco.Cep</p>
-                            <p><strong>Rua:</strong> @endereco.Rua</p>
-                            <p><strong>Número:</strong> @endereco.Numero</p>
-                            <p><strong>Complemento:</strong> @endereco.Complemento</p>
-                            <p><strong>Bairro:</strong> @endereco.Bairro</p>
-                            <p><strong>Cidade:</strong> @endereco.Cidade</p>
-                            <p><strong>Estado:</strong> @endereco.Estado</p>
-                            <p><strong>Telefone:</strong> @endereco.Telefone</p>
-                        </div>
-                    </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    @TempData["MensagemSucesso"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-info">Nenhum endereço de entrega cadastrado.</div>
-    }
 
-    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary mt-3">Voltar</a>
+            <div class="card border-0 shadow-lg mb-5 rounded-4">
+                <div class="card-body p-4">
+                    <form asp-action="Configuracao" method="post" novalidate>
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(x => x.Id)
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label asp-for="UserName" class="form-label">👤 Nome de Usuário</label>
+                                <input asp-for="UserName" class="form-control form-control-lg rounded-3" />
+                                <span asp-validation-for="UserName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label">📧 Email</label>
+                                <input asp-for="Email" class="form-control form-control-lg rounded-3" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Telefone" class="form-label">📱 Telefone</label>
+                                <input asp-for="Telefone" class="form-control form-control-lg rounded-3" />
+                                <span asp-validation-for="Telefone" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4">
+                                <i class="bi bi-save me-2"></i>Salvar
+                            </button>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+                                <i class="bi bi-arrow-left me-2"></i>Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <h4 class="fw-semibold mb-3">📦 Endereços de Entrega</h4>
+
+                @if (Model.Entrega != null && Model.Entrega.Any())
+                {
+                    <div class="row g-4">
+                        @foreach (var endereco in Model.Entrega)
+                        {
+                            <div class="col-md-6">
+                                <div class="card h-100 shadow-sm rounded-3 border-0">
+                                    <div class="card-body">
+                                        <h6 class="card-title fw-semibold text-primary mb-2">Endereço</h6>
+                                        <p class="mb-1"><strong>CEP:</strong> @endereco.Cep</p>
+                                        <p class="mb-1"><strong>Rua:</strong> @endereco.Rua, Nº @endereco.Numero</p>
+                                        @if (!string.IsNullOrWhiteSpace(endereco.Complemento))
+                                        {
+                                            <p class="mb-1"><strong>Complemento:</strong> @endereco.Complemento</p>
+                                        }
+                                        <p class="mb-1"><strong>Bairro:</strong> @endereco.Bairro</p>
+                                        <p class="mb-1"><strong>Cidade:</strong> @endereco.Cidade - @endereco.Estado</p>
+                                        <p><strong>Telefone:</strong> @endereco.Telefone</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="@Url.Action("Index", "EnderecoEntregas")" class="btn btn-outline-secondary rounded-pill">
+                            <i class="bi bi-eye-fill me-2"></i>Ver Todos os Endereços
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info mt-3 d-flex align-items-center" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        Nenhum endereço de entrega cadastrado.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -25,8 +25,14 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end p-3">
                     <ul class="navbar-nav">
-                       
                      
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                        }
                         <li class="nav-item me-3">
                             <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminCategorias" asp-action="Index">Categorias</a>
                         </li>
@@ -43,6 +49,7 @@
                         </li>
 
                         @await Component.InvokeAsync("NotificacoesSino")
+
 
 
                     </ul>

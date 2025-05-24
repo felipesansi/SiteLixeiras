@@ -4,46 +4,64 @@
     ViewData["Title"] = "Endereços de Entrega";
 }
 
-<h1>Endereços de Entrega</h1>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="bi bi-geo-alt-fill me-2"></i>Endereços de Entrega</h2>
+        <div>
+            <a asp-controller="CarrinhoCompra" asp-action="Index" class="btn btn-outline-secondary rounded-pill me-2">
+                <i class="bi bi-cart-fill me-1"></i>Voltar ao Carrinho
+            </a>
+            <a asp-action="Create" class="btn btn-primary rounded-pill">
+                <i class="bi bi-plus-circle me-1"></i>Novo Endereço
+            </a>
+        </div>
+    </div>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Novo Endereço</a>
-</p>
-
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Nome)</th>
-            <th>@Html.DisplayNameFor(model => model.SobreNome)</th>
-            <th>@Html.DisplayNameFor(model => model.Rua)</th>
-            <th>@Html.DisplayNameFor(model => model.Bairro)</th>
-            <th>@Html.DisplayNameFor(model => model.Estado)</th>
-            <th>@Html.DisplayNameFor(model => model.Cidade)</th>
-            <th>@Html.DisplayNameFor(model => model.Telefone)</th>
-            <th>@Html.DisplayNameFor(model => model.Cep)</th>
-            <th>@Html.DisplayNameFor(model => model.CPF)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
-                <td>@Html.DisplayFor(modelItem => item.SobreNome)</td>
-                <td>@Html.DisplayFor(modelItem => item.Rua)</td>
-                <td>@Html.DisplayFor(modelItem => item.Bairro)</td>
-                <td>@Html.DisplayFor(modelItem => item.Estado)</td>
-                <td>@Html.DisplayFor(modelItem => item.Cidade)</td>
-                <td>@Html.DisplayFor(modelItem => item.Telefone)</td>
-                <td>@Html.DisplayFor(modelItem => item.Cep)</td>
-                <td>@Html.DisplayFor(modelItem => item.CPF)</td>
-                <td>
-                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.EnderecoEntregaId">Editar</a>
-                    <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.EnderecoEntregaId">Detalhes</a>
-                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.EnderecoEntregaId">Excluir</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle shadow-sm rounded">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Nome)</th>
+                    <th>@Html.DisplayNameFor(model => model.SobreNome)</th>
+                    <th>@Html.DisplayNameFor(model => model.Rua)</th>
+                    <th>@Html.DisplayNameFor(model => model.Bairro)</th>
+                    <th>@Html.DisplayNameFor(model => model.Estado)</th>
+                    <th>@Html.DisplayNameFor(model => model.Cidade)</th>
+                    <th>@Html.DisplayNameFor(model => model.Telefone)</th>
+                    <th>@Html.DisplayNameFor(model => model.Cep)</th>
+                    <th>@Html.DisplayNameFor(model => model.CPF)</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SobreNome)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Rua)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Bairro)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Cidade)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Telefone)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Cep)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CPF)</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.EnderecoEntregaId" title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a class="btn btn-sm btn-info text-white" asp-action="Details" asp-route-id="@item.EnderecoEntregaId" title="Detalhes">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.EnderecoEntregaId" title="Excluir">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
