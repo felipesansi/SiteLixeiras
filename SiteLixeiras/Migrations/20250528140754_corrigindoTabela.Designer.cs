@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiteLixeiras.Context;
 
@@ -11,9 +12,11 @@ using SiteLixeiras.Context;
 namespace SiteLixeiras.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250528140754_corrigindoTabela")]
+    partial class corrigindoTabela
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -410,6 +413,9 @@ namespace SiteLixeiras.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DataResposta")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("EnviadaPeloAdmin")
                         .HasColumnType("bit");
 
@@ -422,6 +428,9 @@ namespace SiteLixeiras.Migrations
 
                     b.Property<int?>("NotificacaoPaiId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Resposta")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioId")
                         .IsRequired()
@@ -646,7 +655,7 @@ namespace SiteLixeiras.Migrations
             modelBuilder.Entity("SiteLixeiras.Models.Notificacao", b =>
                 {
                     b.HasOne("SiteLixeiras.Models.Notificacao", "NotificacaoPai")
-                        .WithMany("Respostas")
+                        .WithMany()
                         .HasForeignKey("NotificacaoPaiId");
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
@@ -712,11 +721,6 @@ namespace SiteLixeiras.Migrations
             modelBuilder.Entity("SiteLixeiras.Models.Categoria", b =>
                 {
                     b.Navigation("Produtos");
-                });
-
-            modelBuilder.Entity("SiteLixeiras.Models.Notificacao", b =>
-                {
-                    b.Navigation("Respostas");
                 });
 
             modelBuilder.Entity("SiteLixeiras.Models.Pedido", b =>

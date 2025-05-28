@@ -1,38 +1,97 @@
-﻿@model List<SiteLixeiras.Models.Notificacao>
+﻿@model IEnumerable<SiteLixeiras.Models.Notificacao>
+@using Microsoft.AspNetCore.Identity
 @{
-    ViewData["Title"] = "Todas as Notificações";
+    ViewData["Title"] = "Mensagens de Usuários";
+    var usuarios = ViewBag.Usuarios as List<IdentityUser>;
 }
 
-<h2 class="mb-4">📩 Todas as Notificações</h2>
+<h2 class="mb-4">Conversas com Usuários</h2>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Usuário</th>
-            <th>Mensagem</th>
-            <th>Data</th>
-            <th>Origem</th>
-            <th>Lida</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Usuario?.UserName</td>
-                <td>@item.Mensagem</td>
-                <td>@item.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>
-                    @(item.EnviadaPeloAdmin ? "Admin" : "Usuário")
-                </td>
-                <td>
-                    @(item.Lida ? "Sim" : "Não")
-                </td>
-                <td>
-                    <a asp-action="Detalhes" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Detalhes</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#modalNovaMensagem">
+    Enviar Nova Mensagem
+</button>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhuma mensagem recebida de usuários ainda.</div>
+}
+else
+{
+    @foreach (var notificacao in Model)
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <strong>@notificacao.Usuario?.UserName</strong>
+                <span class="float-end">@notificacao.DataCriacao.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">@notificacao.Mensagem</p>
+
+                <small class="text-muted">
+                    @if (notificacao.EnviadaPeloAdmin)
+                    {
+                        <span>Enviada pelo <strong>Admin</strong> • @(notificacao.Lida ? "Lida pelo usuário" : "Não lida pelo usuário")</span>
+                    }
+                    else
+                    {
+                        <span>Enviada pelo <strong>Usuário</strong> • @(notificacao.Lida ? "Lida pelo admin" : "Não lida pelo admin")</span>
+                    }
+                </small>
+
+                @if (notificacao.Respostas?.Any() == true)
+                {
+                    @foreach (var resposta in notificacao.Respostas.OrderBy(r => r.DataCriacao))
+                    {
+                        <div class="border-top pt-3 mt-3">
+                            <small class="text-muted">
+                                @(resposta.EnviadaPeloAdmin ? "Admin" : "Usuário") • @resposta.DataCriacao.ToString("dd/MM/yyyy HH:mm")
+                                • @(resposta.Lida ? "Lida" : "Não lida")
+                            </small>
+                            <p>@resposta.Mensagem</p>
+                        </div>
+                    }
+                }
+
+                <a asp-action="Detalhes" asp-route-id="@notificacao.Id" class="btn btn-outline-primary btn-sm mt-3">Ver Detalhes</a>
+            </div>
+        </div>
+    }
+}
+
+<!-- Modal Nova Mensagem -->
+<div class="modal fade" id="modalNovaMensagem" tabindex="-1" aria-labelledby="modalNovaMensagemLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-action="EnviarNovaMensagem" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalNovaMensagemLabel">Nova Mensagem para Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="usuarioId" class="form-label">Usuário</label>
+                    <select class="form-select" name="id" required>
+                        @if (usuarios != null && usuarios.Any())
+                        {
+                            @foreach (var user in usuarios)
+                            {
+                                <option value="@user.Id">@user.UserName</option>
+                            }
+                        }
+                        else
+                        {
+                            <option disabled selected>Nenhum usuário disponível</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="mensagem" class="form-label">Mensagem</label>
+                    <textarea class="form-control" name="mensagem" rows="4" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>

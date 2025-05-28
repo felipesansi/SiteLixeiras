@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Nova Mensagem";
+}
+
+<h2>Enviar mensagem ao Vendedor</h2>
+
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success">@TempData["Sucesso"]</div>
+}
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erro"]</div>
+}
+
+<form asp-action="EnviarNovaMensagem" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="mensagem">Mensagem</label>
+        <textarea name="mensagem" class="form-control" rows="5" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+</form>

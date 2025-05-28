@@ -1,16 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using SiteLixeiras.Models
+@using Microsoft.AspNetCore.Identity
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SiteLixeiras</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SiteLixeiras.styles.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -20,8 +23,7 @@
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img class="w-75" src="~/imagens/logo-icena-txt.png" alt="Logo SiteLixeiras" />
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end p-3">
@@ -50,7 +52,7 @@
                         <li class="nav-item me-3">
                             @Html.Partial("_LogoutPartial")
                         </li>
-                        
+
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item dropdown me-3">
@@ -67,25 +69,29 @@
                                 <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 320px;" aria-labelledby="notificacoesDropdown">
                                     @if (ViewBag.Notificacoes != null && ViewBag.Notificacoes.Count > 0)
                                     {
-                                        foreach (var n in ViewBag.Notificacoes)
+                                        foreach (Notificacao n in ViewBag.Notificacoes)
                                         {
                                             <li class="mb-2">
                                                 <div>
                                                     <strong>Mensagem:</strong><br />
                                                     <span>@n.Mensagem</span>
                                                 </div>
-                                                @if (!string.IsNullOrWhiteSpace(n.Resposta))
+
+                                                @if (n.Respostas != null && n.Respostas.Any())
                                                 {
-                                                    <div class="mt-2 alert alert-info p-2">
-                                                        <strong>Resposta do admin:</strong><br />
-                                                        <small>@n.Resposta</small>
-                                                    </div>
+                                                    var ultimaResposta = n.Respostas.OrderByDescending(r => r.DataCriacao).FirstOrDefault();
+                                                    if (ultimaResposta != null)
+                                                    {
+                                                        <div class="mt-2 alert alert-info p-2">
+                                                            <strong>@(ultimaResposta.EnviadaPeloAdmin ? "Admin" : "Você") respondeu:</strong><br />
+                                                            <small>@ultimaResposta.Mensagem</small>
+                                                        </div>
+                                                    }
                                                 }
                                             </li>
                                             <li><hr class="dropdown-divider" /></li>
                                         }
                                         <a class="dropdown-item text-center text-primary fw-bold" asp-controller="Notificacoes" asp-action="Index">Ver todas</a>
-
                                     }
                                     else
                                     {
@@ -94,12 +100,12 @@
                                 </ul>
                             </li>
                         }
-
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -107,9 +113,7 @@
     </div>
 
     <footer class="footer">
-    
-            @await Html.PartialAsync("_LayoutFooter")
-        
+        @await Html.PartialAsync("_LayoutFooter")
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

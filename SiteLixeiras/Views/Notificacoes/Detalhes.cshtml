@@ -1,30 +1,52 @@
 ﻿@model SiteLixeiras.Models.Notificacao
+@{
+    ViewData["Title"] = "Detalhes da Notificação";
+}
 
-<h2>Detalhes da Notificação</h2>
+<h2 class="mb-4">Detalhes da Notificação</h2>
 
-<div>
-    <strong>Mensagem do Admin:</strong>
-    <p>@Model.Mensagem</p>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Mensagem Original</h5>
+        <p class="card-text">@Model.Mensagem</p>
+        <p class="text-muted"><small>Enviada em: @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</small></p>
+    </div>
 </div>
 
-@if (!string.IsNullOrEmpty(Model.Resposta))
+@if (Model.Respostas != null && Model.Respostas.Any())
 {
-    <div>
-        <strong>Sua resposta:</strong>
-        <p>@Model.Resposta</p>
-        <small>Respondido em @Model.DataResposta?.ToString("g")</small>
+    <div class="mb-4">
+        <h5>Respostas</h5>
+        @foreach (var resposta in Model.Respostas.OrderBy(r => r.DataCriacao))
+        {
+            <div class="card mb-2 @(resposta.EnviadaPeloAdmin ? "border-primary" : "border-success")">
+                <div class="card-body">
+                    <strong class="text-@(resposta.EnviadaPeloAdmin ? "primary" : "success")">
+                        @(resposta.EnviadaPeloAdmin ? "Admin" : "Você")
+                    </strong>
+                    <p class="mb-1">@resposta.Mensagem</p>
+                    <p class="text-muted"><small>@resposta.DataCriacao.ToString("dd/MM/yyyy HH:mm")</small></p>
+                </div>
+            </div>
+        }
     </div>
 }
 else
 {
-    <form asp-action="Responder" method="post">
-        <input type="hidden" name="id" value="@Model.Id" />
-        <div class="mb-3">
-            <label for="resposta" class="form-label">Sua resposta</label>
-            <textarea name="resposta" id="resposta" class="form-control" rows="4" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Enviar resposta</button>
-    </form>
+    <p class="text-muted">Nenhuma resposta ainda.</p>
 }
 
-<a asp-action="Index">Voltar à lista</a>
+<h4 class="mt-4">Responder</h4>
+
+<form asp-action="Responder" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <div class="mb-3">
+        <label for="resposta" class="form-label">Sua resposta:</label>
+        <textarea name="resposta" class="form-control" rows="4" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Enviar Resposta</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Voltar</a>
+</form>

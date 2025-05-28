@@ -3,28 +3,62 @@
     ViewData["Title"] = "Detalhes da Notificação";
 }
 
-<h2 class="mb-4">📝 Detalhes da Notificação</h2>
+<div class="container my-5">
+    <h2 class="fw-bold text-primary mb-4">Detalhes da Notificação</h2>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <p><strong>Usuário:</strong> @Model.Usuario?.UserName</p>
-        <p><strong>Mensagem:</strong> @Model.Mensagem</p>
-        <p><strong>Data:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
-        <p><strong>Origem:</strong> @(Model.EnviadaPeloAdmin ? "Admin" : "Usuário")</p>
-        <p><strong>Lida:</strong> @(Model.Lida ? "Sim" : "Não")</p>
+    <div class="border rounded-3 p-4 mb-4 shadow-sm bg-light">
+        <div class="mb-2">
+            <span class="text-muted small">Usuário:</span><br />
+            <span class="fw-semibold">@Model.Usuario?.UserName ?? "Usuário desconhecido"</span>
+        </div>
+
+        <div class="mb-2">
+            <span class="text-muted small">Mensagem original:</span><br />
+            <div class="border rounded p-2 bg-white">
+                @Model.Mensagem
+            </div>
+        </div>
+
+        <h5 class="mt-4">Histórico da Conversa:</h5>
+
+        @if (Model.Respostas != null && Model.Respostas.Any())
+        {
+            <div class="list-group mb-4">
+                @foreach (var resposta in Model.Respostas.OrderBy(r => r.DataCriacao))
+                {
+                    <div class="list-group-item border rounded mb-2">
+                        <small class="text-muted">
+                            <strong>@(resposta.EnviadaPeloAdmin ? "Admin" : "Usuário")</strong> • @resposta.DataCriacao.ToString("dd/MM/yyyy HH:mm")
+                            @if (!resposta.Lida && !resposta.EnviadaPeloAdmin)
+                            {
+                                <span class="badge bg-warning text-dark ms-2">Não lida</span>
+                            }
+                        </small>
+                        <p class="mb-0 mt-1">@resposta.Mensagem</p>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">Nenhuma resposta registrada ainda.</p>
+        }
     </div>
+
+    <h4 class="fw-semibold mb-3">Responder</h4>
+
+    <form asp-action="Responder" method="post" class="border rounded-3 p-4 shadow-sm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="form-floating mb-3">
+            <textarea name="resposta" class="form-control" placeholder="Escreva sua resposta aqui..." style="height: 120px" required></textarea>
+            <label for="resposta">Mensagem de resposta</label>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Enviar Resposta</button>
+            <a asp-action="Todas" class="btn btn-outline-secondary">Voltar</a>
+        </div>
+    </form>
 </div>
-
-<h4>Responder</h4>
-
-<form asp-action="Responder" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="id" value="@Model.Id" />
-
-    <div class="form-group">
-        <textarea name="resposta" class="form-control" rows="4" placeholder="Escreva sua resposta aqui..."></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-2">Enviar Resposta</button>
-    <a asp-action="Todas" class="btn btn-secondary mt-2">Voltar</a>
-</form>

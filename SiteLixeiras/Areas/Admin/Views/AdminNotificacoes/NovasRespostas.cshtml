@@ -3,35 +3,27 @@
     ViewData["Title"] = "Novas Respostas de Usuários";
 }
 
-<h2 class="mb-4">📨 Novas Respostas de Usuários</h2>
+<div class="container my-5">
+    <h2 class="fw-bold text-primary mb-4">Novas Respostas de Usuários</h2>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">Nenhuma nova resposta encontrada.</div>
-}
-else
-{
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>Usuário</th>
-                <th>Mensagem</th>
-                <th>Data</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info shadow-sm">Nenhuma nova resposta encontrada.</div>
+    }
+    else
+    {
+        <div class="list-group">
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@item.Usuario?.UserName</td>
-                    <td>@item.Mensagem</td>
-                    <td>@item.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>
-                        <a asp-action="Detalhes" asp-route-id="@item.Id" class="btn btn-sm btn-success">Visualizar e Responder</a>
-                    </td>
-                </tr>
+                <div class="list-group-item list-group-item-action mb-3 border rounded shadow-sm">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1 fw-semibold text-dark">@item.Usuario?.UserName ?? "Usuário desconhecido"</h5>
+                        <small class="text-muted">@item.DataCriacao.ToString("dd/MM/yyyy HH:mm")</small>
+                    </div>
+                    <p class="mb-2">@item.Mensagem</p>
+                    <a asp-action="Detalhes" asp-route-id="@item.NotificacaoPaiId ?? item.Id" class="btn btn-outline-primary btn-sm">Visualizar e Responder</a>
+                </div>
             }
-        </tbody>
-    </table>
-}
+        </div>
+    }
+</div>

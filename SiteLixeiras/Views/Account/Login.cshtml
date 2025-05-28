@@ -1,44 +1,55 @@
 ﻿@model SiteLixeiras.ViewModel.LoginViewModel
 
 @{
-    ViewData["Title"] = "Login"; 
+    ViewData["Title"] = "Login";
 }
+
 
 <div class="container">
     <div class="container2 my-5">
         <div class="row shadow rounded overflow-hidden">
 
-         
             <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-success text-white p-5 text-center">
                 <h2 class="mb-3">Bem-vindo de volta!</h2>
                 <p>Ainda não tem uma conta? Cadastre-se gratuitamente.</p>
                 <a asp-action="Register" class="btn btn-outline-light mt-3">Criar conta</a>
             </div>
 
-         
+       
             <div class="col-12 col-md-6 bg-white p-5">
                 <form asp-controller="Account" asp-action="Login" method="post">
                     @Html.AntiForgeryToken()
 
                     <h3 class="mb-4 text-center">Login</h3>
                     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+        
                     <div class="mb-3">
                         <label asp-for="UserName" class="form-label">Usuário ou E-mail</label>
                         <input asp-for="UserName" class="form-control" placeholder="Seu usuário ou e-mail" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
 
+               
                     <div class="mb-3">
                         <label asp-for="Password" class="form-label">Senha</label>
-                        <input asp-for="Password" type="password" class="form-control" placeholder="Sua senha" />
+                        <div class="input-group">
+                            <input asp-for="Password" type="password" class="form-control" id="passwordInput" placeholder="Sua senha" />
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
                     <input type="hidden" asp-for="ReturnUrl" />
+
+            
                     <a class="d-block p-3 text-center mt-3" asp-controller="Account" asp-action="EsqueciSenha">
                         Esqueceu sua senha?
                     </a>
 
+                 
                     <button type="submit" class="btn btn-success w-100">Entrar</button>
                 </form>
             </div>
@@ -48,4 +59,16 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const isPassword = passwordInput.type === 'password';
+
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleIcon.classList.toggle('fa-eye');
+            toggleIcon.classList.toggle('fa-eye-slash');
+        });
+    </script>
 }
