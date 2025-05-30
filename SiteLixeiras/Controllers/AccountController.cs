@@ -252,20 +252,31 @@ namespace SiteLixeiras.Controllers
                 return View(model);
             }
 
-          
+
             var endereco = await _context.EnderecosEntregas.FirstOrDefaultAsync(e => e.UsuarioId == usuario.Id);
             if (endereco != null)
             {
                 endereco.Telefone = model.Telefone;
                 await _context.SaveChangesAsync();
             }
+           
+            if (usuario.UserName != User.Identity.Name)
+            {
+                TempData["MensagemSucesso"] = "Nome de usuário atualizado com sucesso! Faça login novamente com o novo nome de usuário.";
+                await Task.Delay(1000);
+                HttpContext.Session.Clear();
+                await _signInManager.SignOutAsync();
+              
+                TempData["MensagemSucesso"] = "Nome de usuário atualizado com sucesso! Faça login novamente com o novo nome de usuário.";
+                return RedirectToAction("Login");
+            }
 
-       
             TempData["MensagemSucesso"] = "Dados atualizados com sucesso!";
 
-            return View(model);
-        }
 
+            return View(model);
+
+        }
 
 
         public IActionResult AccessDenied() => View();

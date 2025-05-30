@@ -101,5 +101,24 @@ namespace SiteLixeiras.Areas.Admin.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> ListarFotos()
+        {
+            var fotos = await _context.Fotos.Include(f => f.Produto).ToListAsync();
+            return View(fotos);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ExcluirFoto(int id)
+        {
+            var foto = await _context.Fotos.FindAsync(id);
+            if (foto == null)
+                return NotFound();
+
+            await _uploadFotosService.DeleteFileAsync(foto.Url); // Aguarda a exclusão do arquivo
+
+            _context.Fotos.Remove(foto);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ListarFotos));
+        }
     }
 }

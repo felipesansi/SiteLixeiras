@@ -40,7 +40,9 @@ namespace SiteLixeiras.Areas.Admin.Controllers
                     {
                         UsuarioId = pedido.UsuarioId,
                         Mensagem = $"Seu pedido #{pedido.PedidoId} foi visualizado por um administrador.",
-                        DataCriacao = DateTime.Now  
+                        DataCriacao = DateTime.Now,
+                        EnviadaPeloAdmin = true,
+                        Lida = false
                     });
                 }
             }
@@ -64,7 +66,9 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             {
                 UsuarioId = pedido.UsuarioId,
                 Mensagem = $"Seu pedido #{pedido.PedidoId} Seu pedido foi entregue a transportadora ou mercado livre para ser entregue no seu endereço.",
-                DataCriacao = DateTime.Now  // Data da notificação
+                EnviadaPeloAdmin = true,
+                Lida = false,
+                DataCriacao = DateTime.Now 
             });
 
             await _context.SaveChangesAsync();

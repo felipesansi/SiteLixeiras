@@ -179,7 +179,7 @@ namespace SiteLixeiras.Controllers
         {
             return _context.EnderecosEntregas.Any(e => e.EnderecoEntregaId == id);
         }
-        // GET: /EnderecoEntregas/ConsultarCep?cep=12345678
+        
         [HttpGet]
         public async Task<IActionResult> ConsultarCep(string cep)
         {

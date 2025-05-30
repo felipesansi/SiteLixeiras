@@ -39,15 +39,13 @@ namespace SiteLixeiras.Areas.Admin.Controllers
 
         public async Task<IActionResult> Detalhes(int id)
         {
-            // Garante que sempre pega a notificação raiz da conversa
-            var notificacaoPai = await _context.Notificacoes
+            var notificacaoRaiz = await _context.Notificacoes
                 .Include(n => n.Usuario)
                 .Include(n => n.Respostas.OrderBy(r => r.DataCriacao))
                 .FirstOrDefaultAsync(n => n.Id == id);
 
-            if (notificacaoPai == null)
+            if (notificacaoRaiz == null)
             {
-                // Se for resposta, pega o pai
                 var resposta = await _context.Notificacoes
                     .Include(n => n.Usuario)
                     .FirstOrDefaultAsync(n => n.Id == id);
@@ -55,17 +53,23 @@ namespace SiteLixeiras.Areas.Admin.Controllers
                 if (resposta == null)
                     return NotFound();
 
-                notificacaoPai = await _context.Notificacoes
+                notificacaoRaiz = await _context.Notificacoes
                     .Include(n => n.Usuario)
                     .Include(n => n.Respostas.OrderBy(r => r.DataCriacao))
                     .FirstOrDefaultAsync(n => n.Id == resposta.NotificacaoPaiId);
 
-                if (notificacaoPai == null)
+                if (notificacaoRaiz == null)
                     return NotFound();
             }
 
-        
-            var respostasNaoLidas = notificacaoPai.Respostas
+         
+            if (!  notificacaoRaiz .EnviadaPeloAdmin && !notificacaoRaiz.Lida)
+            {
+                notificacaoRaiz.Lida = true;
+            }
+
+
+            var respostasNaoLidas = notificacaoRaiz.Respostas
                 .Where(r => !r.EnviadaPeloAdmin && !r.Lida)
                 .ToList();
 
@@ -74,7 +78,7 @@ namespace SiteLixeiras.Areas.Admin.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View(notificacaoPai);
+            return View(notificacaoRaiz);
         }
 
         [HttpPost]
