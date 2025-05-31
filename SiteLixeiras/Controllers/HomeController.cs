@@ -71,5 +71,10 @@ namespace SiteLixeiras.Controllers
                 ViewBag.Notificacoes = notificacoes;
             }
         }
+        public async Task<IActionResult> Privacy()
+        {
+            await CarregarNotificacoes();
+            return View();
+        }
     }
 }
