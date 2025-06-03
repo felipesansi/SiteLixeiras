@@ -39,11 +39,29 @@ namespace SiteLixeiras.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Produtos()
+        public async Task<IActionResult> Produtos(decimal? precoMin, decimal? precoMax)
         {
-            var produtos = await _context.Produtos
+            var produtosQuery = _context.Produtos
                 .Include(p => p.Fotos)
-                .ToListAsync();
+                .Include(p => p.Categoria) 
+                .AsQueryable();
+
+            if (precoMin.HasValue && precoMax.HasValue)
+            {
+                if (precoMin <= precoMax)
+                {
+                    produtosQuery = produtosQuery
+                        .Where(p => p.Preco >= precoMin && p.Preco <= precoMax);
+                    ViewData["precoMin"] = precoMin;
+                    ViewData["precoMax"] = precoMax;
+                }
+                else
+                {
+                    ViewBag.Mensagem = "Intervalo de preço inválido.";
+                }
+            }
+
+            var produtos = await produtosQuery.ToListAsync();
 
             await CarregarNotificacoes();
 

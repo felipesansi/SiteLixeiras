@@ -15,12 +15,28 @@
         </div>
     </div>
 
+    <!-- Seção do vídeo -->
+    <div class="row my-5 justify-content-center">
+        <div class="col-md-8 text-center position-relative">
+            <a href="https://www.youtube.com/watch?v=SEU_VIDEO_ID" target="_blank" class="d-inline-block">
+                <img src="~/imagens/Lixeira.png" class="img-fluid rounded shadow" alt="Vídeo institucional">
+                <i class="fa-solid fa-circle-play fa-4x text-white position-absolute top-50 start-50 translate-middle" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.6); cursor:pointer;"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Produtos -->
     <div class="row mt-5">
-        @foreach (var produto in Model)
-        {
-            <div class="col-md-4 mb-4">
-                @await Html.PartialAsync("_Produtos", produto)  
+        <div class="col-md-12">
+            <h2 class="text-center mb-4">Produtos</h2>
+            <div class="row">
+                @foreach (var produto in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        @await Html.PartialAsync("_Produtos", produto)
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
 </div>

@@ -1,0 +1,41 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Catálogo de Cores";
+    var coresHex = new Dictionary<string, string>
+    {
+        { "Preto", "#000000" },
+        { "Branco", "#FFFFFF" },
+        { "Fume", "#808080" },
+        { "Menta", "#98FF98" },
+        { "Azul céu", "#87CEEB" },
+        { "Beringela", "#8E4585" },
+        { "Rosa itch", "#FFB6C1" },
+        { "Vermelho", "#b91d1d"},
+        { "Coral", "#FF7F50" },
+        { "Papaia", "#FFEFD5" },
+        {"Hc28","#2A5F57"},
+        {"Hds29","#D8C48A"},
+        {"Hc31","#A1DDA9"},
+        {"Hc35","#A3D9A5" },
+        {"Hb77","#C5B6F0"},
+        {"Hb50","#2F3DDC"}
+
+        // Adicione mais conforme necessário
+    };
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Catálogo de Cores</h2>
+    <div class="row">
+        @foreach (var cor in Model)
+        {
+            var hex = coresHex.ContainsKey(cor) ? coresHex[cor] : "#cccccc";
+            <div class="col-md-3 mb-4">
+                <div class="border shadow rounded text-center p-3" style="background-color:@hex; height: 150px; color: @(hex == "#FFFFFF" ? "black" : "white");">
+                    <strong>@cor</strong><br />
+                    <small>@hex</small>
+                </div>
+            </div>
+        }
+    </div>
+</div>
