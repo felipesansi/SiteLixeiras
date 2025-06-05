@@ -8,15 +8,18 @@ namespace SiteLixeiras.Models
     {
         [Key]
         public int FotoId { get; set; }
-       
+
         [Required]
-        [StringLength(200)] // Tamanho máximo da URL
-        public string Url { get; set; }
+        [StringLength(300)]
+        public string Url { get; set; } // <- Link visível (https://...raw=1)
 
-        public int ProdutoId { get; set; } // Chave estrangeira para o produto
+        [Required]
+        [StringLength(300)]
+        public string CaminhoDropbox { get; set; } // <- Caminho real no Dropbox (/LixeirasIcena/...)
+
+        public int ProdutoId { get; set; }
+
         [ForeignKey("ProdutoId")]
-        public Produtos Produto { get; set; } // Navegação para o produto
-
-
+        public Produtos Produto { get; set; }
     }
 }

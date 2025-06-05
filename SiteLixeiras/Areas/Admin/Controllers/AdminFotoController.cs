@@ -21,8 +21,7 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             _context = context;
         }
 
-
-        public void CarregarProdutos()
+        private void CarregarProdutos()
         {
             var produtos = _context.Produtos.ToList();
             ViewData["ListaProdutos"] = new SelectList(produtos, "Id_Produto", "Nome");
@@ -36,7 +35,6 @@ namespace SiteLixeiras.Areas.Admin.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> EnviarFotos(IFormFile file, int Id_Produto, bool DefinirComoCapa = false)
         {
             if (file == null || file.Length == 0)
@@ -46,10 +44,11 @@ namespace SiteLixeiras.Areas.Admin.Controllers
                 return View();
             }
 
-            var fotoExistente = await _context.Fotos.Where(f => f.ProdutoId == Id_Produto).ToListAsync();
+            var fotosExistentes = await _context.Fotos
+                .Where(f => f.ProdutoId == Id_Produto)
+                .ToListAsync();
 
-            // Se não houver fotos existentes, exigir que a primeira seja definida como capa
-            if (!fotoExistente.Any() && !DefinirComoCapa)
+            if (!fotosExistentes.Any() && !DefinirComoCapa)
             {
                 ModelState.AddModelError("file", "Defina a primeira imagem como capa antes de enviar.");
                 CarregarProdutos();
@@ -57,15 +56,17 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             }
 
             var nomeUnico = $"{Guid.NewGuid()}_{file.FileName}";
-            var caminhoDestino = $"/LixeirasIcena/{nomeUnico}";
+            var caminhoDropbox = $"/LixeirasIcena/{nomeUnico}";
 
             try
             {
-                var urlImagem = await _uploadFotosService.UploadFileAsync(file, caminhoDestino);
-                var urlAjustada = urlImagem.Replace("dl=0", "raw=1");
+                // Upload e captura da URL original do Dropbox (com dl=0)
+                var urlOriginal = await _uploadFotosService.UploadFileAsync(file, caminhoDropbox);
+
+                // Ajusta para exibição direta
+                var urlExibicao = urlOriginal.Replace("dl=0", "raw=1");
 
                 var produto = await _context.Produtos.FindAsync(Id_Produto);
-
                 if (produto == null)
                 {
                     ModelState.AddModelError("file", "Produto não encontrado.");
@@ -73,40 +74,51 @@ namespace SiteLixeiras.Areas.Admin.Controllers
                     return View();
                 }
 
-                var novaFoto = new Foto { Url = urlAjustada, ProdutoId = Id_Produto };
+                var novaFoto = new Foto
+                {
+                    ProdutoId = Id_Produto,
+                    Url = urlExibicao,
+                    CaminhoDropbox = caminhoDropbox
+                };
+
                 _context.Fotos.Add(novaFoto);
                 await _context.SaveChangesAsync();
 
-                // Se o usuário definiu a imagem como capa, atualiza o produto
                 if (DefinirComoCapa)
                 {
-                    produto.ImagemThumbUrl= urlAjustada;
+                    produto.ImagemThumbUrl = urlExibicao;
                     _context.Produtos.Update(produto);
                     await _context.SaveChangesAsync();
                 }
 
                 ViewData["MensagemSucesso"] = "Foto enviada com sucesso!";
-                ViewData["LinkImagem"] = urlAjustada;
+                ViewData["LinkImagem"] = urlExibicao;
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, $"Erro ao enviar a foto: {ex.Message}");
-                Console.WriteLine(ex.ToString()); // Ajuda na depuração
+                Console.WriteLine(ex);
             }
 
             CarregarProdutos();
             return View();
         }
+
         public IActionResult Index()
         {
             return View();
         }
+
         public async Task<IActionResult> ListarFotos(int id)
         {
-            var fotos = await _context.Fotos.Include(f =>f.Produto).Where(f=>f.ProdutoId ==id) // fotos do produto específico
+            var fotos = await _context.Fotos
+                .Include(f => f.Produto)
+                .Where(f => f.ProdutoId == id)
                 .ToListAsync();
+
             return View(fotos);
         }
+
         [HttpPost]
         public async Task<IActionResult> ExcluirFoto(int id)
         {
@@ -114,12 +126,12 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             if (foto == null)
                 return NotFound();
 
-            await _uploadFotosService.DeleteFileAsync(foto.Url); // Aguarda a exclusão do arquivo
+            await _uploadFotosService.DeleteFileAsync(foto.CaminhoDropbox);
 
             _context.Fotos.Remove(foto);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(ListarFotos));
+            return RedirectToAction(nameof(ListarFotos), new { id = foto.ProdutoId });
         }
     }
 }
