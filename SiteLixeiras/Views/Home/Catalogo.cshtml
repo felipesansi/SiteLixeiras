@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Catálogo";
+    
+    var nomesCores = new List<string>
+    {
+        "Preto", "Fume", "Hc28", "Hb50", "Hb77", "Hc31", "Hc35",
+        "Hc53", "Hds29", "He50", "Hf60", "Hj70", "Hk33", "Menta",
+        "Papaia", "Rosa itch", "Vermelho", "Beringela", "Branco", "Azul céu", "Coral"
+    };
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Catálogo</h1>
+            <p>Bem-vindo ao catálogo de cores dos nossos produtos! Aqui você encontrará uma variedade de cores disponíveis para compra.</p>
+            <div class="row">
+                @for (var cor = 0; cor < nomesCores.Count; cor++)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <img src="~/imagens/Catalogo/@($"f{cor}.jpg")" class="card-img-top" alt="@nomesCores[cor]" />
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@nomesCores[cor]</h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

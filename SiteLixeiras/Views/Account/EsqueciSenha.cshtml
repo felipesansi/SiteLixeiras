@@ -13,12 +13,18 @@
 
                 @if (TempData["Mensagem"] != null)
                 {
-                    <div class="alert alert-success">@TempData["Mensagem"]</div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Mensagem"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                    </div>
                 }
 
                 @if (TempData["Erro"] != null)
                 {
-                    <div class="alert alert-danger">@TempData["Erro"]</div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Erro"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                    </div>
                 }
 
                 <form asp-controller="Account" asp-action="EsqueciSenha" method="post">
@@ -28,7 +34,7 @@
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100">Enviar Link de Recuperação</button>
+                    <button type="submit" class="btn btn-padrao w-100">Enviar Link de Recuperação</button>
                 </form>
 
                 <div class="text-center mt-3">

@@ -54,7 +54,7 @@ namespace SiteLixeiras.Controllers
                 }
             }
 
-            ModelState.AddModelError("", "Usuário ou senha inválidos.");
+            TempData["Erro"] = "Usuário ou senha inválidos. Tente novamente.";
             return View(model);
         }
 
@@ -142,7 +142,7 @@ namespace SiteLixeiras.Controllers
 
             if (usuario == null)
             {
-                ModelState.AddModelError("", "E-mail não encontrado.");
+                TempData["Erro"] = "Usuário não encontrado. Verifique o nome de usuário ou e-mail.";
                 return View(model);
             }
 

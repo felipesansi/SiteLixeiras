@@ -20,7 +20,7 @@ else
     @foreach (var notificacao in Model)
     {
         <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-secondary text-white">
+            <div class="card-header cor_padrao text-white">
                 <strong>@notificacao.Usuario?.UserName</strong>
                 <span class="float-end">@notificacao.DataCriacao.ToString("dd/MM/yyyy HH:mm")</span>
             </div>

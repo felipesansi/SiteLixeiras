@@ -18,7 +18,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light cor_padrao border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img class="w-75" src="~/imagens/logo-icena-txt.png" alt="Logo SiteLixeiras" />
@@ -44,7 +44,7 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="About">Sobre nós</a>
                         </li>
                         <li class="nav-item me-3">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Catalogo" asp-action="CatalogoCores">Catalogo de Cores</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Catalogo">Catalogo de Cores</a>
                         </li>
                         @if (User.IsInRole("User"))
                         {

@@ -6,7 +6,7 @@
         <img src="@Model.ImagemThumbUrl"
              class="img-fluid rounded"
              alt="Imagem do produto"
-             style="height: 220px; object-fit: cover;">
+             style="height: 330px; object-fit: cover;">
     }
     else
     {
@@ -16,14 +16,14 @@
     <div class="card-body">
         <h4 class="text-black">@Model.Nome</h4>
         <p class="text-muted">@Model.Descricao</p>
-        <h5 class="text-danger fw-bold">@Model.Preco.ToString("C")</h5>
+        <h5 class="verde fw-bold">@Model.Preco.ToString("C")</h5>
     </div>
 
     <div class="card-footer bg-transparent border-0">
         <a href="@Url.Action("Detalhes", "Produtos", new { id = Model.Id_Produto })" class="btn btn-outline-dark w-100 mb-2">
             Ver detalhes
         </a>
-        <a class="btn btn-primary w-100"
+        <a class="btn btn-padrao w-100"
            asp-controller="CarrinhoCompra"
            asp-action="AdicionarAoCarrinho"
            asp-route-id="@Model.Id_Produto">

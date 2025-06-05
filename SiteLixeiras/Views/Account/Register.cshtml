@@ -9,7 +9,7 @@
         <div class="row shadow rounded overflow-hidden">
 
             <!-- Painel lateral -->
-            <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-success text-white p-5 text-center">
+            <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center cor_padrao text-white p-5 text-center">
                 <h2 class="mb-3">Olá, novo usuário!</h2>
                 <p>Preencha o formulário para criar sua conta.</p>
                 <a asp-action="Login" class="btn btn-outline-light mt-3">Já tenho uma conta</a>
@@ -25,21 +25,21 @@
 
                     <!-- Email -->
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">E-mail</label>
+                       
                         <input asp-for="Email" class="form-control" placeholder="Seu e-mail" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <!-- Usuário -->
                     <div class="mb-3">
-                        <label asp-for="UserName" class="form-label">Usuário</label>
+       
                         <input asp-for="UserName" class="form-control" placeholder="Usuário" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
 
                     <!-- Senha -->
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Senha</label>
+                     
                         <div class="input-group">
                             <input asp-for="Password" type="password" class="form-control" id="passwordInput" placeholder="Senha" />
                             <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
@@ -51,7 +51,7 @@
 
                     <!-- Confirmar Senha -->
                     <div class="mb-3">
-                        <label asp-for="ConfirmPassword" class="form-label">Confirmar Senha</label>
+                       
                         <div class="input-group">
                             <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPasswordInput" placeholder="Confirmar senha" />
                             <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword" tabindex="-1">
@@ -61,7 +61,7 @@
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100">Cadastrar</button>
+                    <button type="submit" class="btn btn-padrao w-100">Cadastrar</button>
                 </form>
             </div>
         </div>

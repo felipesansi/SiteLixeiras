@@ -8,8 +8,9 @@
 <div class="container">
     <div class="container2 my-5">
         <div class="row shadow rounded overflow-hidden">
-
-            <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-success text-white p-5 text-center">
+        
+            <!--coluna esquerda-->
+            <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center cor_padrao text-white p-5 text-center">
                 <h2 class="mb-3">Bem-vindo de volta!</h2>
                 <p>Ainda não tem uma conta? Cadastre-se gratuitamente.</p>
                 <a asp-action="Register" class="btn btn-outline-light mt-3">Criar conta</a>
@@ -21,18 +22,24 @@
                     @Html.AntiForgeryToken()
 
                     <h3 class="mb-4 text-center">Login</h3>
-                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    @if (TempData["Erro"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Erro"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                        </div>
+                    }
 
         
                     <div class="mb-3">
-                        <label asp-for="UserName" class="form-label">Usuário ou E-mail</label>
+                   
                         <input asp-for="UserName" class="form-control" placeholder="Seu usuário ou e-mail" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
 
                
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Senha</label>
+             
                         <div class="input-group">
                             <input asp-for="Password" type="password" class="form-control" id="passwordInput" placeholder="Sua senha" />
                             <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
@@ -50,7 +57,7 @@
                     </a>
 
                  
-                    <button type="submit" class="btn btn-success w-100">Entrar</button>
+                    <button type="submit" class="btn btn-padrao w-100">Entrar</button>
                 </form>
             </div>
         </div>

@@ -94,5 +94,9 @@ namespace SiteLixeiras.Controllers
             await CarregarNotificacoes();
             return View();
         }
+        public IActionResult Catalogo()
+        {
+            return View();
+        }
     }
 }

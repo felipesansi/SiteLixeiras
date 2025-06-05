@@ -101,9 +101,10 @@ namespace SiteLixeiras.Areas.Admin.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ListarFotos()
+        public async Task<IActionResult> ListarFotos(int id)
         {
-            var fotos = await _context.Fotos.Include(f => f.Produto).ToListAsync();
+            var fotos = await _context.Fotos.Include(f =>f.Produto).Where(f=>f.ProdutoId ==id) // fotos do produto específico
+                .ToListAsync();
             return View(fotos);
         }
         [HttpPost]
