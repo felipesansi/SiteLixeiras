@@ -4,97 +4,102 @@
     ViewData["Title"] = "Editar Endereço";
 }
 
-<h1>Editar Endereço</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header cor_padrao text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Editar Endereço</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" autocomplete="off">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="EnderecoEntregaId" />
+                        <input type="hidden" asp-for="EnderecoEntregaId" />
+                        <input type="hidden" asp-for="UsuarioId" />
 
-            <div class="form-group">
-               
-           
-                <input type="hidden" asp-for="UsuarioId" />
-                <span asp-validation-for="UsuarioId" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nome" class="form-label">Nome</label>
+                                <input asp-for="Nome" class="form-control" />
+                                <span asp-validation-for="Nome" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SobreNome" class="form-label">Sobrenome</label>
+                                <input asp-for="SobreNome" class="form-control" />
+                                <span asp-validation-for="SobreNome" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Cep" class="form-label">CEP</label>
+                            <input asp-for="Cep" class="form-control" id="cep" />
+                            <span asp-validation-for="Cep" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Rua" class="form-label">Rua</label>
+                                <input asp-for="Rua" class="form-control" id="rua" />
+                                <span asp-validation-for="Rua" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Numero" class="form-label">Número</label>
+                                <input asp-for="Numero" class="form-control" />
+                                <span asp-validation-for="Numero" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Complemento" class="form-label">Complemento</label>
+                            <input asp-for="Complemento" class="form-control" />
+                            <span asp-validation-for="Complemento" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Bairro" class="form-label">Bairro</label>
+                                <input asp-for="Bairro" class="form-control" id="bairro" />
+                                <span asp-validation-for="Bairro" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Cidade" class="form-label">Cidade</label>
+                                <input asp-for="Cidade" class="form-control" id="cidade" />
+                                <span asp-validation-for="Cidade" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label asp-for="Estado" class="form-label">UF</label>
+                                <input asp-for="Estado" class="form-control text-uppercase" id="estado" maxlength="2" />
+                                <span asp-validation-for="Estado" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefone" class="form-label">Telefone</label>
+                                <input asp-for="Telefone" class="form-control" />
+                                <span asp-validation-for="Telefone" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CPF" class="form-label">CPF</label>
+                                <input asp-for="CPF" class="form-control" />
+                                <span asp-validation-for="CPF" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left-circle me-1"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle me-1"></i> Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="SobreNome" class="control-label"></label>
-                <input asp-for="SobreNome" class="form-control" />
-                <span asp-validation-for="SobreNome" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Cep" class="control-label"></label>
-                <input asp-for="Cep" class="form-control" id="cep" />
-                <span asp-validation-for="Cep" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Rua" class="control-label"></label>
-                <input asp-for="Rua" class="form-control" id="rua" />
-                <span asp-validation-for="Rua" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Numero" class="control-label"></label>
-                <input asp-for="Numero" class="form-control" />
-                <span asp-validation-for="Numero" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Complemento" class="control-label"></label>
-                <input asp-for="Complemento" class="form-control" />
-                <span asp-validation-for="Complemento" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Bairro" class="control-label"></label>
-                <input asp-for="Bairro" class="form-control" id="bairro" />
-                <span asp-validation-for="Bairro" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Cidade" class="control-label"></label>
-                <input asp-for="Cidade" class="form-control" id="cidade" />
-                <span asp-validation-for="Cidade" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" id="estado" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Telefone" class="control-label"></label>
-                <input asp-for="Telefone" class="form-control" />
-                <span asp-validation-for="Telefone" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="CPF" class="control-label"></label>
-                <input asp-for="CPF" class="form-control" />
-                <span asp-validation-for="CPF" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-3">
-                <input type="submit" value="Salvar" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div class="mt-3">
-    <a asp-action="Index" class="btn btn-secondary">Voltar para a Lista</a>
 </div>
 
 @section Scripts {
@@ -102,20 +107,21 @@
 
     <script>
         document.getElementById("cep").addEventListener("blur", function () {
-            var cep = this.value.replace(/\D/g, '');
+            const cep = this.value.replace(/\D/g, '');
             if (cep.length === 8) {
                 fetch(`/EnderecoEntregas/ConsultarCep?cep=${cep}`)
                     .then(res => res.json())
                     .then(data => {
                         if (data.sucesso) {
-                            document.getElementById("rua").value = data.rua;
-                            document.getElementById("bairro").value = data.bairro;
-                            document.getElementById("cidade").value = data.cidade;
-                            document.getElementById("estado").value = data.estado;
+                            document.getElementById("rua").value = data.rua || '';
+                            document.getElementById("bairro").value = data.bairro || '';
+                            document.getElementById("cidade").value = data.cidade || '';
+                            document.getElementById("estado").value = data.estado || '';
                         } else {
-                            alert(data.mensagem);
+                            alert(data.mensagem || "CEP não encontrado.");
                         }
-                    });
+                    })
+                    .catch(() => alert("Erro ao consultar o CEP."));
             }
         });
     </script>

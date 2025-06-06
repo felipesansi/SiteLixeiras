@@ -32,10 +32,19 @@
         <div class="col-md-12">
             <h2 class="text-center mb-4">Produtos</h2>
             <div class="row">
-                @foreach (var produto in Model)
+                @if (Model != null && Model.Any())
+                {  
+                    @foreach (var produto in Model)
+                    {
+                        <div class="col-md-4 mb-4">
+                            @await Html.PartialAsync("_Produtos", produto)
+                        </div>
+                    }
+                }
+                else
                 {
-                    <div class="col-md-4 mb-4">
-                        @await Html.PartialAsync("_Produtos", produto)
+                    <div class="col-12 text-center text-muted">
+                        <p>Nenhum produto encontrado.</p>
                     </div>
                 }
             </div>

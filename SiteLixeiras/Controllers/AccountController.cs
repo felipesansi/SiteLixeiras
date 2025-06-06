@@ -278,6 +278,49 @@ namespace SiteLixeiras.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult ExcluirConta() => View();
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExcluirConta(string senha)
+        {
+            if (string.IsNullOrWhiteSpace(senha))
+            {
+                ModelState.AddModelError("", "Preencha o campo de confirmação.");
+                return View();
+            }
+
+            var usuario = await _userManager.GetUserAsync(User);
+            if (usuario == null)
+            {
+                TempData["MensagemErro"] = "Usuário não encontrado.";
+                return RedirectToAction("Login");
+            }
+
+            var senhaValida = await _userManager.CheckPasswordAsync(usuario, senha);
+            if (!senhaValida)
+            {
+                ModelState.AddModelError("", "Senha incorreta.");
+                return View();
+            }
+
+            var result = await _userManager.DeleteAsync(usuario);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+                return View();
+            }
+
+
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("ContaExcluida", "Account");
+        }
+        public IActionResult ContaExcluida() => View();
+
 
         public IActionResult AccessDenied() => View();
     }

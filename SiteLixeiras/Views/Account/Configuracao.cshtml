@@ -13,10 +13,10 @@
 
             @if (TempData["MensagemSucesso"] != null)
             {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible fade show" role="alert" aria-live="polite">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     @TempData["MensagemSucesso"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
                 </div>
             }
 
@@ -26,83 +26,125 @@
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(x => x.Id)
 
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <label asp-for="UserName" class="form-label">👤 Nome de Usuário</label>
-                                <input asp-for="UserName" class="form-control form-control-lg rounded-3" />
-                                <span asp-validation-for="UserName" class="text-danger small"></span>
+                                <input asp-for="UserName" type="text" autocomplete="username"
+                                       class="form-control form-control-lg rounded-3"
+                                       aria-describedby="UserNameHelp" />
+                                <span asp-validation-for="UserName" class="text-danger small" id="UserNameHelp"></span>
                             </div>
+
                             <div class="col-md-6">
                                 <label asp-for="Email" class="form-label">📧 Email</label>
-                                <input asp-for="Email" class="form-control form-control-lg rounded-3" />
-                                <span asp-validation-for="Email" class="text-danger small"></span>
+                                <input asp-for="Email" type="email" autocomplete="email"
+                                       class="form-control form-control-lg rounded-3"
+                                       aria-describedby="EmailHelp" />
+                                <span asp-validation-for="Email" class="text-danger small" id="EmailHelp"></span>
                             </div>
-                            <div class="col-md-6">
-                                <label asp-for="Telefone" class="form-label">📱 Telefone</label>
-                                <input asp-for="Telefone" class="form-control form-control-lg rounded-3" />
-                                <span asp-validation-for="Telefone" class="text-danger small"></span>
-                            </div>
+
+                            @if (!User.IsInRole("Admin"))
+                            {
+                                <div class="col-md-6">
+                                    <label asp-for="Telefone" class="form-label">📱 Telefone</label>
+                                    <input asp-for="Telefone" type="tel" autocomplete="tel"
+                                           class="form-control form-control-lg rounded-3"
+                                           aria-describedby="TelefoneHelp" />
+                                    <span asp-validation-for="Telefone" class="text-danger small" id="TelefoneHelp"></span>
+                                </div>
+                            }
                         </div>
 
-                        <div class="mt-4 d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4">
+                        <div class="mt-5 d-flex flex-wrap gap-3 justify-content-center justify-content-md-between">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 d-flex align-items-center">
                                 <i class="bi bi-save me-2"></i>Salvar
+                                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                             </button>
-                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+
+                            @if (!User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Account" asp-action="ExcluirConta" class="btn btn-danger rounded-pill px-4"
+                                   onclick="return confirm('Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita.')">
+                                    <i class="bi bi-trash-fill me-2"></i>Excluir conta
+                                </a>
+                            }
+
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-lg rounded-pill px-4 d-flex align-items-center">
                                 <i class="bi bi-arrow-left me-2"></i>Voltar
                             </a>
                         </div>
                     </form>
                 </div>
             </div>
+            @if (!User.IsInRole("Admin"))
+            {
+                <section class="mb-5">
+                    <h4 class="fw-semibold mb-4">📦 Endereços de Entrega</h4>
 
-            <div class="mb-3">
-                <h4 class="fw-semibold mb-3">📦 Endereços de Entrega</h4>
-
-                @if (Model.Entrega != null && Model.Entrega.Any())
-                {
-                    <div class="row g-4">
-                        @foreach (var endereco in Model.Entrega)
-                        {
-                            <div class="col-md-6">
-                                <div class="card h-100 shadow-sm rounded-3 border-0">
-                                    <div class="card-body">
-                                        <h6 class="card-title fw-semibold text-primary mb-2">Endereço</h6>
-                                        <p class="mb-1"><strong>CEP:</strong> @endereco.Cep</p>
-                                        <p class="mb-1"><strong>Rua:</strong> @endereco.Rua, Nº @endereco.Numero</p>
-                                        @if (!string.IsNullOrWhiteSpace(endereco.Complemento))
-                                        {
-                                            <p class="mb-1"><strong>Complemento:</strong> @endereco.Complemento</p>
-                                        }
-                                        <p class="mb-1"><strong>Bairro:</strong> @endereco.Bairro</p>
-                                        <p class="mb-1"><strong>Cidade:</strong> @endereco.Cidade - @endereco.Estado</p>
-                                        <p><strong>Telefone:</strong> @endereco.Telefone</p>
+                    @if (Model.Entrega != null && Model.Entrega.Any())
+                    {
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            @foreach (var endereco in Model.Entrega)
+                            {
+                                <div class="col">
+                                    <div class="card h-100 shadow-sm rounded-3 border-0">
+                                        <div class="card-body">
+                                            <h6 class="card-title fw-semibold text-primary mb-3">Endereço</h6>
+                                            <p class="mb-1"><strong>CEP:</strong> @endereco.Cep</p>
+                                            <p class="mb-1"><strong>Rua:</strong> @endereco.Rua, Nº @endereco.Numero</p>
+                                            @if (!string.IsNullOrWhiteSpace(endereco.Complemento))
+                                            {
+                                                <p class="mb-1"><strong>Complemento:</strong> @endereco.Complemento</p>
+                                            }
+                                            <p class="mb-1"><strong>Bairro:</strong> @endereco.Bairro</p>
+                                            <p class="mb-1"><strong>Cidade:</strong> @endereco.Cidade - @endereco.Estado</p>
+                                            <p><strong>Telefone:</strong> @endereco.Telefone</p>
+                                        </div>
                                     </div>
                                 </div>
+                            }
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("Index", "EnderecoEntregas")" class="btn btn-outline-secondary rounded-pill px-4">
+                                <i class="bi bi-eye-fill me-2"></i>Ver Todos os Endereços
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info d-flex align-items-center justify-content-between" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                Nenhum endereço de entrega cadastrado.
                             </div>
-                        }
-                    </div>
-                    
-                    <div class="text-center mt-4">
-                        <a href="@Url.Action("Index", "EnderecoEntregas")" class="btn btn-outline-secondary rounded-pill">
-                            <i class="bi bi-eye-fill me-2"></i>Ver Todos os Endereços
-                        </a>
-                    </div>
-                }
-                else
-                {
-                    <div class="alert alert-info mt-3 d-flex align-items-center" role="alert">
-                        <i class="bi bi-info-circle-fill me-2"></i>
-                        Nenhum endereço de entrega cadastrado.
-                    </div>
-                }
-            </div>
+                            <a href="@Url.Action("Create", "EnderecoEntregas")" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-plus-lg me-2"></i>Adicionar Endereço
+                            </a>
+                        </div>
+                    }
+                </section>
+            }
+
+            
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        // Mostrar spinner no botão salvar após submit
+        const form = document.querySelector('form[asp-action="Configuracao"]');
+        const btnSalvar = form.querySelector('button[type="submit"]');
+        const spinner = btnSalvar.querySelector('.spinner-border');
+
+        form.addEventListener('submit', () => {
+            btnSalvar.setAttribute('disabled', 'disabled');
+            spinner.classList.remove('d-none');
+        });
+    </script>
 }
