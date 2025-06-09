@@ -4,6 +4,7 @@ using SiteLixeiras.Context;
 using SiteLixeiras.Models;
 using SiteLixeiras.Repositorios;
 using SiteLixeiras.Repositorios.Interfaces;
+using SiteLixeiras.Services;
 using SiteLixeiras.Sevices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,14 @@ builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinhoCompra(sp));
 builder.Services.AddTransient<IUploadFotosService, UploadFotosService>();
 builder.Services.Configure<DropboxSettings>(builder.Configuration.GetSection("Dropbox"));
 builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("Email"));
+
+// Configuração do RazorViewToStringRenderer
+builder.Services.AddScoped<RazorViewToStringRenderer>();
+builder.Services.AddScoped<EmailService>();
+
+
+
+
 
 // Carrega a configuração do MercadoPago
 builder.Services.Configure<MercadoPagoSettings>(builder.Configuration.GetSection("MercadoPago"));

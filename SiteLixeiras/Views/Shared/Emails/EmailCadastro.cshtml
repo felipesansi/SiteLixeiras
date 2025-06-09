@@ -1,0 +1,57 @@
+﻿@model SiteLixeiras.ViewModel.RegisterViewModel
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bem-vindo ao SiteLixeiras</title>
+
+
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .welcome-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .brand-title {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #1DB954;
+            margin-bottom: 1.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #B3B3B3;
+        }
+
+
+          
+    </style>
+</head>
+<body>
+
+    <div class="welcome-container container">
+        <div class="brand-title">SiteLixeiras</div>
+        <h2 class="mb-3">Bem-vindo, @Model.UserName!</h2>
+        <p class="subtitle mb-4">Seu cadastro foi realizado com sucesso.<br />Obrigado por se juntar a nós!</p>
+    
+    </div>
+
+
+</body>
+</html>

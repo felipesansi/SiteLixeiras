@@ -23,5 +23,10 @@ namespace SiteLixeiras.ViewModel
         [Display(Name = "Confirmar senha")]
         [Compare("Password", ErrorMessage = "As senhas não conferem")]
         public string ConfirmPassword { get; set; }
+       
+        [Required(ErrorMessage = "Você deve aceitar os Termos de Uso.")]
+        [Display(Name = "Aceito os Termos de Uso")]
+        public bool AceiteTermos { get; set; }
+
     }
 }

@@ -60,6 +60,17 @@
                         </div>
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
+                    <!-- Termos de Uso -->
+                    <div class="form-check mb-3">
+                        <input asp-for="AceiteTermos" class="form-check-input" type="checkbox" id="aceiteTermos" />
+                        <label class="form-check-label" for="aceiteTermos">
+                            Li e aceito os <a asp-action="TermosUso" asp-controller="Account" target="_blank">Termos de Uso</a>
+                        </label>
+                        <span asp-validation-for="AceiteTermos" class="text-danger"></span>
+                    </div>
+
+
+
 
                     <button type="submit" class="btn btn-padrao w-100">Cadastrar</button>
                 </form>

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
 using SiteLixeiras.Models;
 using SiteLixeiras.Repositorios.Interfaces;
+using SiteLixeiras.Services;
+using SiteLixeiras.Sevices;
 using System.Security.Claims;
 
 namespace SiteLixeiras.Controllers
@@ -13,14 +15,19 @@ namespace SiteLixeiras.Controllers
         private readonly IPedido _pedido;
         private readonly AppDbContext _context;
         private readonly CarrinhoCompra carrinhoCompra;
+        private readonly RazorViewToStringRenderer _razorViewToStringRenderer;
+        private readonly EmailService _emailService;
 
-        public PedidosController(IProdutosRepositorio produtosRepositorio, IPedido pedido, AppDbContext context, CarrinhoCompra carrinhoCompra)
+        public PedidosController(IProdutosRepositorio produtosRepositorio, IPedido pedido, AppDbContext context, CarrinhoCompra carrinhoCompra, RazorViewToStringRenderer razorViewToStringRenderer, EmailService emailService)
         {
             _produtosRepositorio = produtosRepositorio;
             _pedido = pedido;
             _context = context;
             this.carrinhoCompra = carrinhoCompra;
+            _razorViewToStringRenderer = razorViewToStringRenderer;
+            _emailService = emailService;
         }
+
 
         // Tela para exibir endereços cadastrados
         public async Task<IActionResult> Checkout()
@@ -65,6 +72,11 @@ namespace SiteLixeiras.Controllers
             if (itensCarrinho == null || !itensCarrinho.Any())
                 return RedirectToAction("Carrinho", "CarrinhoCompra");
 
+          
+            var usuario = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (usuario == null)
+                return Unauthorized();
+
             var pedido = new Pedido
             {
                 UsuarioId = userId,
@@ -77,16 +89,23 @@ namespace SiteLixeiras.Controllers
                     ProdutoId = item.Produtos.Id_Produto,
                     Quantidade = item.Quantidade,
                     Preco = item.Produtos.Preco
-                }).ToList()
+                }).ToList(),
+
+            
+                Usuario = usuario
             };
 
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
 
+            var emailhtml = await _razorViewToStringRenderer.RenderViewToStringAsync("Emails/EmailPedido", pedido);
+
+            
+            await _emailService.EnviarEmail(pedido.Usuario.Email, "Confirmação de Pedido", emailhtml);
+
             return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
         }
 
-    
         public IActionResult Confirmacao()
         {
             ViewBag.Mensagem = "Pedido realizado com sucesso!";
