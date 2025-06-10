@@ -45,12 +45,39 @@
                         <button type="submit" class="btn btn-sm btn-success">Marcar como entregue para tranportadora</button>
                     </form>
 
-                    <!-- Botão abre modal -->
+                    <!-- Botão abre modal de mensagem -->
                     <button type="button" class="btn btn-sm btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#@modalId">
                         Enviar mensagem
                     </button>
+
+                    <!-- Botão abre modal de endereço -->
+                    <button type="button" class="btn btn-sm btn-info ms-1" data-bs-toggle="modal" data-bs-target="#enderecoModal-@pedido.PedidoId">
+                        Ver Endereço
+                    </button>
                 </td>
             </tr>
+            <!-- Modal Detalhes do Endereço -->
+            <div class="modal fade" id="enderecoModal-@pedido.PedidoId" tabindex="-1" aria-labelledby="enderecoModalLabel-@pedido.PedidoId" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="enderecoModalLabel-@pedido.PedidoId">Endereço de Entrega</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Rua:</strong> @pedido.EnderecoEntrega?.Rua</p>
+                            <p><strong>Número:</strong> @pedido.EnderecoEntrega?.Numero</p>
+                            <p><strong>Bairro:</strong> @pedido.EnderecoEntrega?.Bairro</p>
+                            <p><strong>Cidade:</strong> @pedido.EnderecoEntrega?.Cidade</p>
+                            <p><strong>CEP:</strong> @pedido.EnderecoEntrega?.Cep</p>
+                            <p><strong>Complemento:</strong> @pedido.EnderecoEntrega?.Complemento</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Modal Enviar Mensagem -->
             <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@($"{modalId}Label")" aria-hidden="true">

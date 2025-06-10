@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
+using SiteLixeiras.Helpers;
 using SiteLixeiras.Models;
 using SiteLixeiras.Repositorios;
 using SiteLixeiras.Repositorios.Interfaces;
@@ -37,9 +38,8 @@ builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("Email
 builder.Services.AddScoped<RazorViewToStringRenderer>();
 builder.Services.AddScoped<EmailService>();
 
-
-
-
+// Configuração de Criptografia
+builder.Services.AddSingleton<CriptografiaHelper>();
 
 // Carrega a configuração do MercadoPago
 builder.Services.Configure<MercadoPagoSettings>(builder.Configuration.GetSection("MercadoPago"));
