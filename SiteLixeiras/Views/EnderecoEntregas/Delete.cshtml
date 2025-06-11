@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Excluir Endereço";
 }
-
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -12,9 +11,24 @@
                     <h4 class="mb-0"><i class="bi bi-trash3-fill me-2"></i>Confirmar Exclusão</h4>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-warning">
-                        <strong>Atenção:</strong> Tem certeza de que deseja excluir este endereço?
+                    @if (TempData["Erro"] != null)
+                    {
+                        <div class="alert alert-warning">
+                            <strong>Ação não permitida:</strong> @TempData["Erro"]
+                        </div>
+                    }
+                   else  
+                   {
+                        <div class="alert alert-warning">
+                           <strong>Atenção:</strong> Tem certeza de que deseja excluir este endereço?
+                        </div>
+
+                   }
+                   
                     </div>
+
+                     
+
                     <dl class="row">
 
                         <dt class="col-sm-4">Usuário</dt>

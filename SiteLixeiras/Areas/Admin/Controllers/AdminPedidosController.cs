@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
 using SiteLixeiras.Models;
+using SiteLixeiras.Helpers;
 
 namespace SiteLixeiras.Areas.Admin.Controllers
 {
@@ -15,10 +16,13 @@ namespace SiteLixeiras.Areas.Admin.Controllers
 
         private readonly UserManager<IdentityUser> _userManager;
 
-        public AdminPedidosController(AppDbContext context, UserManager<IdentityUser> userManager)
+        private CriptografiaHelper _criptografia;
+
+        public AdminPedidosController(AppDbContext context, UserManager<IdentityUser> userManager, CriptografiaHelper criptografia)
         {
             _context = context;
             _userManager = userManager;
+            _criptografia = criptografia;
         }
 
         public async Task<IActionResult> Index()
@@ -30,9 +34,17 @@ namespace SiteLixeiras.Areas.Admin.Controllers
                     .ThenInclude(i => i.Produto)
                 .ToListAsync();
 
+            // Descriptografa os endereços de entrega
             foreach (var pedido in pedidos)
             {
-                
+                if (pedido.EnderecoEntrega != null)
+                {
+                    DescriptografarEndereco(pedido.EnderecoEntrega);
+                }
+            }
+            foreach (var pedido in pedidos)
+            {
+
                 if (!_context.Notificacoes.Any(n => n.UsuarioId == pedido.UsuarioId && n.Mensagem.Contains($"Pedido #{pedido.PedidoId}")))
                 {
                     // Cria uma notificação
@@ -68,7 +80,7 @@ namespace SiteLixeiras.Areas.Admin.Controllers
                 Mensagem = $"Seu pedido #{pedido.PedidoId} Seu pedido foi entregue a transportadora ou mercado livre para ser entregue no seu endereço.",
                 EnviadaPeloAdmin = true,
                 Lida = false,
-                DataCriacao = DateTime.Now 
+                DataCriacao = DateTime.Now
             });
 
             await _context.SaveChangesAsync();
@@ -95,6 +107,22 @@ namespace SiteLixeiras.Areas.Admin.Controllers
 
             TempData["MensagemEnviada"] = "Mensagem enviada com sucesso!";
             return RedirectToAction("Index");
+        }
+        public void DescriptografarEndereco(EnderecoEntrega endereco)
+        {
+            endereco.Nome = _criptografia.Descriptografar(endereco.Nome);
+            endereco.SobreNome = _criptografia.Descriptografar(endereco.SobreNome);
+
+            endereco.Rua = _criptografia.Descriptografar(endereco.Rua);
+            endereco.Bairro = _criptografia.Descriptografar(endereco.Bairro);
+            endereco.Estado = _criptografia.Descriptografar(endereco.Estado);
+            endereco.Cidade = _criptografia.Descriptografar(endereco.Cidade);
+            endereco.Telefone = _criptografia.Descriptografar(endereco.Telefone);
+            endereco.Cep = _criptografia.Descriptografar(endereco.Cep);
+            endereco.CPF = _criptografia.Descriptografar(endereco.CPF);
+            endereco.Numero = _criptografia.Descriptografar(endereco.Numero);
+            endereco.Complemento = _criptografia.Descriptografar(endereco.Complemento);
+
         }
     }
 }

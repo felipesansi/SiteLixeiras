@@ -6,7 +6,7 @@ using SiteLixeiras.Repositorios.Interfaces;
 using SiteLixeiras.Services;
 using SiteLixeiras.Sevices;
 using System.Security.Claims;
-
+using SiteLixeiras.Helpers;
 namespace SiteLixeiras.Controllers
 {
     public class PedidosController : Controller
@@ -17,8 +17,9 @@ namespace SiteLixeiras.Controllers
         private readonly CarrinhoCompra carrinhoCompra;
         private readonly RazorViewToStringRenderer _razorViewToStringRenderer;
         private readonly EmailService _emailService;
+        private CriptografiaHelper _criptografia;
 
-        public PedidosController(IProdutosRepositorio produtosRepositorio, IPedido pedido, AppDbContext context, CarrinhoCompra carrinhoCompra, RazorViewToStringRenderer razorViewToStringRenderer, EmailService emailService)
+        public PedidosController(IProdutosRepositorio produtosRepositorio, IPedido pedido, AppDbContext context, CarrinhoCompra carrinhoCompra, RazorViewToStringRenderer razorViewToStringRenderer, EmailService emailService, CriptografiaHelper criptografia)
         {
             _produtosRepositorio = produtosRepositorio;
             _pedido = pedido;
@@ -26,17 +27,23 @@ namespace SiteLixeiras.Controllers
             this.carrinhoCompra = carrinhoCompra;
             _razorViewToStringRenderer = razorViewToStringRenderer;
             _emailService = emailService;
+            _criptografia = criptografia;
         }
+
 
 
         // Tela para exibir endereços cadastrados
         public async Task<IActionResult> Checkout()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+            // descriptografar os endereços
             var enderecos = await _context.EnderecosEntregas
                 .Where(e => e.UsuarioId == userId)
                 .ToListAsync();
+            foreach (var endereco in enderecos)
+            {
+                DescriptografarEndereco(endereco);
+            }
 
             return View(enderecos);
         }
@@ -49,7 +56,10 @@ namespace SiteLixeiras.Controllers
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 enderecoEntrega.UsuarioId = userId;
+                
+                CriptografarEndereco(enderecoEntrega);
                 _context.EnderecosEntregas.Add(enderecoEntrega);
+              
                 _context.SaveChanges();
                 return RedirectToAction("Checkout");
             }
@@ -72,7 +82,7 @@ namespace SiteLixeiras.Controllers
             if (itensCarrinho == null || !itensCarrinho.Any())
                 return RedirectToAction("Carrinho", "CarrinhoCompra");
 
-          
+
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (usuario == null)
                 return Unauthorized();
@@ -91,7 +101,7 @@ namespace SiteLixeiras.Controllers
                     Preco = item.Produtos.Preco
                 }).ToList(),
 
-            
+
                 Usuario = usuario
             };
 
@@ -100,7 +110,7 @@ namespace SiteLixeiras.Controllers
 
             var emailhtml = await _razorViewToStringRenderer.RenderViewToStringAsync("Emails/EmailPedido", pedido);
 
-            
+
             await _emailService.EnviarEmail(pedido.Usuario.Email, "Confirmação de Pedido", emailhtml);
 
             return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
@@ -116,8 +126,13 @@ namespace SiteLixeiras.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var pedidos = await _context.Pedidos
                 .Include(p => p.EnderecoEntrega)
-                .Where(p => p.UsuarioId == userId && p.PedididoEntregue !=null) 
+                .Where(p => p.UsuarioId == userId && p.PedididoEntregue != null)
                 .ToListAsync();
+            
+            foreach (var pedido in pedidos)
+            {
+                DescriptografarEndereco(pedido.EnderecoEntrega);
+            }
             return View(pedidos);
         }
         public async Task<IActionResult> DetalhesPedido(int id)
@@ -131,5 +146,43 @@ namespace SiteLixeiras.Controllers
                 return NotFound();
             return View(pedido);
         }
+        //desencriptografar o endereço
+        public void DescriptografarEndereco(EnderecoEntrega endereco)
+        {
+            if (endereco != null)
+            {
+                endereco.Nome = _criptografia.Descriptografar(endereco.Nome);
+                endereco.SobreNome = _criptografia.Descriptografar(endereco.SobreNome);
+                endereco.Rua = _criptografia.Descriptografar(endereco.Rua);
+                endereco.Bairro = _criptografia.Descriptografar(endereco.Bairro);
+                endereco.Estado = _criptografia.Descriptografar(endereco.Estado);
+                endereco.Cidade = _criptografia.Descriptografar(endereco.Cidade);
+                endereco.Telefone = _criptografia.Descriptografar(endereco.Telefone);
+                endereco.Cep = _criptografia.Descriptografar(endereco.Cep);
+                endereco.CPF = _criptografia.Descriptografar(endereco.CPF);
+                endereco.Numero = _criptografia.Descriptografar(endereco.Numero);
+                endereco.Complemento = _criptografia.Descriptografar(endereco.Complemento);
+
+            }
+       
+        }
+        public void CriptografarEndereco(EnderecoEntrega endereco)
+        {
+            if (endereco != null)
+            {
+                endereco.Nome = _criptografia.Criptografar(endereco.Nome);
+                endereco.SobreNome = _criptografia.Criptografar(endereco.SobreNome);
+                endereco.Rua = _criptografia.Criptografar(endereco.Rua);
+                endereco.Bairro = _criptografia.Criptografar(endereco.Bairro);
+                endereco.Estado = _criptografia.Criptografar(endereco.Estado);
+                endereco.Cidade = _criptografia.Criptografar(endereco.Cidade);
+                endereco.Telefone = _criptografia.Criptografar(endereco.Telefone);
+                endereco.Cep = _criptografia.Criptografar(endereco.Cep);
+                endereco.CPF = _criptografia.Criptografar(endereco.CPF);
+                endereco.Numero = _criptografia.Criptografar(endereco.Numero);
+                endereco.Complemento = _criptografia.Criptografar(endereco.Complemento);
+            }
+        }
     }
 }
+

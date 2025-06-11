@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiteLixeiras.Context;
 
@@ -11,9 +12,11 @@ using SiteLixeiras.Context;
 namespace SiteLixeiras.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250611160426_AlterandoTbEnderecos")]
+    partial class AlterandoTbEnderecos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -313,57 +316,57 @@ namespace SiteLixeiras.Migrations
 
                     b.Property<string>("Bairro")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(999)
+                        .HasColumnType("nvarchar(999)");
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Cep")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Cidade")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(999)
+                        .HasColumnType("nvarchar(999)");
 
                     b.Property<string>("Complemento")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(999)
+                        .HasColumnType("nvarchar(999)");
 
                     b.Property<string>("Estado")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(999)
+                        .HasColumnType("nvarchar(999)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(999)
+                        .HasColumnType("nvarchar(999)");
 
                     b.Property<string>("Numero")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Rua")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(999)
+                        .HasColumnType("nvarchar(999)");
 
                     b.Property<string>("SobreNome")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(999)
+                        .HasColumnType("nvarchar(999)");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("UsuarioId")
                         .IsRequired()
@@ -668,7 +671,7 @@ namespace SiteLixeiras.Migrations
             modelBuilder.Entity("SiteLixeiras.Models.Pedido", b =>
                 {
                     b.HasOne("SiteLixeiras.Models.EnderecoEntrega", "EnderecoEntrega")
-                        .WithMany("Pedidos")
+                        .WithMany()
                         .HasForeignKey("EnderecoEntregaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -717,11 +720,6 @@ namespace SiteLixeiras.Migrations
             modelBuilder.Entity("SiteLixeiras.Models.Categoria", b =>
                 {
                     b.Navigation("Produtos");
-                });
-
-            modelBuilder.Entity("SiteLixeiras.Models.EnderecoEntrega", b =>
-                {
-                    b.Navigation("Pedidos");
                 });
 
             modelBuilder.Entity("SiteLixeiras.Models.Notificacao", b =>

@@ -64,13 +64,20 @@
                             <h5 class="modal-title" id="enderecoModalLabel-@pedido.PedidoId">Endereço de Entrega</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body bg-body-secondary">
+                            <p><strong>Nome:</strong> @pedido.EnderecoEntrega?.Nome</p>
+                            <p><strong>Sobrenome:</strong> @pedido.EnderecoEntrega?.SobreNome</p>
+                            <p><strong>CPF:</strong> @pedido.EnderecoEntrega?.CPF</p>
+                            <hr>
                             <p><strong>Rua:</strong> @pedido.EnderecoEntrega?.Rua</p>
                             <p><strong>Número:</strong> @pedido.EnderecoEntrega?.Numero</p>
                             <p><strong>Bairro:</strong> @pedido.EnderecoEntrega?.Bairro</p>
                             <p><strong>Cidade:</strong> @pedido.EnderecoEntrega?.Cidade</p>
                             <p><strong>CEP:</strong> @pedido.EnderecoEntrega?.Cep</p>
                             <p><strong>Complemento:</strong> @pedido.EnderecoEntrega?.Complemento</p>
+                            <p><strong>Telefone:</strong> @pedido.EnderecoEntrega?.Telefone</p>
+                           
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
