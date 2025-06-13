@@ -23,6 +23,10 @@ namespace SiteLixeiras.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.MetaTitle = "Lixeiras de Resina - Produtos em Destaque";
+            ViewBag.MetaDescription = "Confira as melhores lixeiras de resina, produtos em destaque e soluções sustentáveis para o seu ambiente.";
+            ViewBag.MetaKeywords = "Lixeiras de Resina, Cesto de Resina,  lixeiras, Cesto, resina, sustentabilidade, produtos, destaque";
+
             var produtos = await _context.Produtos
                 .Where(p => p.Destaque)
                 .Include(p => p.Fotos)
@@ -35,15 +39,23 @@ namespace SiteLixeiras.Controllers
 
         public async Task<IActionResult> About()
         {
+            ViewBag.MetaTitle = "Sobre Nós - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Conheça a história, missão e valores da Lixeiras de Resina.";
+            ViewBag.MetaKeywords = "sobre, empresa, missão, valores, lixeiras de resina";
+
             await CarregarNotificacoes();
             return View();
         }
 
         public async Task<IActionResult> Produtos(decimal? precoMin, decimal? precoMax)
         {
+            ViewBag.MetaTitle = "Todos os Produtos - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Veja todos os produtos de lixeiras de resina disponíveis para compra.";
+            ViewBag.MetaKeywords = "Produtos de resina,produtos, lixeiras, resina, catálogo, comprar";
+
             var produtosQuery = _context.Produtos
                 .Include(p => p.Fotos)
-                .Include(p => p.Categoria) 
+                .Include(p => p.Categoria)
                 .AsQueryable();
 
             if (precoMin.HasValue && precoMax.HasValue)
@@ -71,15 +83,18 @@ namespace SiteLixeiras.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            ViewBag.MetaTitle = "Erro - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Ocorreu um erro ao processar sua solicitação.";
+            ViewBag.MetaKeywords = "erro, lixeiras de resina";
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        
         private async Task CarregarNotificacoes()
         {
             if (User.IsInRole("User"))
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Obtém o ID do usuário autenticado
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 var notificacoes = await _context.Notificacoes
                     .Where(n => n.UsuarioId == userId && !n.Lida)
@@ -89,13 +104,23 @@ namespace SiteLixeiras.Controllers
                 ViewBag.Notificacoes = notificacoes;
             }
         }
+
         public async Task<IActionResult> Privacy()
         {
+            ViewBag.MetaTitle = "Política de Privacidade - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Saiba como tratamos seus dados e garantimos sua privacidade.";
+            ViewBag.MetaKeywords = "privacidade, dados, política, lixeiras de resina";
+
             await CarregarNotificacoes();
             return View();
         }
+
         public IActionResult Catalogo()
         {
+            ViewBag.MetaTitle = "Catálogo de Cores - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Confira o catálogo de cores disponíveis para as lixeiras de resina.";
+            ViewBag.MetaKeywords = "catálogo, cores, lixeiras, resina";
+
             return View();
         }
     }

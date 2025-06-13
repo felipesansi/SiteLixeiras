@@ -8,11 +8,13 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SiteLixeiras - Lixeiras, produtos e soluções sustentáveis para o seu ambiente." />
-    <meta name="keywords" content="lixeiras, sustentabilidade, reciclagem, produtos, icena" />
-    <meta name="author" content="SiteLixeiras" />
+    <meta name="author" content="SiteLixeiras" />  
     <meta name="robots" content="index, follow" />
-    <title>@ViewData["Title"] - SiteLixeiras</title>
+
+    <title>@(ViewBag.MetaTitle ?? "Lixeiras de resina")</title>
+    <meta name="description" content="@(ViewBag.MetaDescription ?? "SiteLixeiras - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+    <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "Lixeiras de resina, lixeiras, cesto sustentabilidade, produtos, Cesto de resina")" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SiteLixeiras.styles.css" asp-append-version="true" />

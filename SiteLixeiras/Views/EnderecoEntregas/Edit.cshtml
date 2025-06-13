@@ -10,6 +10,12 @@
             <div class="card shadow-lg border-0">
                 <div class="card-header cor_padrao text-white">
                     <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Editar Endereço</h4>
+                    @if (ViewData["E'rro"] != null)
+                    {
+                        <div class="alert alert-danger mt-2">
+                            @ViewData["Erro"]
+                        </div>
+                    }
                 </div>
                 <div class="card-body">
                     <form asp-action="Edit" autocomplete="off">

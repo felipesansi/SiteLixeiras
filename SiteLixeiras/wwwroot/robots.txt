@@ -1,0 +1,6 @@
+﻿User-agent: *
+Disallow: /Admin/
+Disallow: /Identity/
+Allow: /
+
+Sitemap: https://www.lixeirasderesina.com.br/sitemap.xml

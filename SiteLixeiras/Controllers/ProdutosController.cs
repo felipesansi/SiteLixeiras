@@ -24,6 +24,9 @@ namespace SiteLixeiras.Controllers
 
         public async Task<IActionResult> Detalhes(int id)
         {
+            ViewBag.MetaTitle = "Detalhes do Produto - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Veja os detalhes do produto selecionado, incluindo fotos, descrição e preço.";
+            ViewBag.MetaKeywords = "Lixeiras de Resina, Cesto de Resina, detalhes, produto, lixeiras, resina, comprar";
             try
             {
                 var produto = await _context.Produtos

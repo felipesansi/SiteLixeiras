@@ -92,6 +92,7 @@ namespace SiteLixeiras.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Edit(int id, [Bind("Id_Produto,Codigo,Nome,Descricao,altura,largura,Preco,Imagem,ImagemThumbUrl,Destaque,CategoriaId")] Produtos produtos)
         {
             if (id != produtos.Id_Produto)
@@ -103,6 +104,17 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             {
                 try
                 {
+                    
+                    var produtoDb = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Id_Produto == id);
+                    if (produtoDb == null)
+                        return NotFound();
+
+                    
+                    if (string.IsNullOrEmpty(produtos.Imagem))
+                        produtos.Imagem = produtoDb.Imagem;
+                    if (string.IsNullOrEmpty(produtos.ImagemThumbUrl))
+                        produtos.ImagemThumbUrl = produtoDb.ImagemThumbUrl;
+
                     _context.Update(produtos);
                     await _context.SaveChangesAsync();
                 }
@@ -122,6 +134,7 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "IdCategoria", "Descricao", produtos.CategoriaId);
             return View(produtos);
         }
+
 
         // GET: Admin/AdminProdutos/Delete/5
         public async Task<IActionResult> Delete(int? id)
