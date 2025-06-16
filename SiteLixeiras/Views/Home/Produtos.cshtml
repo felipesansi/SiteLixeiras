@@ -4,10 +4,10 @@
 }
 
 <div class="container py-5">
-    <h2 class="mb-4 text-center fw-bold">Encontre o produto ideal</h2>
+    <h2 class="mb-4 text-center fw-bold" data-aos="fade-down">Encontre o produto ideal</h2>
 
     <!-- Formulário de busca -->
-    <div class="card shadow-sm rounded mb-5 border-0">
+    <div class="card shadow-sm rounded mb-5 border-0" data-aos="fade-up">
         <div class="card-body">
             <form asp-action="Produtos" asp-controller="Home" method="get" class="row g-3 align-items-end">
                 <div class="col-md-4">
@@ -29,24 +29,26 @@
         </div>
     </div>
 
- 
     @if (!string.IsNullOrEmpty(ViewBag.Mensagem as string))
     {
-        <div class="alert alert-warning text-center fw-semibold">@ViewBag.Mensagem</div>
+        <div class="alert alert-warning text-center fw-semibold" data-aos="fade-in">@ViewBag.Mensagem</div>
     }
+
     <div class="row">
         @if (Model != null && Model.Any())
         {
+            var delay = 0;
             @foreach (var produto in Model)
             {
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="zoom-in" data-aos-delay="@delay">
                     @await Html.PartialAsync("_Produtos", produto)
                 </div>
+                delay += 100; 
             }
         }
         else
         {
-            <div class="col-12 text-center text-muted">
+            <div class="col-12 text-center text-muted" data-aos="fade-in">
                 <p>Nenhum produto encontrado com os preços de limites escolhidos</p>
             </div>
         }

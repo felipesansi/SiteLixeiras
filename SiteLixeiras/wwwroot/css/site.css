@@ -19,6 +19,13 @@
 .verde {
     color: #1A3300;
 }
+/* =========================
+   Dropdown-Menu perfil 
+   ========================= */
+.dropdown-menu .dropdown-item:active,
+.dropdown-menu .dropdown-item.active {
+    background-color: #1A3300 !important;
+}
 
 /* =========================
    NAVBAR
@@ -96,3 +103,4 @@ body {
     background: #f8f9fa;
     border-top: none;
 }
+

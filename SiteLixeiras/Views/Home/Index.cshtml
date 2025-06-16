@@ -6,48 +6,63 @@
 
 <div class="container mt-5">
     <div class="row align-items-center">
-        <div class="col-md-6">
-            <h1 class="lh-sm verde">Design de lixeiras de luxo de resina</h1>
-            <p class="py-5 lh-lg">Design de objetos em resina para decoração e peças ornamentais confeccionados de forma artesanal, produtos para Banheiros em resina, 
-                Cachepôs, Bandejas, Centro de mesa, 
-                Luminárias e outros produtos em Resina Poliéster de primeira linha, pigmentada na cor desejada.</p>
+        <div class="col-md-6" data-aos="fade-up" data-aos-delay="0">
+            <h1 class="lh-sm verde" data-aos="fade-right" data-aos-delay="400">
+                Design de lixeiras de luxo de resina
+            </h1>
+            <p class="py-5 lh-lg" data-aos="fade-up">
+                Design de objetos em resina para decoração e peças ornamentais confeccionados de forma artesanal, produtos para Banheiros em resina,
+                Cachepôs, Bandejas, Centro de mesa,
+                Luminárias e outros produtos em Resina Poliéster de primeira linha, pigmentada na cor desejada.
+            </p>
         </div>
-       
-        <!--imagem hero-->
-        <div class="col-md-6 text-center">
-            <img src="~/imagens/Fotoslixeiras/Adobe Express - file.png" class="img-fluid rounded" alt="Lixeira de luxo de resina" >
+
+        <!-- imagem hero -->
+        <div class="col-md-6 text-center" data-aos="zoom-in" data-aos-delay="300">
+            <img src="~/imagens/Fotoslixeiras/Adobe Express - file.png"
+                 class="img-fluid rounded"
+                 alt="Lixeira de luxo de resina">
         </div>
     </div>
 
     <!-- Seção do vídeo -->
-
-    <div class="row my-5 justify-content-center">
-        <h1 class="text-center mb-4">Vídeo de Apresentação</h1>
-        <div class="col-md-8 text-center position-relative">
+    <div class="row my-5 justify-content-center" data-aos="fade-up" data-aos-delay="400">
+        <h1 class="text-center mb-4" data-aos="fade-down" data-aos-delay="500">
+            Vídeo de Apresentação
+        </h1>
+        <div class="col-md-8 text-center position-relative" data-aos="zoom-in" data-aos-delay="600">
             <a href="https://www.youtube.com/watch?v=SEU_VIDEO_ID" target="_blank" class="d-inline-block">
-                <img src="~/imagens/Lixeira.png" class="img-fluid rounded shadow" alt="Vídeo institucional">
-                <i class="fa-solid fa-circle-play fa-4x text-white position-absolute top-50 start-50 translate-middle" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.6); cursor:pointer;"></i>
+                <img src="~/imagens/Lixeira.png"
+                     class="img-fluid rounded shadow"
+                     alt="Vídeo institucional">
+                <i class="fa-solid fa-circle-play fa-4x text-white position-absolute top-50 start-50 translate-middle"
+                   style="text-shadow: 2px 2px 8px rgba(0,0,0,0.6); cursor:pointer;"
+                   data-aos="pulse"
+                   data-aos-delay="700">
+                </i>
             </a>
         </div>
     </div>
 
     <!-- Produtos -->
     <div class="row mt-5">
-        <div class="col-md-12">
-            <h2 class="text-center mb-4">Produtos</h2>
+        <div class="col-md-12" data-aos="fade-up" data-aos-delay="800">
+            <h2 class="text-center mb-4" data-aos="fade-down" data-aos-delay="900">
+                Produtos
+            </h2>
             <div class="row">
                 @if (Model != null && Model.Any())
-                {  
+                {
                     @foreach (var produto in Model)
                     {
-                        <div class="col-md-4 mb-4">
+                        <div class="col-md-4 mb-4" data-aos="flip-left" data-aos-delay="@(1000 + Model.IndexOf(produto) * 100)">
                             @await Html.PartialAsync("_Produtos", produto)
                         </div>
                     }
                 }
                 else
                 {
-                    <div class="col-12 text-center text-muted">
+                    <div class="col-12 text-center text-muted" data-aos="fade-up" data-aos-delay="1000">
                         <p>Nenhum produto encontrado.</p>
                     </div>
                 }

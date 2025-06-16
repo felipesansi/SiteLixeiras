@@ -1,4 +1,6 @@
-﻿
+﻿// incialização de AOS
+     AOS.init();
+
     // tela de envio de foto / checkbox
    document.getElementById("fotoForm").addEventListener("submit", function (event) {
         const fotoInput = document.getElementById("foto");
@@ -18,4 +20,4 @@
     mensagemErro.innerText = "Selecione um produto.";
         }
     });
-    // tela de envio de foto / checkbox
+// tela de envio de foto / checkbox

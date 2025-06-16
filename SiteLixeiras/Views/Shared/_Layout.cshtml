@@ -10,9 +10,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="SiteLixeiras" />  
     <meta name="robots" content="index, follow" />
-
+    
     <title>@(ViewBag.MetaTitle ?? "Lixeiras de resina")</title>
-    <meta name="description" content="@(ViewBag.MetaDescription ?? "SiteLixeiras - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+    <meta name="description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
     <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "Lixeiras de resina, lixeiras, cesto sustentabilidade, produtos, Cesto de resina")" />
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -22,6 +22,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 </head>
 <body>
     <header>
@@ -37,35 +39,41 @@
                     <ul class="navbar-nav">
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item me-3">
+                            <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="0">
                                 <a class="nav-link text-white" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin</a>
                             </li>
                         }
-                        <li class="nav-item me-3">
+
+                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="100">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item me-3">
+
+                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="200">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Produtos">Todos os Produtos</a>
                         </li>
-                        <li class="nav-item me-3">
+
+                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="300">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="About">Sobre nós</a>
                         </li>
-                        <li class="nav-item me-3">
+
+                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="400">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Catalogo">Catalogo de Cores</a>
                         </li>
+
                         @if (User.IsInRole("User"))
                         {
-                            <li class="nav-item me-3">
+                            <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="500">
                                 @await Component.InvokeAsync("CarrinhoResumo")
                             </li>
                         }
-                        <li class="nav-item me-3">
+
+                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="600">
                             @Html.Partial("_LogoutPartial")
                         </li>
 
                         @if (User.IsInRole("User"))
                         {
-                            <li class="nav-item dropdown me-3">
+                            <li class="nav-item dropdown me-3" data-aos="fade-right" data-aos-delay="700">
                                 <a class="nav-link text-white dropdown-toggle position-relative" href="#" id="notificacoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-bell"></i>
                                     @if (ViewBag.Notificacoes != null && ViewBag.Notificacoes.Count > 0)
@@ -111,6 +119,7 @@
                             </li>
                         }
                     </ul>
+
                 </div>
             </div>
         </nav>
@@ -128,6 +137,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
