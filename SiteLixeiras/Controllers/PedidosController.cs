@@ -100,9 +100,13 @@ namespace SiteLixeiras.Controllers
 
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
+            DescriptografarEndereco(endereco); // Descriptografar o endereço antes de enviar o email
 
-            var emailhtml = await _razorViewToStringRenderer.RenderViewToStringAsync("Emails/EmailPedido", pedido);
+            pedido.EnderecoEntrega = endereco; // Associar o endereço ao pedido
+
+            var emailhtml = await _razorViewToStringRenderer.RenderViewToStringAsync("Emails/EmailPedido", pedido); // Renderizar a view do email para o pedido
             await _emailService.EnviarEmail(pedido.Usuario.Email, "Confirmação de Pedido", emailhtml);
+
 
             return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
         }
