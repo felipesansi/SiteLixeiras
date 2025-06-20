@@ -7,6 +7,7 @@ using SiteLixeiras.Services;
 using SiteLixeiras.Sevices;
 using System.Security.Claims;
 using SiteLixeiras.Helpers;
+
 namespace SiteLixeiras.Controllers
 {
     public class PedidosController : Controller
@@ -30,16 +31,13 @@ namespace SiteLixeiras.Controllers
             _criptografia = criptografia;
         }
 
-
-
-        // Tela para exibir endereços cadastrados
         public async Task<IActionResult> Checkout()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            // descriptografar os endereços
             var enderecos = await _context.EnderecosEntregas
                 .Where(e => e.UsuarioId == userId)
                 .ToListAsync();
+
             foreach (var endereco in enderecos)
             {
                 DescriptografarEndereco(endereco);
@@ -48,7 +46,6 @@ namespace SiteLixeiras.Controllers
             return View(enderecos);
         }
 
-        // Cadastro de novo endereço via POST
         [HttpPost]
         public IActionResult Checkout(EnderecoEntrega enderecoEntrega)
         {
@@ -56,18 +53,17 @@ namespace SiteLixeiras.Controllers
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 enderecoEntrega.UsuarioId = userId;
-                
+
                 CriptografarEndereco(enderecoEntrega);
                 _context.EnderecosEntregas.Add(enderecoEntrega);
-              
                 _context.SaveChanges();
+
                 return RedirectToAction("Checkout");
             }
 
             return View(enderecoEntrega);
         }
 
-        // Finaliza o pedido e redireciona para o pagamento
         [HttpPost]
         public async Task<IActionResult> FinalizarPedido(int enderecoId)
         {
@@ -81,7 +77,6 @@ namespace SiteLixeiras.Controllers
             var itensCarrinho = carrinhoCompra.GetCarrinhoCompraItems();
             if (itensCarrinho == null || !itensCarrinho.Any())
                 return RedirectToAction("Carrinho", "CarrinhoCompra");
-
 
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (usuario == null)
@@ -100,8 +95,6 @@ namespace SiteLixeiras.Controllers
                     Quantidade = item.Quantidade,
                     Preco = item.Produtos.Preco
                 }).ToList(),
-
-
                 Usuario = usuario
             };
 
@@ -109,8 +102,6 @@ namespace SiteLixeiras.Controllers
             await _context.SaveChangesAsync();
 
             var emailhtml = await _razorViewToStringRenderer.RenderViewToStringAsync("Emails/EmailPedido", pedido);
-
-
             await _emailService.EnviarEmail(pedido.Usuario.Email, "Confirmação de Pedido", emailhtml);
 
             return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
@@ -121,6 +112,7 @@ namespace SiteLixeiras.Controllers
             ViewBag.Mensagem = "Pedido realizado com sucesso!";
             return View();
         }
+
         public async Task<IActionResult> HistoricoPedidos()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -128,25 +120,28 @@ namespace SiteLixeiras.Controllers
                 .Include(p => p.EnderecoEntrega)
                 .Where(p => p.UsuarioId == userId && p.PedididoEntregue != null)
                 .ToListAsync();
-            
+
             foreach (var pedido in pedidos)
             {
                 DescriptografarEndereco(pedido.EnderecoEntrega);
             }
+
             return View(pedidos);
         }
+
         public async Task<IActionResult> DetalhesPedido(int id)
         {
             var pedido = await _context.Pedidos
-                .Include(p => p.PedidoItens)
-                .ThenInclude(pd => pd.Produto)
+                .Include(p => p.PedidoItens).ThenInclude(pd => pd.Produto)
                 .Include(p => p.EnderecoEntrega)
                 .FirstOrDefaultAsync(p => p.PedidoId == id);
+
             if (pedido == null)
                 return NotFound();
+
             return View(pedido);
         }
-        //desencriptografar o endereço
+
         public void DescriptografarEndereco(EnderecoEntrega endereco)
         {
             if (endereco != null)
@@ -162,10 +157,9 @@ namespace SiteLixeiras.Controllers
                 endereco.CPF = _criptografia.Descriptografar(endereco.CPF);
                 endereco.Numero = _criptografia.Descriptografar(endereco.Numero);
                 endereco.Complemento = _criptografia.Descriptografar(endereco.Complemento);
-
             }
-       
         }
+
         public void CriptografarEndereco(EnderecoEntrega endereco)
         {
             if (endereco != null)
@@ -185,4 +179,3 @@ namespace SiteLixeiras.Controllers
         }
     }
 }
-

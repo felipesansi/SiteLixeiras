@@ -39,13 +39,12 @@ namespace SiteLixeiras.Controllers
                 PictureUrl = i.Produtos.ImagemThumbUrl
             }).ToList();
 
-            var metodos_pagamento= new PreferencePaymentMethodsRequest
+            var metodos_pagamento = new PreferencePaymentMethodsRequest
             {
                 ExcludedPaymentTypes = new List<PreferencePaymentTypeRequest>(),
-                Installments = 12 // até 12 parcelas
+                Installments = 12
             };
 
-          
             var preferenceRequest = new PreferenceRequest
             {
                 Items = itens_preferencias,
