@@ -68,53 +68,13 @@ namespace SiteLixeiras.Controllers
         }
 
         // Finaliza o pedido e redireciona para o pagamento
+       
         [HttpPost]
         public async Task<IActionResult> FinalizarPedido(int enderecoId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var endereco = await _context.EnderecosEntregas
-                .FirstOrDefaultAsync(e => e.EnderecoEntregaId == enderecoId && e.UsuarioId == userId);
-
-            if (endereco == null)
-                return NotFound("Endereço não encontrado.");
-
-            var itensCarrinho = carrinhoCompra.GetCarrinhoCompraItems();
-            if (itensCarrinho == null || !itensCarrinho.Any())
-                return RedirectToAction("Carrinho", "CarrinhoCompra");
-
-
-            var usuario = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            if (usuario == null)
-                return Unauthorized();
-
-            var pedido = new Pedido
-            {
-                UsuarioId = userId,
-                PedidoTotal = itensCarrinho.Sum(i => i.Produtos.Preco * i.Quantidade),
-                TotalItensPedidos = itensCarrinho.Sum(i => i.Quantidade),
-                PedidoEnviado = DateTime.Now,
-                EnderecoEntregaId = endereco.EnderecoEntregaId,
-                PedidoItens = itensCarrinho.Select(item => new PedidoDetalhe
-                {
-                    ProdutoId = item.Produtos.Id_Produto,
-                    Quantidade = item.Quantidade,
-                    Preco = item.Produtos.Preco
-                }).ToList(),
-
-
-                Usuario = usuario
-            };
-
-            _context.Pedidos.Add(pedido);
-            await _context.SaveChangesAsync();
-
-            var emailhtml = await _razorViewToStringRenderer.RenderViewToStringAsync("Emails/EmailPedido", pedido);
-
-
-            await _emailService.EnviarEmail(pedido.Usuario.Email, "Confirmação de Pedido", emailhtml);
-
-            return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId = endereco.EnderecoEntregaId });
+            return RedirectToAction("CriarPagamento", "Pagamento", new { enderecoId });
         }
+
 
         public IActionResult Confirmacao()
         {
