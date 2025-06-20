@@ -8,12 +8,25 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="author" content="SiteLixeiras" />  
+    <meta name="author" content="SiteLixeiras" />
     <meta name="robots" content="index, follow" />
-    
+
     <title>@(ViewBag.MetaTitle ?? "Lixeiras de resina")</title>
     <meta name="description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
     <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "Lixeiras de resina, lixeiras, cesto sustentabilidade, produtos, Cesto de resina")" />
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
+    <meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+    <meta property="og:image" content="@(ViewBag.MetaImage ?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
+    <meta property="og:url" content="@(ViewBag.MetaUrl ?? Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
+    <meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+    <meta name="twitter:image" content="@(ViewBag.MetaImage ?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -23,14 +36,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
 </head>
+
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light cor_padrao border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img class="w-100" src="~/imagens/Logo-lixeiras.png" alt="Logo Lixeiras de resina" />
+                    <img class="logo-navbar" src="~/imagens/Logo-lixeiras.png" alt="Logo Lixeiras de resina" />
+
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>

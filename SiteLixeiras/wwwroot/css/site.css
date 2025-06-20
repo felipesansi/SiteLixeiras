@@ -11,16 +11,17 @@
     color: white;
 }
 
-    .btn-padrao:hover {
-        background-color: #3c6313;
-        color: white;
-    }
+.btn-padrao:hover {
+    background-color: #3c6313;
+    color: white;
+}
 
 .verde {
     color: #1A3300;
 }
+
 /* =========================
-   Dropdown-Menu perfil 
+   DROPDOWN-MENU PERFIL
    ========================= */
 .dropdown-menu .dropdown-item:active,
 .dropdown-menu .dropdown-item.active {
@@ -87,10 +88,10 @@ body {
     overflow: hidden;
 }
 
-    .foto-card:hover {
-        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-        transform: translateY(-4px) scale(1.02);
-    }
+.foto-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    transform: translateY(-4px) scale(1.02);
+}
 
 .foto-img {
     max-height: 220px;
@@ -104,3 +105,23 @@ body {
     border-top: none;
 }
 
+/* =========================
+   AJUSTES DROPDOWN E NAVBAR
+   ========================= */
+.logo-navbar {
+    max-width: auto;
+    height: auto;
+}
+
+.navbar,
+.container-fluid,
+.navbar-collapse {
+    overflow: visible !important;
+    position: relative; 
+    z-index: 1;
+}
+
+.navbar .dropdown-menu {
+    z-index: 1055; 
+    position: absolute; 
+}

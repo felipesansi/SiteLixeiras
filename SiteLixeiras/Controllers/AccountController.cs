@@ -240,6 +240,14 @@ namespace SiteLixeiras.Controllers
                 return View(model);
             }
 
+            // Verificar se o nome de usuário já existe e pertence a outro usuário
+            var userNameExistente = await _userManager.FindByNameAsync(model.UserName);
+            if (userNameExistente != null && userNameExistente.Id != usuario.Id)
+            {
+                ModelState.AddModelError("", "Nome de usuário já está em uso. Por favor, escolha outro.");
+                return View(model);
+            }
+
             usuario.UserName = model.UserName;
             usuario.Email = model.Email;
 
@@ -268,6 +276,7 @@ namespace SiteLixeiras.Controllers
             TempData["MensagemSucesso"] = "Dados atualizados com sucesso!";
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult ExcluirConta() => View();

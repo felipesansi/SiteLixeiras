@@ -25,7 +25,9 @@ namespace SiteLixeiras.Controllers
         {
             ViewBag.MetaTitle = "Lixeiras de Resina - Produtos em Destaque";
             ViewBag.MetaDescription = "Confira as melhores lixeiras de resina, produtos em destaque e soluções sustentáveis para o seu ambiente.";
-            ViewBag.MetaKeywords = "Lixeiras de Resina, Cesto de Resina,  lixeiras, Cesto, resina, sustentabilidade, produtos, destaque";
+            ViewBag.MetaKeywords = "Lixeiras de Resina, Cesto de Resina, lixeiras, Cesto, resina, sustentabilidade, produtos, destaque";
+            ViewBag.MetaImage = Url.Content("~/imagens/imagem-compartilhamento.png");
+            ViewBag.MetaUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
 
             var produtos = await _context.Produtos
                 .Where(p => p.Destaque)

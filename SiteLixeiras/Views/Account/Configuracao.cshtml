@@ -19,6 +19,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
                 </div>
             }
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" aria-live="polite">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    @TempData["MensagemErro"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                </div>
+            }
 
             <div class="card border-0 shadow-lg mb-5 rounded-4">
                 <div class="card-body p-4">
