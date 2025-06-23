@@ -49,5 +49,7 @@ namespace SiteLixeiras.Models
         public DateTime? DataPagamento { get; set; }
         [MaxLength(50)]
         public string? StatusPagamento { get; set; }
+        [MaxLength(50)]
+        public string? metodoPagamento { get; set; }
     }
 }

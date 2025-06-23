@@ -24,40 +24,46 @@
             }
             else
             {
-                <form asp-action="FinalizarPedido" method="post">
-                    <div class="list-group mb-4">
-                        @foreach (var endereco in Model)
-                        {
-                            var complemento = string.IsNullOrWhiteSpace(endereco.Complemento) ? "" : $" / {endereco.Complemento}";
+                <div class="list-group mb-4">
+                    @foreach (var endereco in Model)
+                    {
+                        var complemento = string.IsNullOrWhiteSpace(endereco.Complemento) ? "" : $" / {endereco.Complemento}";
 
-                            <div class="list-group-item shadow-sm rounded-3 mb-2">
-                                <div class="form-check">
-                                    <input class="form-check-input me-2" type="radio" name="enderecoId" value="@endereco.EnderecoEntregaId" id="endereco_@endereco.EnderecoEntregaId" required />
-                                    <label class="form-check-label w-100" for="endereco_@endereco.EnderecoEntregaId">
-                                        <strong>@endereco.Rua, @endereco.Numero@complemento - @endereco.Bairro</strong><br />
-                                        <small class="text-muted">@endereco.Cidade / @endereco.Estado - CEP: @endereco.Cep</small>
-                                    </label>
-                                </div>
+                        <div class="list-group-item shadow-sm rounded-3 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input me-2" type="radio" name="enderecoId" value="@endereco.EnderecoEntregaId" id="endereco_@endereco.EnderecoEntregaId" required />
+                                <label class="form-check-label w-100" for="endereco_@endereco.EnderecoEntregaId">
+                                    <strong>@endereco.Rua, @endereco.Numero@complemento - @endereco.Bairro</strong><br />
+                                    <small class="text-muted">@endereco.Cidade / @endereco.Estado - CEP: @endereco.Cep</small>
+                                </label>
                             </div>
-                        }
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <a href="@Url.Action("Index", "CarrinhoCompra")" class="btn btn-outline-dark rounded-pill me-2">
-                            <i class="bi bi-arrow-left me-1"></i> Voltar
-                        </a>
-
-                        <a href="@Url.Action("Create", "EnderecoEntregas")" class="btn btn-outline-secondary rounded-pill">
-                            <i class="bi bi-plus-circle me-1"></i> Adicionar Novo Endereço
-                        </a>
-
-                        <div>
-                            <button type="submit" class="btn btn-success rounded-pill px-4">
-                                <i class="bi bi-credit-card me-2"></i> Ir para o Pagamento
-                            </button>
                         </div>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-between flex-wrap gap-2">
+                    <a href="@Url.Action("Index", "CarrinhoCompra")" class="btn btn-outline-dark rounded-pill">
+                        <i class="bi bi-arrow-left me-1"></i> Voltar
+                    </a>
+
+                    <a href="@Url.Action("Create", "EnderecoEntregas")" class="btn btn-outline-secondary rounded-pill">
+                        <i class="bi bi-plus-circle me-1"></i> Adicionar Novo Endereço
+                    </a>
+
+                    <div class="ms-auto d-flex gap-2 flex-wrap">
+                        <button type="button" class="btn btn-primary rounded-pill px-4" onclick="enviarPagamento('cartao')">
+                            <i class="bi bi-credit-card me-2"></i> Cartão
+                        </button>
+
+                        <button type="button" class="btn btn-secondary rounded-pill px-4" onclick="enviarPagamento('boleto')">
+                            <i class="bi bi-file-earmark-text me-2"></i> Boleto
+                        </button>
+
+                        <button type="button" class="btn btn-success rounded-pill px-4" onclick="enviarPagamento('pix')">
+                            <i class="bi bi-qr-code-scan me-2"></i> Pix
+                        </button>
                     </div>
-                </form>
+                </div>
             }
         </div>
     </div>
@@ -65,6 +71,27 @@
 
 @section Scripts {
     <script>
+        function enviarPagamento(tipo) {
+            const selecionado = document.querySelector('input[name="enderecoId"]:checked');
+            if (!selecionado) {
+                alert("Por favor, selecione um endereço de entrega.");
+                return;
+            }
+
+            const enderecoId = selecionado.value;
+            let url = "";
+
+            if (tipo === "cartao") {
+                url = `/Pagamento/CriarPagamentoCartao?enderecoId=${enderecoId}`;
+            } else if (tipo === "boleto") {
+                url = `/Pagamento/CriarPagamentoBoleto?enderecoId=${enderecoId}`;
+            } else if (tipo === "pix") {
+                url = `/Pagamento/CriarPagamentoPix?enderecoId=${enderecoId}`;
+            }
+
+            window.location.href = url;
+        }
+
         @if (TempData["Mensagem"] != null)
         {
             <text>
