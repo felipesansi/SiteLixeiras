@@ -1,8 +1,25 @@
 ﻿@model SiteLixeiras.Models.Produtos
 
+@{
+    var imagemPrincipal = Model.Fotos != null && Model.Fotos.Any() ? Model.Fotos.First().Url : Model.Imagem;
+
+}
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
+<meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+<meta property="og:image" content="@(imagemPrincipal?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
+<meta property="og:url" content="@(ViewBag.MetaUrl ?? Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" />
+ 
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
+<meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+<meta name="twitter:image" content="@imagemPrincipal" />
+
 <div class="container py-4">
     <div class="row">
-        <!-- Imagens -->
+      
         <div class="col-md-6 mb-4">
             <div class="border rounded p-2 shadow-sm">
                 @if (Model.Fotos != null && Model.Fotos.Any())
@@ -39,12 +56,24 @@
 
             <div class="mb-3">
                 <small class="text-muted">DESCRIÇÃO:</small>
-                <p>@Model.Descricao</p>
+                <p>
+                    @{
+                        var resumo = Model.Descricao?.Length > 120
+                            ? Model.Descricao.Substring(0, 15) + "..."
+                            : Model.Descricao;
+                    }
+                    @resumo
+                </p>
             </div>
 
             <div class="mb-3">
-                <h4 class="text-danger fw-bold">@Model.Preco.ToString("C")</h4>
-                <small class="text-muted">em até 10x sem juros no cartão</small>
+            
+                <div class="mb-3 d-flex align-items-center gap-2">
+                    <img src="~/imagens/pix-banco-central-logo.svg" alt="Ícone pix" style="width:150px; height:150px;" />
+                    <h4 class="text-danger fw-bold">@Model.Preco.ToString("C")</h4>
+                </div>
+                <h3 class="fw-bolder">Garantia de 6 meses para este produto</h3>
+                <small class="text-muted">em até 10x no Cartão </small>
             </div>
 
             <a class="btn btn-danger w-100 py-2 mb-2"
@@ -55,7 +84,7 @@
             </a>
 
             <a class="btn btn-success w-100 py-2 mb-2"
-               href="https://wa.me/5511997494922?text=@Uri.EscapeDataString($"Olá, gostaria de comprar o produto: {Model.Nome} - Código: {Model.Codigo}")"
+               href="https://wa.me/5511997494922?text=@Uri.EscapeDataString($"Olá, gostaria de comprar o produto: {Model.Nome} -  Descrição {Model.Descricao }- Código: {Model.Codigo}")"
                target="_blank">
                 <i class="fab fa-whatsapp me-2"></i> COMPRAR PELO WHATSAPP
             </a>
@@ -71,7 +100,7 @@
         </div>
     </div>
 
-    <!-- Tabs estilo Sottile -->
+    
     <div class="mt-5">
         <ul class="nav nav-tabs" id="produtoTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -103,7 +132,11 @@
             if (navigator.share) {
                 navigator.share({
                     title: document.title,
-                    url: url
+                    url: url,
+                    text: `Confira este produto que achei Maravilhoso : ${document.title}`,
+
+             
+
                 }).catch(() => console.log("Compartilhamento cancelado"));
             } else {
                 navigator.clipboard.writeText(url);
