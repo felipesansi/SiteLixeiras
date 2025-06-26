@@ -32,6 +32,10 @@ namespace SiteLixeiras.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal largura { get; set; }
 
+        [Required(ErrorMessage = "O campo Profundidade é obrigatório.")]
+        [Display(Name = "Profundidade (cm)")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal profundidade { get; set; }
 
         [Required]
         [Display(Name = "Preço do imóvel")]
@@ -40,6 +44,7 @@ namespace SiteLixeiras.Models
 
         [Display(Name = "Imagem do Produto")]
         public string? Imagem { get; set; }
+
         [Display(Name = "Imagem do Produto")]
         public string? ImagemThumbUrl { get; set; }
 
@@ -51,6 +56,13 @@ namespace SiteLixeiras.Models
 
         [ForeignKey("CategoriaId")]
         public Categoria? Categoria { get; set; }
-        public List <Foto> Fotos { get; set; } = new List<Foto>();
+
+        public List<Foto> Fotos { get; set; } = new();
+
+        [Display(Name = "Este produto é um Kit?")]
+        public bool EhKit { get; set; } = false;
+
+        // Produtos que compõem este kit (caso EhKit = true)
+        public List<ProdutoKitItem> ItensDoKit { get; set; } = new();
     }
 }

@@ -2,19 +2,19 @@
 
 @{
     ViewData["Title"] = "Editar Produto";
+    var produtosDisponiveis = ViewData["ProdutosDisponiveis"] as List<SiteLixeiras.Models.Produtos> ?? new();
+    var produtosSelecionados = Model.ItensDoKit?.ToDictionary(i => i.ProdutoFilhoId, i => i.Quantidade) ?? new();
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="mb-0">✏️ Editar Produto</h2>
-        <a asp-action="Index" class="btn btn-outline-secondary">
-            ← Voltar à Lista
-        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">← Voltar à Lista</a>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form asp-action="Edit" class="shadow p-4 rounded bg-light">
+        <div class="col-md-8">
+            <form asp-action="Edit" class="shadow p-4 rounded bg-light" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                 <input type="hidden" asp-for="Id_Produto" />
 
@@ -49,6 +49,12 @@
                 </div>
 
                 <div class="mb-3">
+                    <label asp-for="profundidade" class="form-label"></label>
+                    <input asp-for="profundidade" class="form-control" type="number" />
+                    <span asp-validation-for="profundidade" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
                     <label asp-for="Preco" class="form-label"></label>
                     <input asp-for="Preco" class="form-control" type="number" step="0.01" />
                     <span asp-validation-for="Preco" class="text-danger"></span>
@@ -65,10 +71,52 @@
                     <span asp-validation-for="CategoriaId" class="text-danger"></span>
                 </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success">
-                        💾 Salvar Alterações
-                    </button>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" asp-for="EhKit" id="checkKit" />
+                    <label class="form-check-label" for="checkKit">Este produto é um kit</label>
+                </div>
+
+                <div id="produtosKitContainer" style="display: none;">
+                    <h5 class="mb-3">Produtos do Kit</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Selecionar</th>
+                                    <th>Nome</th>
+                                    <th>Código</th>
+                                    <th>Quantidade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var produto in produtosDisponiveis)
+                                {
+                                    var selecionado = produtosSelecionados.ContainsKey(produto.Id_Produto);
+                                    var quantidade = selecionado ? produtosSelecionados[produto.Id_Produto] : 1;
+
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="produtosFilhos" value="@produto.Id_Produto"
+                                                   class="form-check-input kit-checkbox"
+                                            @(selecionado ? "checked" : "") />
+                                        </td>
+                                        <td>@produto.Nome</td>
+                                        <td>@produto.Codigo</td>
+                                        <td>
+                                            <input type="number" name="quantidades"
+                                                   class="form-control form-control-sm"
+                                                   value="@quantidade" min="1"
+                                            @(selecionado ? "" : "disabled") />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-success">💾 Salvar Alterações</button>
                 </div>
             </form>
         </div>
@@ -76,6 +124,29 @@
 </div>
 
 @section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkKit = document.getElementById("checkKit");
+            const container = document.getElementById("produtosKitContainer");
+            const checkboxes = document.querySelectorAll(".kit-checkbox");
+
+            function toggleContainer() {
+                container.style.display = checkKit.checked ? "block" : "none";
+            }
+
+            toggleContainer();
+
+            checkKit.addEventListener("change", toggleContainer);
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener("change", function () {
+                    const qtyInput = cb.closest("tr").querySelector("input[name='quantidades']");
+                    qtyInput.disabled = !cb.checked;
+                });
+            });
+        });
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

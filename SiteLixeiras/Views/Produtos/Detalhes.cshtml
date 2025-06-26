@@ -2,15 +2,14 @@
 
 @{
     var imagemPrincipal = Model.Fotos != null && Model.Fotos.Any() ? Model.Fotos.First().Url : Model.Imagem;
-
 }
 
+<!-- META TAGS OG E TWITTER -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
 <meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
-<meta property="og:image" content="@(imagemPrincipal?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
+<meta property="og:image" content="@(imagemPrincipal ?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
 <meta property="og:url" content="@(ViewBag.MetaUrl ?? Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" />
- 
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
@@ -19,7 +18,7 @@
 
 <div class="container py-4">
     <div class="row">
-      
+
         <div class="col-md-6 mb-4">
             <div class="border rounded p-2 shadow-sm">
                 @if (Model.Fotos != null && Model.Fotos.Any())
@@ -42,7 +41,7 @@
             }
         </div>
 
-        <!-- Informações do produto -->
+        
         <div class="col-md-6">
             <h1 class="fw-bold mb-3" style="font-size: 1.8rem;">@Model.Nome</h1>
 
@@ -51,7 +50,8 @@
             </div>
 
             <div class="mb-2">
-                <small class="text-muted">DIMENSÕES:</small> <span class="ms-1">@Model.altura cm (A) x @Model.largura cm (L)</span>
+                <small class="text-muted">DIMENSÕES:</small>
+                <span class="ms-1">@Model.altura cm (A) x @Model.largura cm (L) x @Model.profundidade cm (P)</span>
             </div>
 
             <div class="mb-3">
@@ -59,24 +59,22 @@
                 <p>
                     @{
                         var resumo = Model.Descricao?.Length > 120
-                            ? Model.Descricao.Substring(0, 15) + "..."
-                            : Model.Descricao;
+                        ? Model.Descricao.Substring(0, 120) + "..."
+                        : Model.Descricao;
                     }
                     @resumo
                 </p>
             </div>
 
-            <div class="mb-3">
-            
-                <div class="mb-3 d-flex align-items-center gap-2">
-                    <img src="~/imagens/pix-banco-central-logo.svg" alt="Ícone pix" style="width:150px; height:150px;" />
-                    <h4 class="text-danger fw-bold">@Model.Preco.ToString("C")</h4>
-                </div>
-                <h3 class="fw-bolder">Garantia de 6 meses para este produto</h3>
-                <small class="text-muted">em até 10x no Cartão </small>
+            <div class="mb-3 d-flex align-items-center gap-2">
+                <img src="~/imagens/pix-banco-central-logo.svg" alt="Ícone pix" style="width:150px; height:150px;" />
+                <h4 class="text-danger fw-bold">@Model.Preco.ToString("C")</h4>
             </div>
 
-            <a class="btn btn-danger w-100 py-2 mb-2"
+            <h3 class="fw-bolder">Garantia de 6 meses para este produto</h3>
+            <small class="text-muted">em até 10x no Cartão</small>
+
+            <a class="btn btn-danger w-100 py-2 my-2"
                asp-controller="CarrinhoCompra"
                asp-action="AdicionarAoCarrinho"
                asp-route-id="@Model.Id_Produto">
@@ -84,7 +82,7 @@
             </a>
 
             <a class="btn btn-success w-100 py-2 mb-2"
-               href="https://wa.me/5511997494922?text=@Uri.EscapeDataString($"Olá, gostaria de comprar o produto: {Model.Nome} -  Descrição {Model.Descricao }- Código: {Model.Codigo}")"
+               href="https://wa.me/5511997494922?text=@Uri.EscapeDataString($"Olá, gostaria de comprar o produto: {Model.Nome} - Descrição: {Model.Descricao} - Código: {Model.Codigo}")"
                target="_blank">
                 <i class="fab fa-whatsapp me-2"></i> COMPRAR PELO WHATSAPP
             </a>
@@ -94,13 +92,38 @@
             </button>
 
             <div class="mt-3">
-                <p class="small text-muted"><i class="fas fa-truck me-1"></i> Frete gratuíto para São Paulo</p>
+                <p class="small text-muted"><i class="fas fa-truck me-1"></i> Frete grátis para São Paulo</p>
                 <p class="small text-muted"><i class="fas fa-shield-alt me-1"></i> Compra 100% segura</p>
             </div>
         </div>
     </div>
 
-    
+    @if (Model.EhKit && Model.ItensDoKit != null && Model.ItensDoKit.Any())
+    {
+        <div class="mt-5">
+            <h4 class="fw-bold mb-4">Produtos que compõem este kit:</h4>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                @foreach (var item in Model.ItensDoKit)
+                {
+                    var produto = item.ProdutoFilho;
+                    var imagem = produto?.Fotos?.FirstOrDefault()?.Url ?? produto?.Imagem ?? "/imagens/placeholder.jpg";
+
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0">
+                            <img src="@imagem" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@produto?.Nome" />
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold">@produto?.Nome</h6>
+                                <p class="card-text mb-1"><small class="text-muted">Código:</small> @produto?.Codigo</p>
+                                <p class="card-text mb-0"><small class="text-muted">Quantidade:</small> @item.Quantidade</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+
     <div class="mt-5">
         <ul class="nav nav-tabs" id="produtoTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -133,10 +156,7 @@
                 navigator.share({
                     title: document.title,
                     url: url,
-                    text: `Confira este produto que achei Maravilhoso : ${document.title}`,
-
-             
-
+                    text: `Confira este produto que achei maravilhoso: ${document.title}`,
                 }).catch(() => console.log("Compartilhamento cancelado"));
             } else {
                 navigator.clipboard.writeText(url);
