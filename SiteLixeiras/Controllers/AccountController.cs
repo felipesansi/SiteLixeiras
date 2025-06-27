@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SiteLixeiras.Context;
+using SiteLixeiras.Helpers;
 using SiteLixeiras.Models;
 using SiteLixeiras.Services;
 using SiteLixeiras.Sevices;
@@ -19,6 +20,7 @@ namespace SiteLixeiras.Controllers
         private readonly AppDbContext _context;
         private readonly EmailService _emailService;
         private readonly RazorViewToStringRenderer _razorRenderer;
+        private readonly CriptografiaHelper _criptografia;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
@@ -26,7 +28,8 @@ namespace SiteLixeiras.Controllers
             IOptions<EmailSetting> emailSetting,
             AppDbContext context,
             EmailService emailService,
-            RazorViewToStringRenderer razorRenderer)
+            RazorViewToStringRenderer razorRenderer,
+            CriptografiaHelper criptografia)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -34,6 +37,7 @@ namespace SiteLixeiras.Controllers
             _context = context;
             _emailService = emailService;
             _razorRenderer = razorRenderer;
+            _criptografia = criptografia;
         }
 
         [HttpGet]
@@ -68,10 +72,8 @@ namespace SiteLixeiras.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!model.AceiteTermos)
-            {
                 ModelState.AddModelError("", "Você deve aceitar os Termos de Uso.");
-                return View(model);
-            }
+
             if (!ModelState.IsValid) return View(model);
 
             if (model.Password != model.ConfirmPassword)
@@ -106,7 +108,7 @@ namespace SiteLixeiras.Controllers
                 Email = model.Email,
                 EmailConfirmed = true
             };
-             
+
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
@@ -151,7 +153,13 @@ namespace SiteLixeiras.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = Url.Action("ResetSenha", "Account", new { userId = user.Id, token }, Request.Scheme);
-            var corpo = $"Clique no link para redefinir sua senha: {callbackUrl}";
+            var emailModel = new ResetSenhaEmailViewModel
+            {
+                NomeUsuario = user.UserName,
+                LinkReset = callbackUrl
+            };
+
+            var corpo = await _razorRenderer.RenderViewToStringAsync("Emails/EmailResetSenha", emailModel);
 
             try
             {
@@ -167,7 +175,7 @@ namespace SiteLixeiras.Controllers
                     From = new MailAddress(_emailSetting.Remetente),
                     Subject = "Redefinição de Senha",
                     Body = corpo,
-                    IsBodyHtml = false
+                    IsBodyHtml = true
                 };
 
                 mailMessage.To.Add(user.Email);
@@ -214,7 +222,12 @@ namespace SiteLixeiras.Controllers
             if (usuario == null) return RedirectToAction("Login");
 
             var dadosUsuario = await _context.Users.FirstOrDefaultAsync(x => x.Id == usuario.Id);
-            var enderecos = await _context.EnderecosEntregas.Where(e => e.UsuarioId == usuario.Id).ToListAsync();
+            var enderecos = await _context.EnderecosEntregas
+                .Where(e => e.UsuarioId == usuario.Id)
+                .ToListAsync();
+
+            foreach (var endereco in enderecos)
+                DescriptografarEndereco(endereco);
 
             var viewModel = new UsuarioViewmodel
             {
@@ -240,7 +253,6 @@ namespace SiteLixeiras.Controllers
                 return View(model);
             }
 
-            // Verificar se o nome de usuário já existe e pertence a outro usuário
             var userNameExistente = await _userManager.FindByNameAsync(model.UserName);
             if (userNameExistente != null && userNameExistente.Id != usuario.Id)
             {
@@ -276,7 +288,6 @@ namespace SiteLixeiras.Controllers
             TempData["MensagemSucesso"] = "Dados atualizados com sucesso!";
             return View(model);
         }
-
 
         [HttpGet]
         public IActionResult ExcluirConta() => View();
@@ -320,5 +331,35 @@ namespace SiteLixeiras.Controllers
         public IActionResult ContaExcluida() => View();
         public IActionResult AccessDenied() => View();
         public IActionResult TermosUso() => View();
+
+        private void CriptografarEndereco(EnderecoEntrega e)
+        {
+            e.Nome = _criptografia.Criptografar(e.Nome);
+            e.SobreNome = _criptografia.Criptografar(e.SobreNome);
+            e.Rua = _criptografia.Criptografar(e.Rua);
+            e.Bairro = _criptografia.Criptografar(e.Bairro);
+            e.Estado = _criptografia.Criptografar(e.Estado);
+            e.Cidade = _criptografia.Criptografar(e.Cidade);
+            e.Telefone = _criptografia.Criptografar(e.Telefone);
+            e.Cep = _criptografia.Criptografar(e.Cep);
+            e.CPF = _criptografia.Criptografar(e.CPF);
+            e.Numero = _criptografia.Criptografar(e.Numero);
+            e.Complemento = _criptografia.Criptografar(e.Complemento);
+        }
+
+        private void DescriptografarEndereco(EnderecoEntrega e)
+        {
+            e.Nome = _criptografia.Descriptografar(e.Nome);
+            e.SobreNome = _criptografia.Descriptografar(e.SobreNome);
+            e.Rua = _criptografia.Descriptografar(e.Rua);
+            e.Bairro = _criptografia.Descriptografar(e.Bairro);
+            e.Estado = _criptografia.Descriptografar(e.Estado);
+            e.Cidade = _criptografia.Descriptografar(e.Cidade);
+            e.Telefone = _criptografia.Descriptografar(e.Telefone);
+            e.Cep = _criptografia.Descriptografar(e.Cep);
+            e.CPF = _criptografia.Descriptografar(e.CPF);
+            e.Numero = _criptografia.Descriptografar(e.Numero);
+            e.Complemento = _criptografia.Descriptografar(e.Complemento);
+        }
     }
 }

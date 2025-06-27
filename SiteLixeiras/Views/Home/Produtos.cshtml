@@ -1,56 +1,64 @@
 ﻿@model List<SiteLixeiras.Models.Produtos>
 @{
     ViewData["Title"] = "Produtos";
+    var precoMin = ViewData["precoMin"] as decimal? ?? 0m;
+    var precoMax = ViewData["precoMax"] as decimal? ?? 1000m;
 }
 
 <div class="container py-5">
     <h2 class="mb-4 text-center fw-bold" data-aos="fade-down">Encontre o produto ideal</h2>
 
-    <!-- Formulário de busca -->
-    <div class="card shadow-sm rounded mb-5 border-0" data-aos="fade-up">
-        <div class="card-body">
-            <form asp-action="Produtos" asp-controller="Home" method="get" class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label for="precoMin" class="form-label">Preço Mínimo</label>
-                    <input type="number" step="0.01" class="form-control" id="precoMin" name="precoMin"
-                           value="@ViewData["precoMin"]" placeholder="Ex: 50.00" min="0" />
-                </div>
-                <div class="col-md-4">
-                    <label for="precoMax" class="form-label">Preço Máximo</label>
-                    <input type="number" step="0.01" class="form-control" id="precoMax" name="precoMax"
-                           value="@ViewData["precoMax"]" placeholder="Ex: 200.00" min="0" />
-                </div>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-search me-2"></i> Pesquisar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    @if (!string.IsNullOrEmpty(ViewBag.Mensagem as string))
-    {
-        <div class="alert alert-warning text-center fw-semibold" data-aos="fade-in">@ViewBag.Mensagem</div>
-    }
-
     <div class="row">
-        @if (Model != null && Model.Any())
-        {
-            var delay = 0;
-            @foreach (var produto in Model)
-            {
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="zoom-in" data-aos-delay="@delay">
-                    @await Html.PartialAsync("_Produtos", produto)
+        <!-- Filtro lateral: ocupa espaço lateral em todas as telas -->
+        <div class="col-12 col-md-4 col-lg-3 mb-4" data-aos="fade-up">
+            <div class="card shadow-sm rounded border-0 h-100">
+                <div class="card-body">
+                    <h5 class="fw-semibold mb-3">Filtrar por preço</h5>
+                    <form asp-action="Produtos" asp-controller="Home" method="get">
+                        <div class="mb-3">
+                            <label for="precoMin" class="form-label small">Preço Mínimo (R$)</label>
+                            <input type="number" class="form-control form-control-sm" id="precoMin" name="precoMin"
+                                   value="@precoMin" placeholder="0,00" min="0" step="0.01" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="precoMax" class="form-label small">Preço Máximo (R$)</label>
+                            <input type="number" class="form-control form-control-sm" id="precoMax" name="precoMax"
+                                   value="@precoMax" placeholder="500,00" min="0" step="0.01" />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-search me-1"></i> Filtrar
+                        </button>
+                    </form>
                 </div>
-                delay += 100; 
-            }
-        }
-        else
-        {
-            <div class="col-12 text-center text-muted" data-aos="fade-in">
-                <p>Nenhum produto encontrado com os preços de limites escolhidos</p>
             </div>
-        }
+        </div>
+
+        <!-- Lista de produtos: ocupa o restante -->
+        <div class="col-12 col-md-8 col-lg-9">
+            @if (!string.IsNullOrEmpty(ViewBag.Mensagem as string))
+            {
+                <div class="alert alert-warning text-center fw-semibold" data-aos="fade-in">@ViewBag.Mensagem</div>
+            }
+
+            <div class="row">
+                @if (Model != null && Model.Any())
+                {
+                    var delay = 0;
+                    @foreach (var produto in Model)
+                    {
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4" data-aos="zoom-in" data-aos-delay="@delay">
+                            @await Html.PartialAsync("_Produtos", produto)
+                        </div>
+                        delay += 100;
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center text-muted" data-aos="fade-in">
+                        <p>Nenhum produto encontrado com os valores informados</p>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>

@@ -4,8 +4,6 @@
     ViewData["Title"] = "Detalhes do Produto";
 }
 
-
-
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold"><i class="bi bi-info-circle me-2"></i>Detalhes do Produto</h2>
@@ -78,6 +76,35 @@
 
                 <dt class="col-sm-3 fw-semibold">Categoria</dt>
                 <dd class="col-sm-9">@Model.Categoria?.Descricao</dd>
+
+                @* Itens do Kit *@
+                @if (Model.EhKit && Model.ItensDoKit?.Any() == true)
+                {
+                    <dt class="col-sm-12 mt-4">
+                        <h5 class="fw-bold"><i class="bi bi-boxes me-2"></i>Itens do Kit</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Código</th>
+                                        <th>Quantidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ItensDoKit)
+                                    {
+                                        <tr>
+                                            <td>@item.ProdutoFilho?.Nome</td>
+                                            <td>@item.ProdutoFilho?.Codigo</td>
+                                            <td>@item.Quantidade</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </dt>
+                }
             </dl>
         </div>
     </div>

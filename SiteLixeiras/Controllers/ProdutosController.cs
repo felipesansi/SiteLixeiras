@@ -27,11 +27,15 @@ namespace SiteLixeiras.Controllers
             ViewBag.MetaTitle = "Detalhes do Produto - Lixeiras de Resina";
             ViewBag.MetaDescription = "Veja os detalhes do produto selecionado, incluindo fotos, descrição e preço.";
             ViewBag.MetaKeywords = "Lixeiras de Resina, Cesto de Resina, detalhes, produto, lixeiras, resina, comprar";
+
             try
             {
                 var produto = await _context.Produtos
-                    .Include(f => f.Fotos)
-                    .Include(c => c.Categoria)
+                    .Include(p => p.Fotos)
+                    .Include(p => p.Categoria)
+                    .Include(p => p.ItensDoKit)
+                        .ThenInclude(i => i.ProdutoFilho)
+                            .ThenInclude(f => f.Fotos) 
                     .FirstOrDefaultAsync(p => p.Id_Produto == id);
 
                 if (produto == null)
@@ -47,6 +51,8 @@ namespace SiteLixeiras.Controllers
             }
         }
 
-
     }
+
+
 }
+

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiteLixeiras.Context;
 
@@ -11,9 +12,11 @@ using SiteLixeiras.Context;
 namespace SiteLixeiras.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250620150536_add_campo_pedido")]
+    partial class add_campo_pedido
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -482,10 +485,6 @@ namespace SiteLixeiras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("metodoPagamento")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.HasKey("PedidoId");
 
                     b.HasIndex("EnderecoEntregaId");
@@ -524,32 +523,6 @@ namespace SiteLixeiras.Migrations
                     b.ToTable("PedidoDetalhes");
                 });
 
-            modelBuilder.Entity("SiteLixeiras.Models.ProdutoKitItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProdutoFilhoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProdutoKitId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantidade")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProdutoFilhoId");
-
-                    b.HasIndex("ProdutoKitId");
-
-                    b.ToTable("ProdutoKitItens");
-                });
-
             modelBuilder.Entity("SiteLixeiras.Models.Produtos", b =>
                 {
                     b.Property<int>("Id_Produto")
@@ -572,9 +545,6 @@ namespace SiteLixeiras.Migrations
                     b.Property<bool>("Destaque")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("EhKit")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Imagem")
                         .HasColumnType("nvarchar(max)");
 
@@ -592,9 +562,6 @@ namespace SiteLixeiras.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("largura")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("profundidade")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id_Produto");
@@ -743,25 +710,6 @@ namespace SiteLixeiras.Migrations
                     b.Navigation("Produto");
                 });
 
-            modelBuilder.Entity("SiteLixeiras.Models.ProdutoKitItem", b =>
-                {
-                    b.HasOne("SiteLixeiras.Models.Produtos", "ProdutoFilho")
-                        .WithMany()
-                        .HasForeignKey("ProdutoFilhoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SiteLixeiras.Models.Produtos", "ProdutoKit")
-                        .WithMany("ItensDoKit")
-                        .HasForeignKey("ProdutoKitId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ProdutoFilho");
-
-                    b.Navigation("ProdutoKit");
-                });
-
             modelBuilder.Entity("SiteLixeiras.Models.Produtos", b =>
                 {
                     b.HasOne("SiteLixeiras.Models.Categoria", "Categoria")
@@ -796,8 +744,6 @@ namespace SiteLixeiras.Migrations
             modelBuilder.Entity("SiteLixeiras.Models.Produtos", b =>
                 {
                     b.Navigation("Fotos");
-
-                    b.Navigation("ItensDoKit");
                 });
 #pragma warning restore 612, 618
         }

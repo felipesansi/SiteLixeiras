@@ -11,10 +11,10 @@
     color: white;
 }
 
-.btn-padrao:hover {
-    background-color: #3c6313;
-    color: white;
-}
+    .btn-padrao:hover {
+        background-color: #3c6313;
+        color: white;
+    }
 
 .verde {
     color: #1A3300;
@@ -31,8 +31,38 @@
 /* =========================
    NAVBAR
    ========================= */
+.navbar {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    min-height: 80px;
+    overflow: visible !important;
+    position: relative;
+    z-index: 1;
+}
+
 .navbar-toggler-icon {
     filter: brightness(0) invert(1);
+}
+
+.navbar .dropdown-menu {
+    z-index: 1055;
+    position: absolute;
+}
+
+.container-fluid,
+.navbar-collapse {
+    overflow: visible !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================
+   LOGO
+   ========================= */
+.logo-navbar {
+    max-height: 100%;
+    height: auto;
+    width: auto;
 }
 
 /* =========================
@@ -63,6 +93,7 @@ html {
 
 body {
     margin-bottom: 60px;
+    overflow-x: hidden;
 }
 
 /* =========================
@@ -88,10 +119,10 @@ body {
     overflow: hidden;
 }
 
-.foto-card:hover {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-    transform: translateY(-4px) scale(1.02);
-}
+    .foto-card:hover {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        transform: translateY(-4px) scale(1.02);
+    }
 
 .foto-img {
     max-height: 220px;
@@ -106,22 +137,109 @@ body {
 }
 
 /* =========================
-   AJUSTES DROPDOWN E NAVBAR
+   HEADER FIXO - ÍCONES SEPARADOS
    ========================= */
-.logo-navbar {
-    max-width: auto;
-    height: auto;
+.navbar-icones {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.navbar,
-.container-fluid,
-.navbar-collapse {
-    overflow: visible !important;
-    position: relative; 
-    z-index: 1;
+.carrinho-header,
+.perfil-header,
+.notificacoes-header {
+    display: flex;
+    align-items: center;
+    color: white;
 }
 
-.navbar .dropdown-menu {
-    z-index: 1055; 
-    position: absolute; 
+    .carrinho-header .nav-link,
+    .perfil-header .nav-link,
+    .notificacoes-header .nav-link {
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .notificacoes-header .badge {
+        font-size: 0.7rem;
+    }
+
+/* =========================
+   BOTÃO FIXO WHATSAPP
+   ========================= */
+.whatsapp-fixo {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25D366;
+    color: white;
+    font-size: 1.8rem;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+    transition: background-color 0.3s ease;
+}
+
+    .whatsapp-fixo:hover {
+        background-color: #1ebe5d;
+        text-decoration: none;
+        color: white;
+    }
+
+/* =========================
+   RESPONSIVO (MOBILE)
+   ========================= */
+@media (max-width: 576px) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+
+    .navbar,
+    .container-fluid {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .logo-navbar {
+        max-height: 40px;
+        height: auto;
+        width: auto;
+    }
+
+    .navbar-toggler {
+        margin-left: 10px;
+    }
+
+    .navbar .container-fluid {
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+    }
+
+    .carrinho-header,
+    .perfil-header,
+    .notificacoes-header {
+        font-size: 1rem;
+    }
+
+        .notificacoes-header i.fa-bell {
+            font-size: 1rem !important;
+        }
+
+    .navbar .dropdown-menu {
+        position: fixed !important;
+        top: 60px !important;
+        left: 10px !important;
+        right: 10px !important;
+        z-index: 1055;
+        width: auto !important;
+        margin: 0 auto;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
 }

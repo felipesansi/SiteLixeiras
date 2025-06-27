@@ -11,140 +11,149 @@
     <meta name="author" content="SiteLixeiras" />
     <meta name="robots" content="index, follow" />
 
-    <title>@(ViewBag.MetaTitle ?? "Lixeiras de resina")</title>
-    <meta name="description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
-    <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "Lixeiras de resina, lixeiras, cesto sustentabilidade, produtos, Cesto de resina")" />
+    <title>@(ViewBag.MetaTitle ?? "Lixeiras de Resina")</title>
+    <meta name="description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Produtos sustentáveis para o seu ambiente.")" />
+    <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "Lixeiras de resina, lixeiras, cesto, sustentabilidade, decoração")" />
 
-    <!-- Open Graph / Facebook / WhatsApp -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
-    <meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
-    <meta property="og:image" content="@(ViewBag.MetaImage ?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
+    <meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de Resina")" />
+    <meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Produtos sustentáveis para o seu ambiente.")" />
+    <meta property="og:image" content="@(ViewBag.MetaImage ?? Url.Content("~/imagens/Logo-lixeiras.png"))" />
     <meta property="og:url" content="@(ViewBag.MetaUrl ?? Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
-    <meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
-    <meta name="twitter:image" content="@(ViewBag.MetaImage ?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
+    <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de Resina")" />
+    <meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Produtos sustentáveis para o seu ambiente.")" />
+    <meta name="twitter:image" content="@(ViewBag.MetaImage ?? Url.Content("~/imagens/Logo-lixeiras.png"))" />
+
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SiteLixeiras.styles.css" asp-append-version="true" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light cor_padrao border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img class="logo-navbar" src="~/imagens/Logo-lixeiras.png" alt="Logo Lixeiras de resina" />
+        <nav class="navbar navbar-expand-sm navbar-light cor_padrao border-bottom box-shadow mb-3" style="min-height: 100px;">
+            <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap">
 
+            
+                <a class="navbar-brand me-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/imagens/Logo-lixeiras.png" alt="Logo" class="logo-navbar" style="max-height:;" />
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+
+               
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end p-3">
-                    <ul class="navbar-nav">
+
+              
+                <div class="collapse navbar-collapse order-1 order-sm-0" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="0">
+                            <li class="nav-item me-3">
                                 <a class="nav-link text-white" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin</a>
                             </li>
                         }
 
-                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="100">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-
-                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="200">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Produtos">Todos os Produtos</a>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Produtos">Todos os Produtos</a>
                         </li>
-
-                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="300">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="About">Sobre nós</a>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="About">Sobre nós</a>
                         </li>
-
-                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="400">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Catalogo">Catalogo de Cores</a>
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Catalogo">Catálogo de Cores</a>
                         </li>
-
-                        @if (User.IsInRole("User"))
-                        {
-                            <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="500">
-                                @await Component.InvokeAsync("CarrinhoResumo")
-                            </li>
-                        }
-
-                        <li class="nav-item me-3" data-aos="fade-right" data-aos-delay="600">
-                            @Html.Partial("_LogoutPartial")
-                        </li>
-
-                        @if (User.IsInRole("User"))
-                        {
-                            <li class="nav-item dropdown me-3" data-aos="fade-right" data-aos-delay="700">
-                                <a class="nav-link text-white dropdown-toggle position-relative" href="#" id="notificacoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-bell"></i>
-                                    @if (ViewBag.Notificacoes != null && ViewBag.Notificacoes.Count > 0)
-                                    {
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            @ViewBag.Notificacoes.Count
-                                            <span class="visually-hidden">novas notificações</span>
-                                        </span>
-                                    }
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 320px;" aria-labelledby="notificacoesDropdown">
-                                    @if (ViewBag.Notificacoes != null && ViewBag.Notificacoes.Count > 0)
-                                    {
-                                        foreach (Notificacao n in ViewBag.Notificacoes)
-                                        {
-                                            <li class="mb-2">
-                                                <div>
-                                                    <strong>Mensagem:</strong><br />
-                                                    <span>@n.Mensagem</span>
-                                                </div>
-
-                                                @if (n.Respostas != null && n.Respostas.Any())
-                                                {
-                                                    var ultimaResposta = n.Respostas.OrderByDescending(r => r.DataCriacao).FirstOrDefault();
-                                                    if (ultimaResposta != null)
-                                                    {
-                                                        <div class="mt-2 alert alert-info p-2">
-                                                            <strong>@(ultimaResposta.EnviadaPeloAdmin ? "Admin" : "Você") respondeu:</strong><br />
-                                                            <small>@ultimaResposta.Mensagem</small>
-                                                        </div>
-                                                    }
-                                                }
-                                            </li>
-                                            <li><hr class="dropdown-divider" /></li>
-                                        }
-                                        <a class="dropdown-item text-center text-primary fw-bold" asp-controller="Notificacoes" asp-action="Index">Ver todas</a>
-                                    }
-                                    else
-                                    {
-                                        <li><span class="dropdown-item text-muted">Nenhuma notificação.</span></li>
-                                    }
-                                </ul>
-                            </li>
-                        }
                     </ul>
+                </div>
 
+              
+                <div class="navbar-icones d-flex align-items-center gap-3 order-0 order-sm-1">
+                    @if (User.IsInRole("User"))
+                    {
+                        <div class="carrinho-header">
+                            @await Component.InvokeAsync("CarrinhoResumo")
+                        </div>
+                    }
+
+                    <div class="perfil-header">
+                        @Html.Partial("_LogoutPartial")
+                    </div>
+
+                    @if (User.IsInRole("User"))
+                    {
+                        <div class="dropdown notificacoes-header">
+                            <a class="nav-link text-white dropdown-toggle position-relative" href="#" id="notificacoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell"></i>
+                                @if (ViewBag.Notificacoes != null && ViewBag.Notificacoes.Count > 0)
+                                {
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        @ViewBag.Notificacoes.Count
+                                        <span class="visually-hidden">novas notificações</span>
+                                    </span>
+                                }
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 320px;" aria-labelledby="notificacoesDropdown">
+                                @if (ViewBag.Notificacoes != null && ViewBag.Notificacoes.Count > 0)
+                                {
+                                    foreach (Notificacao n in ViewBag.Notificacoes)
+                                    {
+                                        <li class="mb-2">
+                                            <div>
+                                                <strong>Mensagem:</strong><br />
+                                                <span>@n.Mensagem</span>
+                                            </div>
+                                            @if (n.Respostas != null && n.Respostas.Any())
+                                            {
+                                                var ultimaResposta = n.Respostas.OrderByDescending(r => r.DataCriacao).FirstOrDefault();
+                                                if (ultimaResposta != null)
+                                                {
+                                                    <div class="mt-2 alert alert-info p-2">
+                                                        <strong>@(ultimaResposta.EnviadaPeloAdmin ? "Admin" : "Você") respondeu:</strong><br />
+                                                        <small>@ultimaResposta.Mensagem</small>
+                                                    </div>
+                                                }
+                                            }
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                    }
+                                    <a class="dropdown-item text-center text-primary fw-bold" asp-controller="Notificacoes" asp-action="Index">Ver todas</a>
+                                }
+                                else
+                                {
+                                    <li><span class="dropdown-item text-muted">Nenhuma notificação.</span></li>
+                                }
+                            </ul>
+                        </div>
+                    }
                 </div>
             </div>
         </nav>
     </header>
+
 
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
+    <a href="https://wa.me/5599999999999" target="_blank" class="whatsapp-fixo" aria-label="Converse pelo WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+
+
 
     <footer class="footer">
         @await Html.PartialAsync("_LayoutFooter")
@@ -153,7 +162,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

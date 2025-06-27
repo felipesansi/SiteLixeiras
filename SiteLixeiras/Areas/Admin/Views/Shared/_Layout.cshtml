@@ -3,36 +3,40 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SiteLixeiras</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Lixeiras de resina</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SiteLixeiras.styles.css" asp-append-version="true" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light cor_padrao border-bottom box-shadow mb-3 ">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="w-100" src="~/imagens/Logo-lixeiras.png" alt="Logo" /></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-sm navbar-light cor_padrao border-bottom box-shadow mb-3" style="min-height: 100px;">
+            <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap">
+
+        
+                <a class="navbar-brand me-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/imagens/Logo-lixeiras.png" alt="Logo" class="logo-navbar" style="max-height:100%;" />
+                </a>
+
+    
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end p-3">
-                    <ul class="navbar-nav">
-                     
 
+                <div class="collapse navbar-collapse order-1 order-sm-0 p-3" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item me-3">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                         }
+
                         <li class="nav-item me-3">
                             <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminCategorias" asp-action="Index">Categorias</a>
                         </li>
@@ -40,20 +44,21 @@
                         <li class="nav-item me-3">
                             <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminProdutos" asp-action="Index">Produtos</a>
                         </li>
-        
+
                         <li class="nav-item me-3">
                             <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminPedidos" asp-action="Index">Gerenciar Pedidos</a>
                         </li>
-
-                        @await Component.InvokeAsync("NotificacoesSino")
-
-
-
                     </ul>
+                </div>
+
+                
+                <div class="navbar-icones d-flex align-items-center gap-3 order-0 order-sm-1">
+                    @await Component.InvokeAsync("NotificacoesSino")
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -62,9 +67,10 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - SiteLixeiras - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Lixeiras de resina - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidade</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
