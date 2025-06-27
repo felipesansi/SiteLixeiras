@@ -153,7 +153,13 @@ namespace SiteLixeiras.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = Url.Action("ResetSenha", "Account", new { userId = user.Id, token }, Request.Scheme);
-            var corpo = $"Clique no link para redefinir sua senha: {callbackUrl}";
+            var emailModel = new ResetSenhaEmailViewModel
+            {
+                NomeUsuario = user.UserName,
+                LinkReset = callbackUrl
+            };
+
+            var corpo = await _razorRenderer.RenderViewToStringAsync("Emails/EmailResetSenha", emailModel);
 
             try
             {
@@ -169,7 +175,7 @@ namespace SiteLixeiras.Controllers
                     From = new MailAddress(_emailSetting.Remetente),
                     Subject = "Redefinição de Senha",
                     Body = corpo,
-                    IsBodyHtml = false
+                    IsBodyHtml = true
                 };
 
                 mailMessage.To.Add(user.Email);
