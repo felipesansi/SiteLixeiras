@@ -8,33 +8,44 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="author" content="SiteLixeiras" />
+    <meta name="author" content="Lixeiras de Resina - Lixeiras de resina" />
     <meta name="robots" content="index, follow" />
 
-    <title>@(ViewBag.MetaTitle ?? "Lixeiras de Resina")</title>
-    <meta name="description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Produtos sustentáveis para o seu ambiente.")" />
-    <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "Lixeiras de resina, lixeiras, cesto, sustentabilidade, decoração")" />
+    <title>@(ViewBag.MetaTitle ?? "Lixeiras de Resina de Luxo | Cestos Decorativos Artesanais")</title>
+    <meta name="description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina de luxo feitas artesanalmente com resina poliéster pigmentada. Cestos decorativos exclusivos para banheiros, lavabos e ambientes refinados.")" />
+    <meta name="keywords" content="@(ViewBag.MetaKeywords ?? "lixeiras de resina, cestos decorativos, lixeira de luxo, banheiro, lavabo, decoração artesanal, objetos em resina, resina poliéster, bandejas, cachepôs, luminárias")" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de Resina")" />
-    <meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Produtos sustentáveis para o seu ambiente.")" />
+    <meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de Resina de Luxo | Cestos Decorativos Artesanais")" />
+    <meta property="og:description" content="@(ViewBag.MetaDescription ?? "Conheça nossas lixeiras de resina artesanal para ambientes sofisticados. Design exclusivo, durabilidade e personalização.")" />
     <meta property="og:image" content="@(ViewBag.MetaImage ?? Url.Content("~/imagens/Logo-lixeiras.png"))" />
     <meta property="og:url" content="@(ViewBag.MetaUrl ?? Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de Resina")" />
-    <meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Produtos sustentáveis para o seu ambiente.")" />
+    <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de Resina de Luxo | Decoração")" />
+    <meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras artesanais em resina de alto padrão para banheiros e decoração de luxo.")" />
     <meta name="twitter:image" content="@(ViewBag.MetaImage ?? Url.Content("~/imagens/Logo-lixeiras.png"))" />
 
-
+    <!-- CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SiteLixeiras.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+    
+    <!-- Google tag (gtag.js) -->
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-SYYJ14J48X"></script>
+   <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-SYYJ14J48X');
+   </script>
+
 </head>
 
 <body>

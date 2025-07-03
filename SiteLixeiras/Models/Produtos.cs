@@ -41,6 +41,9 @@ namespace SiteLixeiras.Models
         [Display(Name = "Preço do imóvel")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Preco { get; set; }
+        [Display(Name = "Disponível para venda")]
+        public bool Ativo { get; set; } = true;
+
 
         [Display(Name = "Imagem do Produto")]
         public string? Imagem { get; set; }

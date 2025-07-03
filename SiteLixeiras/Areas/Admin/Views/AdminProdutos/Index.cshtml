@@ -21,8 +21,8 @@
                 {
                     <img src="@Url.Content(item.ImagemThumbUrl)" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Imagem do produto" />
                 }
-               
-                <div class="card-header bg-primary text-white">
+
+                <div class="card-header cor_padrao text-white">
                     <h5 class="card-title mb-0">@item.Nome</h5>
                 </div>
 
@@ -33,6 +33,7 @@
                     <p class="card-text"><strong>Altura:</strong> @item.altura cm</p>
                     <p class="card-text"><strong>Largura:</strong> @item.largura cm</p>
                     <p class="card-text"><strong>Destaque:</strong> @(item.Destaque ? "Sim" : "Não")</p>
+                    <p class="card-text"><strong>Disponível:</strong> @(item.Ativo ? "Sim" : "Não")</p>
                     <p class="card-text"><strong>Categoria:</strong> @item.Categoria?.Nome</p>
                 </div>
 

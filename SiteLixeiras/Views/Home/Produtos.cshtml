@@ -1,15 +1,22 @@
 ﻿@model List<SiteLixeiras.Models.Produtos>
 @{
-    ViewData["Title"] = "Produtos";
+    ViewData["Title"] = "Produtos de Resina - Lixeiras, Cestos e Kits";
     var precoMin = ViewData["precoMin"] as decimal? ?? 0m;
     var precoMax = ViewData["precoMax"] as decimal? ?? 1000m;
 }
 
 <div class="container py-5">
-    <h2 class="mb-4 text-center fw-bold" data-aos="fade-down">Encontre o produto ideal</h2>
+    <h2 class="mb-4 text-center fw-bold" data-aos="fade-down">
+        Lixeiras de Resina, Cestos Decorativos e Kits de Banheiro
+    </h2>
+
+    <p class="text-center text-muted mb-4" data-aos="fade-up">
+        Explore nossa seleção de <strong>lixeiras artesanais feitas em resina pigmentada</strong>,
+        com design contemporâneo, durabilidade e diversas opções de cores.
+        Ideal para banheiros, lavabos, escritórios e ambientes sofisticados.
+    </p>
 
     <div class="row">
-        <!-- Filtro lateral: ocupa espaço lateral em todas as telas -->
         <div class="col-12 col-md-4 col-lg-3 mb-4" data-aos="fade-up">
             <div class="card shadow-sm rounded border-0 h-100">
                 <div class="card-body">
@@ -33,7 +40,6 @@
             </div>
         </div>
 
-        <!-- Lista de produtos: ocupa o restante -->
         <div class="col-12 col-md-8 col-lg-9">
             @if (!string.IsNullOrEmpty(ViewBag.Mensagem as string))
             {
@@ -55,10 +61,18 @@
                 else
                 {
                     <div class="col-12 text-center text-muted" data-aos="fade-in">
-                        <p>Nenhum produto encontrado com os valores informados</p>
+                        <p>Nenhum produto encontrado com os valores informados.</p>
                     </div>
                 }
             </div>
         </div>
     </div>
+
+    <section class="mt-5 text-center text-muted">
+        <p>
+            Todas as nossas <strong>lixeiras de resina</strong> são desenvolvidas com materiais premium,
+            oferecendo estilo e funcionalidade em uma peça só.
+            Personalize o seu ambiente com <strong>cestos decorativos</strong> e <strong>kits de banheiro em resina</strong>.
+        </p>
+    </section>
 </div>

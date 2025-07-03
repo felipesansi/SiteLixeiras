@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Novo Produto";
-    var produtosDisponiveis = ViewData["ProdutosDisponiveis"] as List<SiteLixeiras.Models.Produtos>;
+    var produtosDisponiveis = ViewData["ProdutosDisponiveis"] as List<SiteLixeiras.Models.Produtos> ?? new();
 }
 
 <div class="container py-5">
@@ -19,19 +19,19 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label asp-for="Codigo" class="form-label">Código</label>
-                        <input asp-for="Codigo" class="form-control" placeholder="Ex: P12345" />
+                        <input asp-for="Codigo" class="form-control" placeholder="Ex: 1" />
                         <span asp-validation-for="Codigo" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <label asp-for="Nome" class="form-label">Nome do Produto</label>
                         <input asp-for="Nome" class="form-control" placeholder="Ex: Lixeira Inox 30L" />
                         <span asp-validation-for="Nome" class="text-danger"></span>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-md-12">
                         <label asp-for="Descricao" class="form-label">Descrição</label>
                         <textarea asp-for="Descricao" class="form-control" rows="3" placeholder="Breve descrição do produto..."></textarea>
                         <span asp-validation-for="Descricao" class="text-danger"></span>
@@ -61,7 +61,7 @@
                         <span asp-validation-for="Preco" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label asp-for="CategoriaId" class="form-label">Categoria</label>
                         <select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.CategoriaId">
                             <option value="">Selecione uma categoria</option>
@@ -69,12 +69,14 @@
                         <span asp-validation-for="CategoriaId" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-6 d-flex align-items-center mt-4">
-                        <div class="form-check">
+                    <div class="col-md-4 d-flex align-items-center">
+                        <div class="form-check me-3">
                             <input class="form-check-input" asp-for="Destaque" />
-                            <label class="form-check-label" asp-for="Destaque">
-                                Destaque na vitrine
-                            </label>
+                            <label class="form-check-label" asp-for="Destaque">Destaque</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="Ativo" />
+                            <label class="form-check-label" asp-for="Ativo">Ativo</label>
                         </div>
                     </div>
                 </div>
@@ -103,12 +105,14 @@
                                 {
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="produtosFilhos" value="@produto.Id_Produto" class="form-check-input kit-checkbox" />
+                                            <input type="checkbox" name="produtosFilhos" value="@produto.Id_Produto"
+                                                   class="form-check-input kit-checkbox" />
                                         </td>
                                         <td>@produto.Nome</td>
                                         <td>@produto.Codigo</td>
                                         <td>
-                                            <input type="number" name="quantidades" value="1" class="form-control form-control-sm" min="1" disabled />
+                                            <input type="number" name="quantidades" value="1"
+                                                   class="form-control form-control-sm" min="1" disabled />
                                         </td>
                                     </tr>
                                 }
@@ -132,27 +136,24 @@
         document.addEventListener("DOMContentLoaded", function () {
             const checkKit = document.getElementById("checkKit");
             const container = document.getElementById("produtosKitContainer");
-            const checkboxes = document.querySelectorAll(".kit-checkbox");
 
             checkKit.addEventListener("change", function () {
                 container.style.display = this.checked ? "block" : "none";
             });
 
-            checkboxes.forEach((cb, index) => {
+            document.querySelectorAll(".kit-checkbox").forEach(cb => {
                 cb.addEventListener("change", function () {
                     const qtyInput = cb.closest("tr").querySelector("input[name='quantidades']");
                     qtyInput.disabled = !cb.checked;
                 });
             });
 
-            // Mostra container se já estiver marcado (edição)
+            // Mostrar container se já estiver marcado (ex: edição)
             if (checkKit.checked) {
                 container.style.display = "block";
             }
         });
     </script>
 
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

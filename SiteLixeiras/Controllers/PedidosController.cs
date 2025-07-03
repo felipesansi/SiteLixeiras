@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
+using SiteLixeiras.Helpers;
 using SiteLixeiras.Models;
 using SiteLixeiras.Repositorios.Interfaces;
 using SiteLixeiras.Services;
 using SiteLixeiras.Sevices;
 using System.Security.Claims;
-using SiteLixeiras.Helpers;
 namespace SiteLixeiras.Controllers
 {
     public class PedidosController : Controller
@@ -56,10 +56,10 @@ namespace SiteLixeiras.Controllers
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 enderecoEntrega.UsuarioId = userId;
-                
+
                 CriptografarEndereco(enderecoEntrega);
                 _context.EnderecosEntregas.Add(enderecoEntrega);
-              
+
                 _context.SaveChanges();
                 return RedirectToAction("Checkout");
             }
@@ -68,7 +68,7 @@ namespace SiteLixeiras.Controllers
         }
 
         // Finaliza o pedido e redireciona para o pagamento
-       
+
         [HttpPost]
         public async Task<IActionResult> FinalizarPedido(int enderecoId)
         {
@@ -88,7 +88,7 @@ namespace SiteLixeiras.Controllers
                 .Include(p => p.EnderecoEntrega)
                 .Where(p => p.UsuarioId == userId && p.PedididoEntregue != null)
                 .ToListAsync();
-            
+
             foreach (var pedido in pedidos)
             {
                 DescriptografarEndereco(pedido.EnderecoEntrega);
@@ -124,7 +124,7 @@ namespace SiteLixeiras.Controllers
                 endereco.Complemento = _criptografia.Descriptografar(endereco.Complemento);
 
             }
-       
+
         }
         public void CriptografarEndereco(EnderecoEntrega endereco)
         {

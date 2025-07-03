@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SiteLixeiras.Context;
@@ -20,14 +16,15 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/AdminProdutos
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Produtos.Include(p => p.Categoria);
+            var appDbContext = _context.Produtos
+                .Include(p => p.Categoria)
+                .OrderBy(p => p.Nome);
+
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Admin/AdminProdutos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -43,15 +40,13 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             return View(produto);
         }
 
-        // GET: Admin/AdminProdutos/Create
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "IdCategoria", "Descricao");
-            ViewData["ProdutosDisponiveis"] = _context.Produtos.ToList();
+            ViewData["ProdutosDisponiveis"] = _context.Produtos.Where(p => p.Ativo).ToList();
             return View();
         }
 
-        // POST: Admin/AdminProdutos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Produtos produtos, int[]? produtosFilhos, int[]? quantidades)
@@ -80,11 +75,10 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             }
 
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "IdCategoria", "Descricao", produtos.CategoriaId);
-            ViewData["ProdutosDisponiveis"] = _context.Produtos.ToList();
+            ViewData["ProdutosDisponiveis"] = _context.Produtos.Where(p => p.Ativo).ToList();
             return View(produtos);
         }
 
-        // GET: Admin/AdminProdutos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -97,13 +91,12 @@ namespace SiteLixeiras.Areas.Admin.Controllers
 
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "IdCategoria", "Descricao", produto.CategoriaId);
             ViewData["ProdutosDisponiveis"] = _context.Produtos
-                .Where(p => p.Id_Produto != id)
+                .Where(p => p.Id_Produto != id && p.Ativo)
                 .ToList();
 
             return View(produto);
         }
 
-        // POST: Admin/AdminProdutos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Produtos produtos, int[]? produtosFilhos, int[]? quantidades)
@@ -122,32 +115,26 @@ namespace SiteLixeiras.Areas.Admin.Controllers
 
                     if (string.IsNullOrEmpty(produtos.Imagem))
                         produtos.Imagem = produtoDb.Imagem;
+
                     if (string.IsNullOrEmpty(produtos.ImagemThumbUrl))
                         produtos.ImagemThumbUrl = produtoDb.ImagemThumbUrl;
 
                     _context.Entry(produtoDb).CurrentValues.SetValues(produtos);
 
-                    if (produtos.EhKit)
-                    {
-                        _context.RemoveRange(produtoDb.ItensDoKit);
+                    _context.RemoveRange(produtoDb.ItensDoKit);
 
-                        if (produtosFilhos != null && quantidades != null)
-                        {
-                            for (int i = 0; i < produtosFilhos.Length; i++)
-                            {
-                                var kitItem = new ProdutoKitItem
-                                {
-                                    ProdutoKitId = produtos.Id_Produto,
-                                    ProdutoFilhoId = produtosFilhos[i],
-                                    Quantidade = quantidades[i]
-                                };
-                                _context.Add(kitItem);
-                            }
-                        }
-                    }
-                    else
+                    if (produtos.EhKit && produtosFilhos != null && quantidades != null)
                     {
-                        _context.RemoveRange(produtoDb.ItensDoKit);
+                        for (int i = 0; i < produtosFilhos.Length; i++)
+                        {
+                            var kitItem = new ProdutoKitItem
+                            {
+                                ProdutoKitId = produtos.Id_Produto,
+                                ProdutoFilhoId = produtosFilhos[i],
+                                Quantidade = quantidades[i]
+                            };
+                            _context.Add(kitItem);
+                        }
                     }
 
                     await _context.SaveChangesAsync();
@@ -162,11 +149,10 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             }
 
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "IdCategoria", "Descricao", produtos.CategoriaId);
-            ViewData["ProdutosDisponiveis"] = _context.Produtos.ToList();
+            ViewData["ProdutosDisponiveis"] = _context.Produtos.Where(p => p.Ativo).ToList(); // ✅ ajuste aqui
             return View(produtos);
         }
 
-        // GET: Admin/AdminProdutos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -180,7 +166,6 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             return View(produto);
         }
 
-        // POST: Admin/AdminProdutos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -193,9 +178,9 @@ namespace SiteLixeiras.Areas.Admin.Controllers
             {
                 _context.RemoveRange(produto.ItensDoKit);
                 _context.Produtos.Remove(produto);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

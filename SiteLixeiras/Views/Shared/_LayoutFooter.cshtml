@@ -1,23 +1,28 @@
-﻿<footer class="cor_padrao text-light pt-5 mt-5 border-top">
+﻿<footer class="cor_padrao text-light pt-5 mt-5 border-top" role="contentinfo">
     <div class="container">
         <div class="row text-center text-md-start">
+
             <!-- Métodos de Pagamento -->
             <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="100">
                 <h5 class="mb-3">Métodos de Pagamento</h5>
-                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
-                    <img src="~/imagens/Logos_footer.png"
-                         alt="Métodos de Pagamento"
-                         style="max-width: 100%; height: auto;">
-                </div>
+                <img src="~/imagens/Logos_footer.png"
+                     alt="Logos dos métodos de pagamento aceitos"
+                     class="img-fluid" loading="lazy">
             </div>
 
             <!-- Institucional -->
             <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="200">
                 <h5 class="mb-3">Institucional</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="@Url.Action("About", "Home")" class="text-warning text-decoration-none">Quem Somos</a></li>
-                    <li class="mb-2"><a href="@Url.Action("Privacy", "Home")" class="text-warning text-decoration-none">Política de Privacidade</a></li>
-                    <li class="mb-2"><a href="@Url.Action("TermosUso", "Account")" class="text-warning text-decoration-none">Termos de Uso</a></li>
+                    <li class="mb-2">
+                        <a href="@Url.Action("About", "Home")" class="text-warning text-decoration-none">Quem Somos</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="@Url.Action("Privacy", "Home")" class="text-warning text-decoration-none">Política de Privacidade</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="@Url.Action("TermosUso", "Account")" class="text-warning text-decoration-none">Termos de Uso</a>
+                    </li>
                 </ul>
             </div>
 
@@ -25,7 +30,10 @@
             <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="300">
                 <h5 class="mb-3">Atendimento</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2">Telefone: <a href="tel:+551199999" class="text-warning text-decoration-none">(11) 99999</a></li>
+                    <li class="mb-2">
+                        <span>Telefone:</span>
+                        <a href="tel:+551199999" class="text-warning text-decoration-none" aria-label="Telefone para contato">(11) 99999</a>
+                    </li>
                     <li class="mb-2">Seg a Sex - 8h às 18h</li>
                 </ul>
             </div>
@@ -33,8 +41,11 @@
             <!-- Redes Sociais -->
             <div class="col-md-3 mb-4" data-aos="fade-up" data-aos-delay="400">
                 <h5 class="mb-3">Redes Sociais</h5>
-                <a href="https://www.youtube.com/Lixeirasderesina" target="_blank" class="text-danger me-3" aria-label="YouTube">
+                <a href="https://www.youtube.com/Lixeirasderesina" target="_blank" class="text-danger me-3" aria-label="Acesse nosso canal no YouTube">
                     <i class="fab fa-youtube fa-lg"></i>
+                </a>
+                <a href="https://www.instagram.com/lixeirasderesina" target="_blank" class="text-primary me-3" aria-label="Visite nosso Instagram">
+                    <i class="fab fa-instagram fa-lg"></i>
                 </a>
             </div>
         </div>
@@ -46,7 +57,12 @@
                 <small>© @DateTime.Now.Year Lixeiras de Luxo. Todos os direitos reservados.</small>
             </div>
             <div class="col-md-6 text-center text-md-end">
-                <small>Desenvolvido por <a href="https://portfolio-react-omega-rust.vercel.app/" target="_blank" class="text-primary text-decoration-none">Felipe Dev</a></small>
+                <small>
+                    Desenvolvido por
+                    <a href="https://portfolio-react-omega-rust.vercel.app/" target="_blank" rel="noopener" class="text-primary text-decoration-none">
+                        Felipe Dev
+                    </a>
+                </small>
             </div>
         </div>
     </div>

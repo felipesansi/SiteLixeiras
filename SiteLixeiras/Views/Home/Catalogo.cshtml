@@ -1,6 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "Catálogo";
-    
+    ViewData["Title"] = "Catálogo de Cores de Lixeiras de Resina";
+
     var nomesCores = new List<string>
     {
         "Preto", "Fume", "Hc28", "Hb50", "Hb77", "Hc31", "Hc35",
@@ -8,18 +8,21 @@
         "Papaia", "Rosa itch", "Vermelho", "Beringela", "Branco", "Azul céu", "Coral"
     };
 }
-
-<div class="container">
+<div class="container py-5">
     <div class="row">
         <div class="col-md-12">
-            <h1>Catálogo</h1>
-            <p>Bem-vindo ao catálogo de cores dos nossos produtos! Aqui você encontrará uma variedade de cores disponíveis para compra.</p>
+            <h1 class="mb-4">Catálogo de Cores para Lixeiras de Resina</h1>
+            <p class="mb-4">
+                Personalize sua <strong>lixeira de resina</strong> com as cores disponíveis em nosso catálogo. Cada cor representa uma possibilidade única para combinar com a sua decoração.
+                Produzimos lixeiras, cestos e objetos de resina com pigmentos exclusivos que garantem acabamento brilhante, durável e sofisticado.
+            </p>
+
             <div class="row">
                 @for (var cor = 0; cor < nomesCores.Count; cor++)
                 {
                     <div class="col-md-3 mb-4">
                         <div class="card">
-                            <img src="~/imagens/Catalogo/@($"f{cor}.jpg")" class="card-img-top" alt="@nomesCores[cor]" />
+                            <img src="~/imagens/Catalogo/@($"f{cor}.jpg")" class="card-img-top" alt="Cor @nomesCores[cor] para lixeira de resina" />
                             <div class="card-body text-center">
                                 <h5 class="card-title">@nomesCores[cor]</h5>
                             </div>
@@ -27,6 +30,10 @@
                     </div>
                 }
             </div>
+
+            <p class="mt-5 text-muted">
+                Todas as nossas <strong>lixeiras artesanais em resina</strong> são feitas sob medida, respeitando o padrão de qualidade e sofisticação da marca. Escolha sua cor favorita e leve elegância para seu banheiro ou ambiente decorado.
+            </p>
         </div>
     </div>
 </div>

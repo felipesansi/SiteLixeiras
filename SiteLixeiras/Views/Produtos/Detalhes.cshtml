@@ -7,13 +7,13 @@
 <!-- META TAGS OG E TWITTER -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
-<meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+<meta property="og:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Detalhes do produto " + Model.Nome)" />
 <meta property="og:image" content="@(imagemPrincipal ?? "https://www.lixeirasderesina.com.br/imagens/Logo-lixeiras.png")" />
 <meta property="og:url" content="@(ViewBag.MetaUrl ?? Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="@(ViewBag.MetaTitle ?? "Lixeiras de resina")" />
-<meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina - Lixeiras, produtos e soluções sustentáveis para o seu ambiente.")" />
+<meta name="twitter:description" content="@(ViewBag.MetaDescription ?? "Lixeiras de resina -  Detalhes do produto " + Model.Nome) />
 <meta name="twitter:image" content="@imagemPrincipal" />
 
 <div class="container py-4">

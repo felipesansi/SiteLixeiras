@@ -1,11 +1,16 @@
 ﻿@model SiteLixeiras.Models.Produtos
 
+@{
+    var imageUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Url.Content(Model.ImagemThumbUrl)}";
+    var productUrl = Url.Action("Detalhes", "Produtos", new { id = Model.Id_Produto }, Context.Request.Scheme);
+}
+
 <div class="card border-0 shadow-lg h-100 d-flex flex-column text-center p-3">
     @if (!string.IsNullOrEmpty(Model.ImagemThumbUrl))
     {
         <img src="@Model.ImagemThumbUrl"
              class="img-fluid rounded mb-3"
-             alt="Imagem do produto"
+             alt="Lixeira de resina - @Model.Nome"
              style="height: 330px; object-fit: cover;">
     }
     else
@@ -29,7 +34,7 @@
     </div>
 
     <div class="card-footer bg-transparent border-0 d-grid gap-2">
-        <a href="@Url.Action("Detalhes", "Produtos", new { id = Model.Id_Produto })"
+        <a href="@productUrl"
            class="btn btn-outline-dark">
             Ver detalhes
         </a>
@@ -40,4 +45,23 @@
             Incluir no Carrinho
         </a>
     </div>
+
+    <!-- Dados estruturados para SEO -->
+    <script type="application/ld+json">
+        {
+          "context": "https://schema.org/",
+          "type": "Product",
+          "name": "@Model.Nome",
+          "image": "@imageUrl",
+          "description": "@(Model.Descricao?.Length > 150 ? Model.Descricao.Substring(0, 150).Replace("\"", "'") + "..." : Model.Descricao?.Replace("\"", "'"))",
+          "sku": "@Model.Id_Produto",
+          "offers": {
+            "type": "Offer",
+            "url": "@productUrl",
+            "priceCurrency": "BRL",
+            "price": "@Model.Preco.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)",
+            "availability": "https://schema.org/InStock"
+          }
+        }
+    </script>
 </div>

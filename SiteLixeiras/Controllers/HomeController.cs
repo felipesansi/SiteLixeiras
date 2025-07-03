@@ -23,11 +23,9 @@ namespace SiteLixeiras.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.MetaTitle = "Lixeiras de Resina - Produtos em Destaque";
-            ViewBag.MetaDescription = "Confira as melhores lixeiras de resina, produtos em destaque e soluções sustentáveis para o seu ambiente.";
-            ViewBag.MetaKeywords = "Lixeiras de Resina, Cesto de Resina, lixeiras, Cesto, resina, sustentabilidade, produtos, destaque";
-            ViewBag.MetaImage = Url.Content("~/imagens/imagem-compartilhamento.png");
-            ViewBag.MetaUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+            ViewBag.MetaTitle = "Lixeiras de Resina | Cestos Artesanais para Ambientes Sofisticados";
+            ViewBag.MetaDescription = "Explore nossa coleção de lixeiras de resina feitas à mão com design elegante e exclusivo. Ideal para banheiros, lavabos e decoração refinada.";
+            ViewBag.MetaKeywords = "lixeiras de resina, lixeira artesanal, cesto decorativo, decoração de luxo, lavabo, banheiro, resina poliéster, Lixeiras de resina";
 
             var produtos = await _context.Produtos
                 .Where(p => p.Destaque)
@@ -35,15 +33,14 @@ namespace SiteLixeiras.Controllers
                 .ToListAsync();
 
             await CarregarNotificacoes();
-
             return View(produtos);
         }
 
         public async Task<IActionResult> About()
         {
-            ViewBag.MetaTitle = "Sobre Nós - Lixeiras de Resina";
-            ViewBag.MetaDescription = "Conheça a história, missão e valores da Lixeiras de Resina.";
-            ViewBag.MetaKeywords = "sobre, empresa, missão, valores, lixeiras de resina";
+            ViewBag.MetaTitle = "Sobre a Lixeiras de resina | Lixeiras de Resina Artesanal";
+            ViewBag.MetaDescription = "Conheça a história da lixeiras de resina e como criamos peças decorativas em resina com exclusividade e sofisticação.";
+            ViewBag.MetaKeywords = "lixeira de resina, sobre lixeiras de resina, quem somos, lixeiras artesanais, história, missão, resina de luxo";
 
             await CarregarNotificacoes();
             return View();
@@ -51,9 +48,9 @@ namespace SiteLixeiras.Controllers
 
         public async Task<IActionResult> Produtos(decimal? precoMin, decimal? precoMax)
         {
-            ViewBag.MetaTitle = "Todos os Produtos - Lixeiras de Resina";
-            ViewBag.MetaDescription = "Veja todos os produtos de lixeiras de resina disponíveis para compra.";
-            ViewBag.MetaKeywords = "Produtos de resina,produtos, lixeiras, resina, catálogo, comprar";
+            ViewBag.MetaTitle = "Catálogo de Lixeiras de Resina | Todos os Produtos";
+            ViewBag.MetaDescription = "Veja todos os modelos de lixeiras de resina disponíveis. Escolha o design ideal para o seu espaço com a elegância da Lixeiras de resina.";
+            ViewBag.MetaKeywords = "produtos de resina, catálogo lixeiras, lixeira para banheiro, lavabo, luxo, decoração, resina artesanal";
 
             var produtosQuery = _context.Produtos
                 .Include(p => p.Fotos)
@@ -78,16 +75,34 @@ namespace SiteLixeiras.Controllers
             var produtos = await produtosQuery.ToListAsync();
 
             await CarregarNotificacoes();
-
             return View(produtos);
+        }
+
+        public async Task<IActionResult> Privacy()
+        {
+            ViewBag.MetaTitle = "Política de Privacidade - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Entenda como protegemos suas informações e garantimos sua privacidade em nosso site.";
+            ViewBag.MetaKeywords = "lixeiras de resina, cesto, política de privacidade, proteção de dados, informações pessoais, segurança, site Lixeiras de resina";
+
+            await CarregarNotificacoes();
+            return View();
+        }
+
+        public IActionResult Catalogo()
+        {
+            ViewBag.MetaTitle = "Catálogo de Cores | Lixeiras de Resina Personalizadas";
+            ViewBag.MetaDescription = "Descubra todas as cores disponíveis para personalizar suas lixeiras de resina de forma única e elegante.";
+            ViewBag.MetaKeywords = "catálogo de cores, personalização, lixeiras sob medida, lixeira decorativa, resina pigmentada";
+
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            ViewBag.MetaTitle = "Erro - Lixeiras de Resina";
-            ViewBag.MetaDescription = "Ocorreu um erro ao processar sua solicitação.";
-            ViewBag.MetaKeywords = "erro, lixeiras de resina";
+            ViewBag.MetaTitle = "Erro no Site - Lixeiras de Resina";
+            ViewBag.MetaDescription = "Ocorreu um erro inesperado. Tente novamente mais tarde ou entre em contato com o suporte.";
+            ViewBag.MetaKeywords = "erro, falha, problema, lixeiras de resina, suporte técnico";
 
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
@@ -105,25 +120,6 @@ namespace SiteLixeiras.Controllers
 
                 ViewBag.Notificacoes = notificacoes;
             }
-        }
-
-        public async Task<IActionResult> Privacy()
-        {
-            ViewBag.MetaTitle = "Política de Privacidade - Lixeiras de Resina";
-            ViewBag.MetaDescription = "Saiba como tratamos seus dados e garantimos sua privacidade.";
-            ViewBag.MetaKeywords = "privacidade, dados, política, lixeiras de resina";
-
-            await CarregarNotificacoes();
-            return View();
-        }
-
-        public IActionResult Catalogo()
-        {
-            ViewBag.MetaTitle = "Catálogo de Cores - Lixeiras de Resina";
-            ViewBag.MetaDescription = "Confira o catálogo de cores disponíveis para as lixeiras de resina.";
-            ViewBag.MetaKeywords = "catálogo, cores, lixeiras, resina";
-
-            return View();
         }
     }
 }
